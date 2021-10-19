@@ -1,4 +1,4 @@
-from pygm import SM4
+from fastgm import SM4
 
 def test_sm4_ecb():
     sm4 = SM4(b'1233213')

@@ -1,4 +1,4 @@
-# pygm
+# fastgm
 Fast GMSSL Library for Python
 基于Cython的快速国密算法Python实现，目前支持SM4（ECB）
 
@@ -9,14 +9,13 @@ Fast GMSSL Library for Python
 #### 安装教程
 下载项目
 ```
-cd pygm
-pip install .
+pip install fastgm
 ```
 
 #### 使用说明
 
 ```
-from pygm import SM4
+from fastgm import SM4
 
 def test_sm4_ecb():
     sm4 = SM4(b'1233213')
