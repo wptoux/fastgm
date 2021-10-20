@@ -1,33 +1,18 @@
-import cython
 from cpython cimport array
 import array
+import cython
 
-cdef sm4_key_new():
-    return array.array('B', [0] * SM4_NUM_ROUNDS)
 
-cdef zero_pad(const unsigned char[:] data):
-    cdef unsigned long buf_len = len(data), new_len
-    cdef new_data = array.array('B', data)
-    
-    if buf_len % 16 == 0:
-        new_len = buf_len
-    else:
-        new_len = (buf_len // 16 + 1) * 16
-        new_data.extend(b'\0' * (new_len - buf_len))
-        
-    return new_data
-    
-
-# @cython.boundscheck(False) # turn off bounds-checking for entire function
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function        
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function        
 cdef int SM4_GETU32(const unsigned char[:] data, unsigned long offset):
     return ((data[offset] << 24)
             | (data[offset + 1] << 16)
             | (data[offset + 2] << 8)
             | data[offset + 3])
 
-# @cython.boundscheck(False) # turn off bounds-checking for entire function
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function    
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function    
 cdef void SM4_PUTU32(unsigned char[:] data, unsigned long offset, unsigned int value):
     data[offset + 3] = (value & 0xff)
     value >>= 8
@@ -116,9 +101,9 @@ cdef unsigned int SM4_L32_(unsigned int x):
         SM4_ROL32(x, 13) ^
         SM4_ROL32(x, 23))
 
-# @cython.boundscheck(False) # turn off bounds-checking for entire function
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function
-def sm4_set_encrypt_key(unsigned char[:] key, const unsigned char[:] user_key):
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+cdef void sm4_set_encrypt_key(unsigned int[:] key, const unsigned char[:] user_key):
     cdef unsigned int x0, x1, x2, x3, x4
     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
@@ -158,9 +143,9 @@ def sm4_set_encrypt_key(unsigned char[:] key, const unsigned char[:] user_key):
     key[31] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))
     x0 = x1 = x3 = x3 = x4 = 0
 
-# @cython.boundscheck(False) # turn off bounds-checking for entire function
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function
-cdef sm4_set_decrypt_key(unsigned char[:] key, const unsigned char[:] user_key):
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+cdef void sm4_set_decrypt_key(unsigned int[:] key, const unsigned char[:] user_key):
     cdef unsigned int x0, x1, x2, x3, x4
     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
@@ -200,11 +185,11 @@ cdef sm4_set_decrypt_key(unsigned char[:] key, const unsigned char[:] user_key):
     key[ 0] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))
     x0 = x1 = x3 = x3 = x4 = 0
 
-# @cython.boundscheck(False) # turn off bounds-checking for entire function
-# @cython.wraparound(False)  # turn off negative index wrapping for entire function
-cdef sm4_encrypt(const unsigned char[:] inbuf, unsigned long in_offset, 
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
+cdef void sm4_encrypt(const unsigned char[:] inbuf, unsigned long in_offset, 
                 unsigned char[:] outbuf, unsigned long out_offset, 
-                unsigned char[:] key):
+                unsigned int[:] key):
     cdef unsigned int x0, x1, x2, x3, x4
     x0 = SM4_GETU32(inbuf, in_offset)
     x1 = SM4_GETU32(inbuf, in_offset + 4)
@@ -247,14 +232,14 @@ cdef sm4_encrypt(const unsigned char[:] inbuf, unsigned long in_offset,
     SM4_PUTU32(outbuf, out_offset + 8, x3)
     SM4_PUTU32(outbuf, out_offset + 12, x2)
 
-cdef sm4_decrypt(const unsigned char[:] inbuf, unsigned long in_offset, 
+cdef void sm4_decrypt(const unsigned char[:] inbuf, unsigned long in_offset, 
                 unsigned char[:] outbuf, unsigned long out_offset, 
-                unsigned char[:] key):
+                unsigned int[:] key):
     sm4_encrypt(inbuf, in_offset, outbuf, out_offset, key)
 
-cdef sm4_encrypt_ecb(const unsigned char[:] inbuf,
+cdef void sm4_encrypt_ecb(const unsigned char[:] inbuf,
                     unsigned char[:] outbuf,
-                    unsigned char[:] key):
+                    unsigned int[:] key):
     
     cdef unsigned long buf_len = len(inbuf)
     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
@@ -262,9 +247,9 @@ cdef sm4_encrypt_ecb(const unsigned char[:] inbuf,
     for i in range(0, buf_len, 16):
         sm4_encrypt(inbuf, i, outbuf, i, key)
         
-cdef sm4_decrypt_ecb(const unsigned char[:] inbuf,
+cdef void sm4_decrypt_ecb(const unsigned char[:] inbuf,
                     unsigned char[:] outbuf,
-                    unsigned char[:] key):
+                    unsigned int[:] key):
     
     cdef unsigned long buf_len = len(inbuf)
     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
@@ -273,9 +258,23 @@ cdef sm4_decrypt_ecb(const unsigned char[:] inbuf,
         sm4_decrypt(inbuf, i, outbuf, i, key)
         
         
+def sm4_key_new():
+    return array.array('I', [0] * SM4_NUM_ROUNDS)
+
+
+def zero_pad(data):
+    buf_len = len(data)
+    
+    if buf_len % 16 == 0:
+        return data
+    else:
+        new_len = (buf_len // 16 + 1) * 16
+        return data + b'\0' * (new_len - buf_len)
+
 class SM4:
     def __init__(self, key):
-        self._raw_key = zero_pad(key)
+        assert len(key) == 16
+        self._raw_key = key
         self._enc_key = None
         self._dec_key = None
         
