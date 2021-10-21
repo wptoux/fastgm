@@ -53,5 +53,6 @@ def test_sm2():
 
 ### 参考
 [1] https://github.com/guanzhi/GmSSL  
-[2] https://github.com/gongxian-ding/gmssl-python  
-[3] https://github.com/pyca/cryptography
+[2] https://github.com/duanhongyi/gmssl  
+[3] https://github.com/gongxian-ding/gmssl-python  
+[4] https://github.com/pyca/cryptography
