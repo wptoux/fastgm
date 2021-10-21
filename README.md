@@ -18,13 +18,17 @@ pip install fastgm
 from fastgm import SM2, SM3, SM4
 
 def test_sm4_ecb():
-    sm4 = SM4(b'1' * 16)
+    key = b'1' * 16
+    data = b'helloworld'
 
-    enc = sm4.encrypt_ecb(b'helloworld')
+    sm4 = SM4(key)
+
+    enc = sm4.encrypt_ecb(data)
     dec = sm4.decrypt_ecb(enc)
 
 def test_sm3():
-    h = SM3().hash(b'helloworld' * 1024)
+    data = b'helloworld' * 1024
+    h = SM3().hash(data)
 
 def test_sm2():
     sk = '00B9AB0B828FF68872F21A837FC303668428DEA11DCD1B24429D0C99E24EED83D5'
