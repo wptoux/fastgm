@@ -1,7 +1,9 @@
 .PHONY: build dist redist install install-from-source clean uninstall
 
-test: clean
+dev: 
 	CYTHONIZE=1 python setup.py develop
+	
+test: clean dev
 	pytest
 
 build:

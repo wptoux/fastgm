@@ -28,6 +28,10 @@ extensions = [
     Extension(
         'fastgm.sm4',
         sources=['src/fastgm/sm4.pyx'],
+    ),
+    Extension(
+        'fastgm.sm3',
+        sources=['src/fastgm/sm3.pyx'],
     )
 ]
 
@@ -41,7 +45,7 @@ else:
 
 setup(
     name="fastgm",
-    version="0.0.2",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
+    version="0.1.0",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
     author="wptoux",
     author_email="wangzhen_ok@qq.com",
     description="Fast GMSSL Library for Python",
