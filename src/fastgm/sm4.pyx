@@ -1,3 +1,5 @@
+import os
+
 from cpython cimport array
 import array
 import cython
@@ -277,6 +279,10 @@ class SM4:
         self._raw_key = key
         self._enc_key = None
         self._dec_key = None
+
+    @classmethod
+    def generate_key(cls):
+        return os.urandom(16)
         
     def encrypt_ecb(self, message):
         if self._enc_key is None:

@@ -26,6 +26,11 @@ def test_sm4_ecb_with_crypto():
 
     assert enc_crypto == sm4.encrypt_ecb(value)
 
+def test_sm4_generate_key():
+    key = SM4.generate_key()
+    sm4 = SM4(key)
+    assert sm4.decrypt_ecb(sm4.encrypt_ecb(b'helloworld')) == b'helloworld'
+
 def test_sm3():
     from gmssl.sm3 import sm3_hash
 
@@ -38,6 +43,18 @@ def test_sm2():
     data = b'helloworld' * 1024
 
     sm2 = SM2()
+
+    enc = sm2.encrypt(pk, data)
+    dec = sm2.decrypt(sk, enc)
+
+    assert dec == data
+
+def test_sm2_generate_key():
+    sm2 = SM2()
+
+    sk, pk = SM2.generate_key()
+
+    data = b'helloworld' * 1024
 
     enc = sm2.encrypt(pk, data)
     dec = sm2.decrypt(sk, enc)

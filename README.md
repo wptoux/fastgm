@@ -19,6 +19,14 @@ SM2是国家密码管理局发布的椭圆曲线公钥密码算法。对标RSA
 
 使用方法：
 
++ 生成秘钥
+```
+from fastgm import SM2
+
+sk, pk = SM2.generate_key()  # sk为私钥，pk为公钥，均为hex格式
+
+```
+
 + 使用公钥加密
 
 ```
@@ -61,6 +69,13 @@ h = SM3().hash(data)  # 哈希运算
 SM4.0（原名SMS4.0）是中华人民共和国政府采用的一种分组密码标准。对标AES。
 
 使用方法：
+
++ 生成秘钥
+```
+from fastgm import SM4
+
+key = SM4.generate_key() # key为16位bytes数组
+```
 
 + Zero Padding ECB加解密
 ```

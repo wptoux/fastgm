@@ -208,6 +208,20 @@ def decrypt(sk, data, mode='C1C3C2'):
         else:
             return None
 
+
+def generate_key():
+    """
+    return: sk, pk
+    """
+    
+    k = os.urandom(32)
+    k = int(k.hex(), 16)
+
+    pk = kP(k, G)
+    
+    return ('%064x'% k).upper(), point2hex(pk).upper()
+
+
 class SM2:
     def __init__(self, mode='C1C3C2'):
         """
@@ -215,6 +229,13 @@ class SM2:
         """
         
         self._mode = mode
+
+    @classmethod
+    def generate_key(cls):
+        """
+        return: 私钥、公钥组成的tuple
+        """
+        return generate_key()
 
     def encrypt(self, pk, data):
         """
