@@ -26,6 +26,23 @@ def test_sm4_ecb_with_crypto():
 
     assert enc_crypto == sm4.encrypt_ecb(value)
 
+def test_sm4_ecb_pkcs7():
+    sm4 = SM4(b'1' * 16, padding='pkcs7')
+    assert sm4.decrypt_ecb(sm4.encrypt_ecb(b'helloworld')) == b'helloworld'
+
+def test_sm4_ecb_with_gmssl():
+    from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
+
+    crypt_sm4 = CryptSM4()
+
+    crypt_sm4.set_key(b'1' * 16, SM4_ENCRYPT)
+    gmssl_enc = crypt_sm4.crypt_ecb(b'plain_text')
+
+    from fastgm import SM4
+    fastgm_enc = SM4(b'1'*16, padding='pkcs7').encrypt_ecb(b'plain_text')
+
+    assert gmssl_enc == fastgm_enc
+
 def test_sm4_generate_key():
     key = SM4.generate_key()
     sm4 = SM4(key)

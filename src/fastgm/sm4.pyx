@@ -273,23 +273,45 @@ def zero_pad(data):
         new_len = (buf_len // 16 + 1) * 16
         return data + b'\0' * (new_len - buf_len)
 
+def pkcs7_pad(data):
+    buf_len = len(data)
+
+    new_len = (buf_len // 16 + 1) * 16
+    return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)
+
 class SM4:
-    def __init__(self, key):
+    def __init__(self, key, padding='zero'):
+        """
+        key: 加密key，长度为16的bytes串。可以通过SM4.generate_key()方法生成。
+        padding: padding方式，可选zero与pkcs7，默认为zero
+        """
         assert len(key) == 16
         self._raw_key = key
         self._enc_key = None
         self._dec_key = None
+
+        assert padding in ('zero', 'pkcs7'), '不支持的padding方式，目前支持zero与pcks7'
+        self.padding = padding
 
     @classmethod
     def generate_key(cls):
         return os.urandom(16)
         
     def encrypt_ecb(self, message):
+        """
+        message: 待加密bytes串
+        """
         if self._enc_key is None:
             self._enc_key = sm4_key_new()
             sm4_set_encrypt_key(self._enc_key, self._raw_key)
         
-        message = zero_pad(message)
+        if self.padding == 'zero':
+            message = zero_pad(message)
+        elif self.padding == 'pkcs7':
+            message = pkcs7_pad(message)
+        else:
+            raise Exception('不支持的padding方式，目前支持zero与pcks7')
+
         buf = array.array('B', b'\0' * len(message))
         
         sm4_encrypt_ecb(message, buf, self._enc_key)
@@ -297,13 +319,24 @@ class SM4:
         return buf.tobytes().rstrip(b'\0')
     
     def decrypt_ecb(self, message):
+        """
+        message: 待解密bytes串
+        """
+
         if self._dec_key is None:
             self._dec_key = sm4_key_new()
             sm4_set_decrypt_key(self._dec_key, self._raw_key)
         
-        message = zero_pad(message)
+        assert len(message) % 16 == 0, '密文长度需要是16的整数'
+
         buf = array.array('B', b'\0' * len(message))
         
         sm4_decrypt_ecb(message, buf, self._dec_key)
         
-        return buf.tobytes().rstrip(b'\0')
+        buf = buf.tobytes()
+        
+        if self.padding == 'zero':
+            return buf.rstrip(b'\0')
+        else:
+            pad_len = buf[-1]
+            return buf[:-pad_len]
