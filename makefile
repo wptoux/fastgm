@@ -26,7 +26,6 @@ clean: uninstall
 	$(RM) -r src/fastgm/*.c
 	$(RM) -r .pytest_cache
 	$(RM) -r src/*.so src/fastgm/*.so
-	$(RM) -r reports .coverage
 	find . -name __pycache__ -exec rm -r {} +
 	#git clean -fdX
 
