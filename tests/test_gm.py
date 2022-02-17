@@ -14,6 +14,11 @@ def test_sm4_ecb():
     sm4 = SM4(b'1' * 16)
     assert sm4.decrypt_ecb(sm4.encrypt_ecb(b'helloworld')) == b'helloworld'
 
+def test_sm4_cbc():
+    sm4 = SM4(b'1' * 16)
+    iv = b'2' * 16
+    assert sm4.decrypt_cbc(iv, sm4.encrypt_cbc(iv, b'helloworld')) == b'helloworld'
+
 def test_sm4_ecb_with_crypto():
     key = b'1' * 16
     value = b'1' * 16
