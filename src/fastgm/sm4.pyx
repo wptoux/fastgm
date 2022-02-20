@@ -267,17 +267,13 @@ cdef void sm4_encrypt_cbc(const unsigned char[:] inbuf,
     cdef unsigned int buf_len = len(inbuf)
     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
 
-    cdef unsigned int i = 0
     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
-    cdef unsigned char[16] tmp_input
 
-    while buf_len > 0:
+    for i in range(0, buf_len, 16):
         for _i in range(16):
-            tmp_input[_i] = (inbuf[_i] ^ tmp_iv[_i])
-        sm4_encrypt(tmp_input, i, outbuf, i, key)
+            outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]
+        sm4_encrypt(outbuf, i, outbuf, i, key)
         tmp_iv = outbuf[i:i + 16]
-        i += 16
-        buf_len -= 16
 
 cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,
                           const unsigned char[:] iv,
@@ -287,16 +283,13 @@ cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,
     cdef unsigned int buf_len = len(inbuf)
     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
 
-    cdef unsigned int i = 0
     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
 
-    while buf_len > 0:
+    for i in range(0, buf_len, 16):
         sm4_decrypt(inbuf, i, outbuf, i, key)
         for _i in range(16):
-            outbuf[_i] = (outbuf[_i] ^ tmp_iv[_i])
+            outbuf[_i + i] = outbuf[_i + i] ^ tmp_iv[_i]
         tmp_iv = inbuf[i:i + 16].copy()
-        i += 16
-        buf_len -= 16
 
 def sm4_key_new():
     return array.array('I', [0] * SM4_NUM_ROUNDS)

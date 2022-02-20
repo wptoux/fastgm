@@ -1,5 +1,6 @@
 from fastgm import SM2, SM3, SM4
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
 
 def zero_pad(data):
     buf_len = len(data)
@@ -14,10 +15,26 @@ def test_sm4_ecb():
     sm4 = SM4(b'1' * 16)
     assert sm4.decrypt_ecb(sm4.encrypt_ecb(b'helloworld')) == b'helloworld'
 
+
 def test_sm4_cbc():
-    sm4 = SM4(b'1' * 16)
-    iv = b'2' * 16
-    assert sm4.decrypt_cbc(iv, sm4.encrypt_cbc(iv, b'helloworld')) == b'helloworld'
+    key = b"1" * 16
+    iv = b"2" * 16
+    plain_text = b'/#N4:=EFtd|2"}Wg0'
+    sm4 = SM4(key, "pkcs7")
+
+    assert sm4.decrypt_cbc(iv, sm4.encrypt_cbc(iv, plain_text)) == plain_text
+
+    crypt_sm4 = CryptSM4()
+    crypt_sm4.set_key(key, SM4_ENCRYPT)
+    encrypt_value = crypt_sm4.crypt_cbc(iv, plain_text)
+    crypt_sm4.set_key(key, SM4_DECRYPT)
+    decrypt_value = crypt_sm4.crypt_cbc(iv, encrypt_value)
+    assert plain_text == decrypt_value
+
+    assert crypt_sm4.crypt_cbc(iv, sm4.encrypt_cbc(iv, plain_text)) == plain_text
+    crypt_sm4.set_key(key, SM4_ENCRYPT)
+    assert sm4.decrypt_cbc(iv, crypt_sm4.crypt_cbc(iv, plain_text)) == plain_text
+
 
 def test_sm4_ecb_with_crypto():
     key = b'1' * 16
