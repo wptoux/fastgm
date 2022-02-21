@@ -37,3 +37,12 @@ jobs:
     - name: make redist
       run: |
         make redist
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: upload
+        path: |
+          dist
+          reports
+        
+    
