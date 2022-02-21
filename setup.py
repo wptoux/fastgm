@@ -51,7 +51,7 @@ setup(
     description="Fast GMSSL Library for Python",
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    keywords="GM SM4 Cython",
+    keywords="国密 GM GMSSL SM2 SM3 SM4 Cython",
     license="Apache",
     url="https://github.com/wptoux/fastgm",
     zip_safe=False,
