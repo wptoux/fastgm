@@ -259,7 +259,38 @@ cdef void sm4_decrypt_ecb(const unsigned char[:] inbuf,
     for i in range(0, buf_len, 16):
         sm4_decrypt(inbuf, i, outbuf, i, key)
         
-        
+cdef void sm4_encrypt_cbc(const unsigned char[:] inbuf,
+                          const unsigned char[:] iv,
+                          unsigned char[:] outbuf,
+                          unsigned int[:] key):
+
+    cdef unsigned int buf_len = len(inbuf)
+    assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
+
+    cdef unsigned char[:] tmp_iv = iv[0:16].copy()
+
+    for i in range(0, buf_len, 16):
+        for _i in range(16):
+            outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]
+        sm4_encrypt(outbuf, i, outbuf, i, key)
+        tmp_iv = outbuf[i:i + 16]
+
+cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,
+                          const unsigned char[:] iv,
+                          unsigned char[:] outbuf,
+                          unsigned int[:] key):
+
+    cdef unsigned int buf_len = len(inbuf)
+    assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
+
+    cdef unsigned char[:] tmp_iv = iv[0:16].copy()
+
+    for i in range(0, buf_len, 16):
+        sm4_decrypt(inbuf, i, outbuf, i, key)
+        for _i in range(16):
+            outbuf[_i + i] = outbuf[_i + i] ^ tmp_iv[_i]
+        tmp_iv = inbuf[i:i + 16].copy()
+
 def sm4_key_new():
     return array.array('I', [0] * SM4_NUM_ROUNDS)
 
@@ -290,7 +321,7 @@ class SM4:
         self._enc_key = None
         self._dec_key = None
 
-        assert padding in ('zero', 'pkcs7'), '不支持的padding方式，目前支持zero与pcks7'
+        assert padding in ('zero', 'pkcs7'), '不支持的padding方式，目前支持zero与pkcs7'
         self.padding = padding
 
     @classmethod
@@ -310,7 +341,7 @@ class SM4:
         elif self.padding == 'pkcs7':
             message = pkcs7_pad(message)
         else:
-            raise Exception('不支持的padding方式，目前支持zero与pcks7')
+            raise Exception('不支持的padding方式，目前支持zero与pkcs7')
 
         buf = array.array('B', b'\0' * len(message))
         
@@ -335,6 +366,49 @@ class SM4:
         
         buf = buf.tobytes()
         
+        if self.padding == 'zero':
+            return buf.rstrip(b'\0')
+        else:
+            pad_len = buf[-1]
+            return buf[:-pad_len]
+
+    def encrypt_cbc(self, iv, message):
+        """
+        message: 待加密bytes串
+        """
+        if self._enc_key is None:
+            self._enc_key = sm4_key_new()
+            sm4_set_encrypt_key(self._enc_key, self._raw_key)
+
+
+        if self.padding == 'zero':
+            message = zero_pad(message)
+        elif self.padding == 'pkcs7':
+            message = pkcs7_pad(message)
+        else:
+            raise Exception('不支持的padding方式，目前支持zero与pkcs7')
+
+        buf = array.array('B', b'\0' * len(message))
+        sm4_encrypt_cbc(message, iv, buf, self._enc_key)
+        return buf.tobytes().rstrip(b'\0')
+
+
+    def decrypt_cbc(self, iv, message):
+        """
+        message: 待解密bytes串
+        """
+        if self._dec_key is None:
+            self._dec_key = sm4_key_new()
+            sm4_set_decrypt_key(self._dec_key, self._raw_key)
+
+        assert len(message) % 16 == 0, '密文长度需要是16的整数'
+
+        buf = array.array('B', b'\0' * len(message))
+
+        sm4_decrypt_cbc(message, iv, buf, self._dec_key)
+
+        buf = buf.tobytes()
+
         if self.padding == 'zero':
             return buf.rstrip(b'\0')
         else:

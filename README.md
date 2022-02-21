@@ -1,12 +1,12 @@
 # fastgm
 Fast GMSSL Library for Python  
 
-基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB）
+基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB、CBC）
 
 ![test](reports/tests.svg) ![cov](reports/coverage.svg) 
 
 #### 介绍
-基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB）
+基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB、CBC）
 
 
 #### 安装教程
@@ -93,6 +93,20 @@ dec = sm4.decrypt_ecb(enc)  # 解密
 
 ```
 
++ PKCS7 Padding CBC加解密
+```
+from fastgm import SM4
+
+key = b'1' * 16  # key为16位bytes数组
+iv = b'2' * 16  # 初始化向量, iv为16位bytes数组
+data = b'helloworld' # 待加密内容
+
+sm4 = SM4(key, padding='pkcs7')  # 初始化, padding可选zero, pkcs7。gmssl-python库默认为pkcs7
+
+enc = sm4.encrypt_cbc(iv, data) # 加密
+dec = sm4.decrypt_cbc(iv, enc)  # 解密
+
+```
 #### benchmark
 以SM4为例，加密1024个helloworld，共计10240个字符，只需约0.3ms。纯Python实现的gmssl-python需要约171ms。
 
