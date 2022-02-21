@@ -1,4 +1,5 @@
 from math import ceil
+from cpython cimport array
 import array
 
 # rotl = lambda x, n:((x << n) & 0xffffffff) | ((x >> (32 - n)) & 0xffffffff)

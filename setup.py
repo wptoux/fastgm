@@ -1,4 +1,5 @@
 import os
+from sys import version_info
 
 from setuptools import setup, Extension, find_packages
 
@@ -6,6 +7,10 @@ try:
     from Cython.Build import cythonize
 except ImportError:
     cythonize = None
+
+if version_info[0] == 2:
+    from io import open
+
 
 # https://cython.readthedocs.io/en/latest/src/userguide/source_files_and_compilation.html#distributing-cython-modules
 def no_cythonize(extensions, **_ignore):
@@ -38,7 +43,7 @@ extensions = [
 CYTHONIZE = bool(int(os.getenv("CYTHONIZE", 0))) and cythonize is not None
 
 if CYTHONIZE:
-    compiler_directives = {"language_level": 3, "embedsignature": True}
+    compiler_directives = {"embedsignature": True}
     extensions = cythonize(extensions, compiler_directives=compiler_directives)
 else:
     extensions = no_cythonize(extensions)
@@ -58,4 +63,5 @@ setup(
     package_dir={"": "src"},
     packages=find_packages("src"),
     ext_modules=extensions,
+    options={"bdist_wheel": {"universal": True}},
 )
