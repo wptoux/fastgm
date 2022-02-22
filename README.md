@@ -3,7 +3,12 @@ Fast GMSSL Library for Python
 
 基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB、CBC）
 
-![test](reports/tests.svg) ![cov](reports/coverage.svg) 
+![pyver](https://img.shields.io/pypi/pyversions/fastgm)
+
+![test](https://raw.githubusercontent.com/wptoux/fastgm/master/reports/tests.svg) ![cov](https://raw.githubusercontent.com/wptoux/fastgm/master/reports/coverage.svg) 
+
+![download](https://img.shields.io/pypi/dm/fastgm)
+
 
 #### 介绍
 基于Cython的快速国密算法Python实现，目前支持SM2, SM3, SM4（ECB、CBC）
