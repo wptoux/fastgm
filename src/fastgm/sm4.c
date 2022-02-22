@@ -1273,36 +1273,6 @@ static PyObject* __Pyx_PyInt_FloorDivideObjC(PyObject *op1, PyObject *op2, long 
     (inplace ? PyNumber_InPlaceFloorDivide(op1, op2) : PyNumber_FloorDivide(op1, op2))
 #endif
 
-/* RaiseArgTupleInvalid.proto */
-static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
-    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
-
-/* RaiseDoubleKeywords.proto */
-static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
-
-/* ParseKeywords.proto */
-static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
-    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
-    const char* function_name);
-
-/* PyObjectSetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
-static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
-#else
-#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
-#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
-#endif
-
-/* IncludeStringH.proto */
-#include <string.h>
-
-/* BytesEquals.proto */
-static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
-
-/* UnicodeEquals.proto */
-static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
-
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
 #define __PYX_DICT_VERSION_INIT  ((PY_UINT64_T) -1)
@@ -1350,13 +1320,6 @@ static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_ve
 static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
 #endif
 
-/* PyCFunctionFastCall.proto */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
-#else
-#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
-#endif
-
 /* PyFunctionFastCall.proto */
 #if CYTHON_FAST_PYCALL
 #define __Pyx_PyFunction_FastCall(func, args, nargs)\
@@ -1380,6 +1343,50 @@ static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, 
     (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
 #endif
 
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* RaiseArgTupleInvalid.proto */
+static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
+    Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
+
+/* RaiseDoubleKeywords.proto */
+static void __Pyx_RaiseDoubleKeywordsError(const char* func_name, PyObject* kw_name);
+
+/* ParseKeywords.proto */
+static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
+    PyObject *kwds2, PyObject *values[], Py_ssize_t num_pos_args,\
+    const char* function_name);
+
+/* PyObjectSetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+#define __Pyx_PyObject_DelAttrStr(o,n) __Pyx_PyObject_SetAttrStr(o, n, NULL)
+static CYTHON_INLINE int __Pyx_PyObject_SetAttrStr(PyObject* obj, PyObject* attr_name, PyObject* value);
+#else
+#define __Pyx_PyObject_DelAttrStr(o,n)   PyObject_DelAttr(o,n)
+#define __Pyx_PyObject_SetAttrStr(o,n,v) PyObject_SetAttr(o,n,v)
+#endif
+
+/* IncludeStringH.proto */
+#include <string.h>
+
+/* BytesEquals.proto */
+static CYTHON_INLINE int __Pyx_PyBytes_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* UnicodeEquals.proto */
+static CYTHON_INLINE int __Pyx_PyUnicode_Equals(PyObject* s1, PyObject* s2, int equals);
+
+/* StrEquals.proto */
+#if PY_MAJOR_VERSION >= 3
+#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
+#else
+#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
+#endif
+
 /* PyObjectCall2Args.proto */
 static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2);
 
@@ -1400,9 +1407,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
 
 /* RaiseException.proto */
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb, PyObject *cause);
-
-/* None.proto */
-static CYTHON_INLINE Py_ssize_t __Pyx_mod_Py_ssize_t(Py_ssize_t, Py_ssize_t);
 
 /* GetItemInt.proto */
 #define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
@@ -1432,18 +1436,14 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(
         PyObject** py_start, PyObject** py_stop, PyObject** py_slice,
         int has_cstart, int has_cstop, int wraparound);
 
+/* None.proto */
+static CYTHON_INLINE Py_ssize_t __Pyx_mod_Py_ssize_t(Py_ssize_t, Py_ssize_t);
+
 /* ArgTypeTest.proto */
 #define __Pyx_ArgTypeTest(obj, type, none_allowed, name, exact)\
     ((likely((Py_TYPE(obj) == type) | (none_allowed && (obj == Py_None)))) ? 1 :\
         __Pyx__ArgTypeTest(obj, type, name, exact))
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
-
-/* StrEquals.proto */
-#if PY_MAJOR_VERSION >= 3
-#define __Pyx_PyString_Equals __Pyx_PyUnicode_Equals
-#else
-#define __Pyx_PyString_Equals __Pyx_PyBytes_Equals
-#endif
 
 /* None.proto */
 static CYTHON_INLINE Py_ssize_t __Pyx_div_Py_ssize_t(Py_ssize_t, Py_ssize_t);
@@ -1963,6 +1963,9 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  int dtype_is_object);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value);
 
 /* CIntFromPy.proto */
@@ -1976,9 +1979,6 @@ static CYTHON_INLINE unsigned long __Pyx_PyInt_As_unsigned_long(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_int(unsigned int value);
-
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CopyContentsUtility.proto */
 #define __pyx_memoryview_copy_slice_dc_unsigned_char_c(slice)\
@@ -2200,14 +2200,15 @@ static const char __pyx_k_16[] = "\345\257\206\346\226\207\351\225\277\345\272\2
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_iv[] = "iv";
 static const char __pyx_k_os[] = "os";
+static const char __pyx_k_PY2[] = "PY2";
 static const char __pyx_k_SM4[] = "SM4";
-static const char __pyx_k_big[] = "big";
 static const char __pyx_k_buf[] = "buf";
 static const char __pyx_k_cls[] = "cls";
 static const char __pyx_k_doc[] = "__doc__";
 static const char __pyx_k_key[] = "key";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
+static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_data[] = "data";
 static const char __pyx_k_dict[] = "__dict__";
@@ -2245,7 +2246,9 @@ static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_buf_len[] = "buf_len";
 static const char __pyx_k_dec_key[] = "_dec_key";
+static const char __pyx_k_decrypt[] = "decrypt";
 static const char __pyx_k_enc_key[] = "_enc_key";
+static const char __pyx_k_encrypt[] = "encrypt";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
 static const char __pyx_k_message[] = "message";
@@ -2262,11 +2265,12 @@ static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_setstate[] = "__setstate__";
-static const char __pyx_k_to_bytes[] = "to_bytes";
+static const char __pyx_k_tostring[] = "tostring";
 static const char __pyx_k_zero_pad[] = "zero_pad";
 static const char __pyx_k_TypeError[] = "TypeError";
 static const char __pyx_k_enumerate[] = "enumerate";
 static const char __pyx_k_metaclass[] = "__metaclass__";
+static const char __pyx_k_padding_2[] = "_padding";
 static const char __pyx_k_pkcs7_pad[] = "pkcs7_pad";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
@@ -2282,10 +2286,14 @@ static const char __pyx_k_decrypt_cbc[] = "decrypt_cbc";
 static const char __pyx_k_decrypt_ecb[] = "decrypt_ecb";
 static const char __pyx_k_encrypt_cbc[] = "encrypt_cbc";
 static const char __pyx_k_encrypt_ecb[] = "encrypt_ecb";
+static const char __pyx_k_set_dec_key[] = "_set_dec_key";
+static const char __pyx_k_set_enc_key[] = "_set_enc_key";
 static const char __pyx_k_sm4_key_new[] = "sm4_key_new";
+static const char __pyx_k_SM4__padding[] = "SM4._padding";
 static const char __pyx_k_generate_key[] = "generate_key";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
+static const char __pyx_k_version_info[] = "version_info";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static const char __pyx_k_reduce_cython[] = "__reduce_cython__";
 static const char __pyx_k_SM4_decrypt_cbc[] = "SM4.decrypt_cbc";
@@ -2297,6 +2305,8 @@ static const char __pyx_k_allocate_buffer[] = "allocate_buffer";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
+static const char __pyx_k_SM4__set_dec_key[] = "SM4._set_dec_key";
+static const char __pyx_k_SM4__set_enc_key[] = "SM4._set_enc_key";
 static const char __pyx_k_SM4_generate_key[] = "SM4.generate_key";
 static const char __pyx_k_paddingzeropkcs7[] = "\344\270\215\346\224\257\346\214\201\347\232\204padding\346\226\271\345\274\217\357\274\214\347\233\256\345\211\215\346\224\257\346\214\201zero\344\270\216pkcs7";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
@@ -2304,12 +2314,14 @@ static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_src_fastgm_sm4_pyx[] = "src/fastgm/sm4.pyx";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
+static const char __pyx_k_bytes_array_to_string[] = "_bytes_array_to_string";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
 static const char __pyx_k_MemoryView_of_r_object[] = "<MemoryView of %r object>";
 static const char __pyx_k_MemoryView_of_r_at_0x_x[] = "<MemoryView of %r at 0x%x>";
 static const char __pyx_k_contiguous_and_indirect[] = "<contiguous and indirect>";
 static const char __pyx_k_Cannot_index_with_type_s[] = "Cannot index with type '%s'";
 static const char __pyx_k_Invalid_shape_in_axis_d_d[] = "Invalid shape in axis %d: %d.";
+static const char __pyx_k_SM4__bytes_array_to_string[] = "SM4._bytes_array_to_string";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static const char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
@@ -2327,9 +2339,9 @@ static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing ex
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
 static PyObject *__pyx_kp_b_;
-static PyObject *__pyx_n_u_16;
+static PyObject *__pyx_kp_s_16;
 static PyObject *__pyx_n_s_ASCII;
-static PyObject *__pyx_n_u_B;
+static PyObject *__pyx_n_s_B;
 static PyObject *__pyx_kp_s_Buffer_view_does_not_expose_stri;
 static PyObject *__pyx_kp_s_Can_only_create_a_buffer_that_is;
 static PyObject *__pyx_kp_s_Cannot_assign_to_read_only_memor;
@@ -2337,7 +2349,7 @@ static PyObject *__pyx_kp_s_Cannot_create_writable_memory_vi;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
-static PyObject *__pyx_n_u_I;
+static PyObject *__pyx_n_s_I;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
 static PyObject *__pyx_n_s_IndexError;
 static PyObject *__pyx_kp_s_Indirect_dimensions_not_supporte;
@@ -2348,9 +2360,14 @@ static PyObject *__pyx_kp_s_MemoryView_of_r_at_0x_x;
 static PyObject *__pyx_kp_s_MemoryView_of_r_object;
 static PyObject *__pyx_n_b_O;
 static PyObject *__pyx_kp_s_Out_of_bounds_on_buffer_access_a;
+static PyObject *__pyx_n_s_PY2;
 static PyObject *__pyx_n_s_PickleError;
 static PyObject *__pyx_n_s_SM4;
 static PyObject *__pyx_n_s_SM4___init;
+static PyObject *__pyx_n_s_SM4__bytes_array_to_string;
+static PyObject *__pyx_n_s_SM4__padding;
+static PyObject *__pyx_n_s_SM4__set_dec_key;
+static PyObject *__pyx_n_s_SM4__set_enc_key;
 static PyObject *__pyx_n_s_SM4_decrypt_cbc;
 static PyObject *__pyx_n_s_SM4_decrypt_ecb;
 static PyObject *__pyx_n_s_SM4_encrypt_cbc;
@@ -2363,9 +2380,9 @@ static PyObject *__pyx_n_s_View_MemoryView;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_array;
 static PyObject *__pyx_n_s_base;
-static PyObject *__pyx_n_u_big;
 static PyObject *__pyx_n_s_buf;
 static PyObject *__pyx_n_s_buf_len;
+static PyObject *__pyx_n_s_bytes_array_to_string;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_class;
@@ -2375,6 +2392,7 @@ static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_data;
 static PyObject *__pyx_n_s_dec_key;
+static PyObject *__pyx_n_s_decrypt;
 static PyObject *__pyx_n_s_decrypt_cbc;
 static PyObject *__pyx_n_s_decrypt_ecb;
 static PyObject *__pyx_n_s_dict;
@@ -2382,6 +2400,7 @@ static PyObject *__pyx_n_s_doc;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_enc_key;
 static PyObject *__pyx_n_s_encode;
+static PyObject *__pyx_n_s_encrypt;
 static PyObject *__pyx_n_s_encrypt_cbc;
 static PyObject *__pyx_n_s_encrypt_ecb;
 static PyObject *__pyx_n_s_enumerate;
@@ -2418,9 +2437,10 @@ static PyObject *__pyx_n_s_os;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pad_len;
 static PyObject *__pyx_n_s_padding;
-static PyObject *__pyx_kp_u_paddingzeropkcs7;
+static PyObject *__pyx_n_s_padding_2;
+static PyObject *__pyx_kp_s_paddingzeropkcs7;
 static PyObject *__pyx_n_s_pickle;
-static PyObject *__pyx_n_u_pkcs7;
+static PyObject *__pyx_n_s_pkcs7;
 static PyObject *__pyx_n_s_pkcs7_pad;
 static PyObject *__pyx_n_s_prepare;
 static PyObject *__pyx_n_s_pyx_PickleError;
@@ -2439,6 +2459,8 @@ static PyObject *__pyx_n_s_reduce_cython;
 static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_n_s_rstrip;
 static PyObject *__pyx_n_s_self;
+static PyObject *__pyx_n_s_set_dec_key;
+static PyObject *__pyx_n_s_set_enc_key;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
@@ -2453,25 +2475,31 @@ static PyObject *__pyx_kp_s_strided_and_direct_or_indirect;
 static PyObject *__pyx_kp_s_strided_and_indirect;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_struct;
+static PyObject *__pyx_n_s_sys;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_to_bytes;
 static PyObject *__pyx_n_s_tobytes;
+static PyObject *__pyx_n_s_tostring;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_urandom;
-static PyObject *__pyx_n_u_zero;
+static PyObject *__pyx_n_s_version_info;
+static PyObject *__pyx_n_s_zero;
 static PyObject *__pyx_n_s_zero_pad;
 static PyObject *__pyx_pf_6fastgm_3sm4_sm4_key_new(CYTHON_UNUSED PyObject *__pyx_self); /* proto */
 static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data); /* proto */
 static PyObject *__pyx_pf_6fastgm_3sm4_4pkcs7_pad(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data); /* proto */
 static PyObject *__pyx_pf_6fastgm_3sm4_3SM4___init__(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_key, PyObject *__pyx_v_padding); /* proto */
 static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_2generate_key(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_cls); /* proto */
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6decrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message); /* proto */
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_10decrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4_set_enc_key(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6_set_dec_key(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8_padding(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_10_bytes_array_to_string(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_buf, PyObject *__pyx_v_mode); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_12encrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_14decrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_16encrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message); /* proto */
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_18decrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message); /* proto */
 static int __pyx_pf_7cpython_5array_5array___getbuffer__(arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info, CYTHON_UNUSED int __pyx_v_flags); /* proto */
 static void __pyx_pf_7cpython_5array_5array_2__releasebuffer__(CYTHON_UNUSED arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -2522,6 +2550,7 @@ static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject 
 static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
+static PyObject *__pyx_int_2;
 static PyObject *__pyx_int_16;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_neg_1;
@@ -2533,7 +2562,7 @@ static PyObject *__pyx_tuple__6;
 static PyObject *__pyx_tuple__7;
 static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_slice__18;
+static PyObject *__pyx_slice__17;
 static PyObject *__pyx_tuple__10;
 static PyObject *__pyx_tuple__11;
 static PyObject *__pyx_tuple__12;
@@ -2541,38 +2570,45 @@ static PyObject *__pyx_tuple__13;
 static PyObject *__pyx_tuple__14;
 static PyObject *__pyx_tuple__15;
 static PyObject *__pyx_tuple__16;
-static PyObject *__pyx_tuple__17;
+static PyObject *__pyx_tuple__18;
 static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_tuple__20;
-static PyObject *__pyx_tuple__21;
-static PyObject *__pyx_tuple__23;
-static PyObject *__pyx_tuple__25;
-static PyObject *__pyx_tuple__27;
+static PyObject *__pyx_tuple__22;
+static PyObject *__pyx_tuple__24;
+static PyObject *__pyx_tuple__26;
+static PyObject *__pyx_tuple__28;
 static PyObject *__pyx_tuple__29;
-static PyObject *__pyx_tuple__30;
-static PyObject *__pyx_tuple__32;
-static PyObject *__pyx_tuple__34;
-static PyObject *__pyx_tuple__36;
-static PyObject *__pyx_tuple__38;
-static PyObject *__pyx_tuple__40;
+static PyObject *__pyx_tuple__31;
+static PyObject *__pyx_tuple__33;
+static PyObject *__pyx_tuple__35;
+static PyObject *__pyx_tuple__37;
+static PyObject *__pyx_tuple__39;
 static PyObject *__pyx_tuple__41;
-static PyObject *__pyx_tuple__42;
 static PyObject *__pyx_tuple__43;
-static PyObject *__pyx_tuple__44;
 static PyObject *__pyx_tuple__45;
-static PyObject *__pyx_codeobj__22;
-static PyObject *__pyx_codeobj__24;
-static PyObject *__pyx_codeobj__26;
-static PyObject *__pyx_codeobj__28;
-static PyObject *__pyx_codeobj__31;
-static PyObject *__pyx_codeobj__33;
-static PyObject *__pyx_codeobj__35;
-static PyObject *__pyx_codeobj__37;
-static PyObject *__pyx_codeobj__39;
+static PyObject *__pyx_tuple__47;
+static PyObject *__pyx_tuple__48;
+static PyObject *__pyx_tuple__49;
+static PyObject *__pyx_tuple__50;
+static PyObject *__pyx_tuple__51;
+static PyObject *__pyx_tuple__52;
+static PyObject *__pyx_codeobj__21;
+static PyObject *__pyx_codeobj__23;
+static PyObject *__pyx_codeobj__25;
+static PyObject *__pyx_codeobj__27;
+static PyObject *__pyx_codeobj__30;
+static PyObject *__pyx_codeobj__32;
+static PyObject *__pyx_codeobj__34;
+static PyObject *__pyx_codeobj__36;
+static PyObject *__pyx_codeobj__38;
+static PyObject *__pyx_codeobj__40;
+static PyObject *__pyx_codeobj__42;
+static PyObject *__pyx_codeobj__44;
 static PyObject *__pyx_codeobj__46;
+static PyObject *__pyx_codeobj__53;
 /* Late includes */
 
-/* "fastgm/sm4.pyx":10
+/* "fastgm/sm4.pyx":18
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef int SM4_GETU32(const unsigned char[:] data, unsigned long offset):             # <<<<<<<<<<<<<<
@@ -2589,7 +2625,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
   size_t __pyx_t_4;
   __Pyx_RefNannySetupContext("SM4_GETU32", 0);
 
-  /* "fastgm/sm4.pyx":11
+  /* "fastgm/sm4.pyx":19
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef int SM4_GETU32(const unsigned char[:] data, unsigned long offset):
  *     return ((data[offset] << 24)             # <<<<<<<<<<<<<<
@@ -2598,7 +2634,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
  */
   __pyx_t_1 = __pyx_v_offset;
 
-  /* "fastgm/sm4.pyx":12
+  /* "fastgm/sm4.pyx":20
  * cdef int SM4_GETU32(const unsigned char[:] data, unsigned long offset):
  *     return ((data[offset] << 24)
  *             | (data[offset + 1] << 16)             # <<<<<<<<<<<<<<
@@ -2607,7 +2643,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
  */
   __pyx_t_2 = (__pyx_v_offset + 1);
 
-  /* "fastgm/sm4.pyx":13
+  /* "fastgm/sm4.pyx":21
  *     return ((data[offset] << 24)
  *             | (data[offset + 1] << 16)
  *             | (data[offset + 2] << 8)             # <<<<<<<<<<<<<<
@@ -2616,7 +2652,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
  */
   __pyx_t_3 = (__pyx_v_offset + 2);
 
-  /* "fastgm/sm4.pyx":14
+  /* "fastgm/sm4.pyx":22
  *             | (data[offset + 1] << 16)
  *             | (data[offset + 2] << 8)
  *             | data[offset + 3])             # <<<<<<<<<<<<<<
@@ -2627,7 +2663,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
   __pyx_r = (((((*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_1 * __pyx_v_data.strides[0]) ))) << 24) | ((*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_2 * __pyx_v_data.strides[0]) ))) << 16)) | ((*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_3 * __pyx_v_data.strides[0]) ))) << 8)) | (*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_4 * __pyx_v_data.strides[0]) ))));
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":10
+  /* "fastgm/sm4.pyx":18
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef int SM4_GETU32(const unsigned char[:] data, unsigned long offset):             # <<<<<<<<<<<<<<
@@ -2641,7 +2677,7 @@ static int __pyx_f_6fastgm_3sm4_SM4_GETU32(__Pyx_memviewslice __pyx_v_data, unsi
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":18
+/* "fastgm/sm4.pyx":26
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void SM4_PUTU32(unsigned char[:] data, unsigned long offset, unsigned int value):             # <<<<<<<<<<<<<<
@@ -2654,7 +2690,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   size_t __pyx_t_1;
   __Pyx_RefNannySetupContext("SM4_PUTU32", 0);
 
-  /* "fastgm/sm4.pyx":19
+  /* "fastgm/sm4.pyx":27
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void SM4_PUTU32(unsigned char[:] data, unsigned long offset, unsigned int value):
  *     data[offset + 3] = (value & 0xff)             # <<<<<<<<<<<<<<
@@ -2664,7 +2700,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   __pyx_t_1 = (__pyx_v_offset + 3);
   *((unsigned char *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_1 * __pyx_v_data.strides[0]) )) = (__pyx_v_value & 0xff);
 
-  /* "fastgm/sm4.pyx":20
+  /* "fastgm/sm4.pyx":28
  * cdef void SM4_PUTU32(unsigned char[:] data, unsigned long offset, unsigned int value):
  *     data[offset + 3] = (value & 0xff)
  *     value >>= 8             # <<<<<<<<<<<<<<
@@ -2673,7 +2709,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
  */
   __pyx_v_value = (__pyx_v_value >> 8);
 
-  /* "fastgm/sm4.pyx":21
+  /* "fastgm/sm4.pyx":29
  *     data[offset + 3] = (value & 0xff)
  *     value >>= 8
  *     data[offset + 2] = (value & 0xff)             # <<<<<<<<<<<<<<
@@ -2683,7 +2719,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   __pyx_t_1 = (__pyx_v_offset + 2);
   *((unsigned char *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_1 * __pyx_v_data.strides[0]) )) = (__pyx_v_value & 0xff);
 
-  /* "fastgm/sm4.pyx":22
+  /* "fastgm/sm4.pyx":30
  *     value >>= 8
  *     data[offset + 2] = (value & 0xff)
  *     value >>= 8             # <<<<<<<<<<<<<<
@@ -2692,7 +2728,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
  */
   __pyx_v_value = (__pyx_v_value >> 8);
 
-  /* "fastgm/sm4.pyx":23
+  /* "fastgm/sm4.pyx":31
  *     data[offset + 2] = (value & 0xff)
  *     value >>= 8
  *     data[offset + 1] = (value & 0xff)             # <<<<<<<<<<<<<<
@@ -2702,7 +2738,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   __pyx_t_1 = (__pyx_v_offset + 1);
   *((unsigned char *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_1 * __pyx_v_data.strides[0]) )) = (__pyx_v_value & 0xff);
 
-  /* "fastgm/sm4.pyx":24
+  /* "fastgm/sm4.pyx":32
  *     value >>= 8
  *     data[offset + 1] = (value & 0xff)
  *     value >>= 8             # <<<<<<<<<<<<<<
@@ -2711,7 +2747,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
  */
   __pyx_v_value = (__pyx_v_value >> 8);
 
-  /* "fastgm/sm4.pyx":25
+  /* "fastgm/sm4.pyx":33
  *     data[offset + 1] = (value & 0xff)
  *     value >>= 8
  *     data[offset] = (value & 0xff)             # <<<<<<<<<<<<<<
@@ -2721,7 +2757,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   __pyx_t_1 = __pyx_v_offset;
   *((unsigned char *) ( /* dim=0 */ (__pyx_v_data.data + __pyx_t_1 * __pyx_v_data.strides[0]) )) = (__pyx_v_value & 0xff);
 
-  /* "fastgm/sm4.pyx":18
+  /* "fastgm/sm4.pyx":26
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void SM4_PUTU32(unsigned char[:] data, unsigned long offset, unsigned int value):             # <<<<<<<<<<<<<<
@@ -2733,7 +2769,7 @@ static void __pyx_f_6fastgm_3sm4_SM4_PUTU32(__Pyx_memviewslice __pyx_v_data, uns
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":82
+/* "fastgm/sm4.pyx":90
  * ]
  * 
  * cdef unsigned int SM4_ROL32(unsigned int x, unsigned int n):             # <<<<<<<<<<<<<<
@@ -2746,7 +2782,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_ROL32(unsigned int __pyx_v_x, unsig
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("SM4_ROL32", 0);
 
-  /* "fastgm/sm4.pyx":83
+  /* "fastgm/sm4.pyx":91
  * 
  * cdef unsigned int SM4_ROL32(unsigned int x, unsigned int n):
  *     return ((x << n) | (x >> (32 - n)))             # <<<<<<<<<<<<<<
@@ -2756,7 +2792,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_ROL32(unsigned int __pyx_v_x, unsig
   __pyx_r = ((__pyx_v_x << __pyx_v_n) | (__pyx_v_x >> (32 - __pyx_v_n)));
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":82
+  /* "fastgm/sm4.pyx":90
  * ]
  * 
  * cdef unsigned int SM4_ROL32(unsigned int x, unsigned int n):             # <<<<<<<<<<<<<<
@@ -2770,7 +2806,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_ROL32(unsigned int __pyx_v_x, unsig
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":85
+/* "fastgm/sm4.pyx":93
  *     return ((x << n) | (x >> (32 - n)))
  * 
  * cdef unsigned int SM4_S32(unsigned int A):             # <<<<<<<<<<<<<<
@@ -2783,7 +2819,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_S32(unsigned int __pyx_v_A) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("SM4_S32", 0);
 
-  /* "fastgm/sm4.pyx":89
+  /* "fastgm/sm4.pyx":97
  *         (SM4_S[A >> 24] << 24) ^
  *         (SM4_S[(A >> 16) & 0xff] << 16) ^
  *         (SM4_S[(A >> 8) & 0xff] << 8) ^             # <<<<<<<<<<<<<<
@@ -2793,7 +2829,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_S32(unsigned int __pyx_v_A) {
   __pyx_r = (((((__pyx_v_6fastgm_3sm4_SM4_S[(__pyx_v_A >> 24)]) << 24) ^ ((__pyx_v_6fastgm_3sm4_SM4_S[((__pyx_v_A >> 16) & 0xff)]) << 16)) ^ ((__pyx_v_6fastgm_3sm4_SM4_S[((__pyx_v_A >> 8) & 0xff)]) << 8)) ^ (__pyx_v_6fastgm_3sm4_SM4_S[(__pyx_v_A & 0xff)]));
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":85
+  /* "fastgm/sm4.pyx":93
  *     return ((x << n) | (x >> (32 - n)))
  * 
  * cdef unsigned int SM4_S32(unsigned int A):             # <<<<<<<<<<<<<<
@@ -2807,7 +2843,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_S32(unsigned int __pyx_v_A) {
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":92
+/* "fastgm/sm4.pyx":100
  *         (SM4_S[A & 0xff]))
  * 
  * cdef unsigned int SM4_L32(unsigned int x):             # <<<<<<<<<<<<<<
@@ -2820,7 +2856,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32(unsigned int __pyx_v_x) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("SM4_L32", 0);
 
-  /* "fastgm/sm4.pyx":97
+  /* "fastgm/sm4.pyx":105
  *         SM4_ROL32(x, 2) ^
  *         SM4_ROL32(x, 10) ^
  *         SM4_ROL32(x, 18) ^             # <<<<<<<<<<<<<<
@@ -2830,7 +2866,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32(unsigned int __pyx_v_x) {
   __pyx_r = ((((__pyx_v_x ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 2)) ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 10)) ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 18)) ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 24));
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":92
+  /* "fastgm/sm4.pyx":100
  *         (SM4_S[A & 0xff]))
  * 
  * cdef unsigned int SM4_L32(unsigned int x):             # <<<<<<<<<<<<<<
@@ -2844,7 +2880,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32(unsigned int __pyx_v_x) {
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":100
+/* "fastgm/sm4.pyx":108
  *         SM4_ROL32(x, 24))
  * 
  * cdef unsigned int SM4_L32_(unsigned int x):             # <<<<<<<<<<<<<<
@@ -2857,7 +2893,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32_(unsigned int __pyx_v_x) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("SM4_L32_", 0);
 
-  /* "fastgm/sm4.pyx":103
+  /* "fastgm/sm4.pyx":111
  *     return (
  *         x ^
  *         SM4_ROL32(x, 13) ^             # <<<<<<<<<<<<<<
@@ -2867,7 +2903,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32_(unsigned int __pyx_v_x) {
   __pyx_r = ((__pyx_v_x ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 13)) ^ __pyx_f_6fastgm_3sm4_SM4_ROL32(__pyx_v_x, 23));
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":100
+  /* "fastgm/sm4.pyx":108
  *         SM4_ROL32(x, 24))
  * 
  * cdef unsigned int SM4_L32_(unsigned int x):             # <<<<<<<<<<<<<<
@@ -2881,7 +2917,7 @@ static unsigned int __pyx_f_6fastgm_3sm4_SM4_L32_(unsigned int __pyx_v_x) {
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":108
+/* "fastgm/sm4.pyx":116
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_set_encrypt_key(unsigned int[:] key, const unsigned char[:] user_key):             # <<<<<<<<<<<<<<
@@ -2900,7 +2936,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   Py_ssize_t __pyx_t_2;
   __Pyx_RefNannySetupContext("sm4_set_encrypt_key", 0);
 
-  /* "fastgm/sm4.pyx":110
+  /* "fastgm/sm4.pyx":118
  * cdef void sm4_set_encrypt_key(unsigned int[:] key, const unsigned char[:] user_key):
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]             # <<<<<<<<<<<<<<
@@ -2909,7 +2945,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x0 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 0) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[0]));
 
-  /* "fastgm/sm4.pyx":111
+  /* "fastgm/sm4.pyx":119
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]             # <<<<<<<<<<<<<<
@@ -2918,7 +2954,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x1 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 4) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[1]));
 
-  /* "fastgm/sm4.pyx":112
+  /* "fastgm/sm4.pyx":120
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]             # <<<<<<<<<<<<<<
@@ -2927,7 +2963,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x2 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 8) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[2]));
 
-  /* "fastgm/sm4.pyx":113
+  /* "fastgm/sm4.pyx":121
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]             # <<<<<<<<<<<<<<
@@ -2936,7 +2972,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x3 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 12) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[3]));
 
-  /* "fastgm/sm4.pyx":114
+  /* "fastgm/sm4.pyx":122
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]
  *     key[ 0] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))             # <<<<<<<<<<<<<<
@@ -2948,7 +2984,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":115
+  /* "fastgm/sm4.pyx":123
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]
  *     key[ 0] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))
  *     key[ 1] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))             # <<<<<<<<<<<<<<
@@ -2960,7 +2996,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":116
+  /* "fastgm/sm4.pyx":124
  *     key[ 0] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))
  *     key[ 1] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))
  *     key[ 2] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))             # <<<<<<<<<<<<<<
@@ -2972,7 +3008,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":117
+  /* "fastgm/sm4.pyx":125
  *     key[ 1] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))
  *     key[ 2] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))             # <<<<<<<<<<<<<<
@@ -2984,7 +3020,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":118
+  /* "fastgm/sm4.pyx":126
  *     key[ 2] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))
  *     key[ 4] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))             # <<<<<<<<<<<<<<
@@ -2996,7 +3032,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":119
+  /* "fastgm/sm4.pyx":127
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))
  *     key[ 4] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))
  *     key[ 5] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))             # <<<<<<<<<<<<<<
@@ -3008,7 +3044,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":120
+  /* "fastgm/sm4.pyx":128
  *     key[ 4] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))
  *     key[ 5] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))
  *     key[ 6] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))             # <<<<<<<<<<<<<<
@@ -3020,7 +3056,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":121
+  /* "fastgm/sm4.pyx":129
  *     key[ 5] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))
  *     key[ 6] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))
  *     key[ 7] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))             # <<<<<<<<<<<<<<
@@ -3032,7 +3068,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":122
+  /* "fastgm/sm4.pyx":130
  *     key[ 6] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))
  *     key[ 7] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))             # <<<<<<<<<<<<<<
@@ -3044,7 +3080,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":123
+  /* "fastgm/sm4.pyx":131
  *     key[ 7] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))
  *     key[ 9] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))             # <<<<<<<<<<<<<<
@@ -3056,7 +3092,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":124
+  /* "fastgm/sm4.pyx":132
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))
  *     key[ 9] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))
  *     key[10] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))             # <<<<<<<<<<<<<<
@@ -3068,7 +3104,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":125
+  /* "fastgm/sm4.pyx":133
  *     key[ 9] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))
  *     key[10] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))
  *     key[11] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))             # <<<<<<<<<<<<<<
@@ -3080,7 +3116,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":126
+  /* "fastgm/sm4.pyx":134
  *     key[10] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))
  *     key[11] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))
  *     key[12] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))             # <<<<<<<<<<<<<<
@@ -3092,7 +3128,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":127
+  /* "fastgm/sm4.pyx":135
  *     key[11] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))
  *     key[12] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))             # <<<<<<<<<<<<<<
@@ -3104,7 +3140,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":128
+  /* "fastgm/sm4.pyx":136
  *     key[12] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))
  *     key[14] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))             # <<<<<<<<<<<<<<
@@ -3116,7 +3152,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":129
+  /* "fastgm/sm4.pyx":137
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))
  *     key[14] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))
  *     key[15] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))             # <<<<<<<<<<<<<<
@@ -3128,7 +3164,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":130
+  /* "fastgm/sm4.pyx":138
  *     key[14] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))
  *     key[15] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))
  *     key[16] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))             # <<<<<<<<<<<<<<
@@ -3140,7 +3176,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":131
+  /* "fastgm/sm4.pyx":139
  *     key[15] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))
  *     key[16] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))
  *     key[17] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))             # <<<<<<<<<<<<<<
@@ -3152,7 +3188,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":132
+  /* "fastgm/sm4.pyx":140
  *     key[16] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))
  *     key[17] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))             # <<<<<<<<<<<<<<
@@ -3164,7 +3200,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":133
+  /* "fastgm/sm4.pyx":141
  *     key[17] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))
  *     key[19] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))             # <<<<<<<<<<<<<<
@@ -3176,7 +3212,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":134
+  /* "fastgm/sm4.pyx":142
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))
  *     key[19] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))
  *     key[20] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))             # <<<<<<<<<<<<<<
@@ -3188,7 +3224,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":135
+  /* "fastgm/sm4.pyx":143
  *     key[19] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))
  *     key[20] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))
  *     key[21] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))             # <<<<<<<<<<<<<<
@@ -3200,7 +3236,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":136
+  /* "fastgm/sm4.pyx":144
  *     key[20] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))
  *     key[21] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))
  *     key[22] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))             # <<<<<<<<<<<<<<
@@ -3212,7 +3248,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":137
+  /* "fastgm/sm4.pyx":145
  *     key[21] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))
  *     key[22] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))             # <<<<<<<<<<<<<<
@@ -3224,7 +3260,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":138
+  /* "fastgm/sm4.pyx":146
  *     key[22] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))
  *     key[24] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))             # <<<<<<<<<<<<<<
@@ -3236,7 +3272,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":139
+  /* "fastgm/sm4.pyx":147
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))
  *     key[24] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))
  *     key[25] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))             # <<<<<<<<<<<<<<
@@ -3248,7 +3284,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":140
+  /* "fastgm/sm4.pyx":148
  *     key[24] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))
  *     key[25] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))
  *     key[26] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))             # <<<<<<<<<<<<<<
@@ -3260,7 +3296,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":141
+  /* "fastgm/sm4.pyx":149
  *     key[25] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))
  *     key[26] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))
  *     key[27] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))             # <<<<<<<<<<<<<<
@@ -3272,7 +3308,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":142
+  /* "fastgm/sm4.pyx":150
  *     key[26] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))
  *     key[27] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))             # <<<<<<<<<<<<<<
@@ -3284,7 +3320,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":143
+  /* "fastgm/sm4.pyx":151
  *     key[27] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))
  *     key[29] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))             # <<<<<<<<<<<<<<
@@ -3296,7 +3332,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":144
+  /* "fastgm/sm4.pyx":152
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))
  *     key[29] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))
  *     key[30] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))             # <<<<<<<<<<<<<<
@@ -3308,7 +3344,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":145
+  /* "fastgm/sm4.pyx":153
  *     key[29] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))
  *     key[30] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))
  *     key[31] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))             # <<<<<<<<<<<<<<
@@ -3320,7 +3356,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":146
+  /* "fastgm/sm4.pyx":154
  *     key[30] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))
  *     key[31] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))
  *     x0 = x1 = x3 = x3 = x4 = 0             # <<<<<<<<<<<<<<
@@ -3333,7 +3369,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   __pyx_v_x3 = 0;
   __pyx_v_x4 = 0;
 
-  /* "fastgm/sm4.pyx":108
+  /* "fastgm/sm4.pyx":116
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_set_encrypt_key(unsigned int[:] key, const unsigned char[:] user_key):             # <<<<<<<<<<<<<<
@@ -3345,7 +3381,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__Pyx_memviewslice __pyx_v_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":150
+/* "fastgm/sm4.pyx":158
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_set_decrypt_key(unsigned int[:] key, const unsigned char[:] user_key):             # <<<<<<<<<<<<<<
@@ -3364,7 +3400,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   Py_ssize_t __pyx_t_2;
   __Pyx_RefNannySetupContext("sm4_set_decrypt_key", 0);
 
-  /* "fastgm/sm4.pyx":152
+  /* "fastgm/sm4.pyx":160
  * cdef void sm4_set_decrypt_key(unsigned int[:] key, const unsigned char[:] user_key):
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]             # <<<<<<<<<<<<<<
@@ -3373,7 +3409,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x0 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 0) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[0]));
 
-  /* "fastgm/sm4.pyx":153
+  /* "fastgm/sm4.pyx":161
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]             # <<<<<<<<<<<<<<
@@ -3382,7 +3418,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x1 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 4) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[1]));
 
-  /* "fastgm/sm4.pyx":154
+  /* "fastgm/sm4.pyx":162
  *     x0 = SM4_GETU32(user_key,  0) ^ SM4_FK[0]
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]             # <<<<<<<<<<<<<<
@@ -3391,7 +3427,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x2 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 8) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[2]));
 
-  /* "fastgm/sm4.pyx":155
+  /* "fastgm/sm4.pyx":163
  *     x1 = SM4_GETU32(user_key,  4) ^ SM4_FK[1]
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]             # <<<<<<<<<<<<<<
@@ -3400,7 +3436,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
  */
   __pyx_v_x3 = (__pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_user_key, 12) ^ (__pyx_v_6fastgm_3sm4_SM4_FK[3]));
 
-  /* "fastgm/sm4.pyx":156
+  /* "fastgm/sm4.pyx":164
  *     x2 = SM4_GETU32(user_key,  8) ^ SM4_FK[2]
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]
  *     key[31] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))             # <<<<<<<<<<<<<<
@@ -3412,7 +3448,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":157
+  /* "fastgm/sm4.pyx":165
  *     x3 = SM4_GETU32(user_key, 12) ^ SM4_FK[3]
  *     key[31] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))
  *     key[30] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))             # <<<<<<<<<<<<<<
@@ -3424,7 +3460,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":158
+  /* "fastgm/sm4.pyx":166
  *     key[31] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 0])))
  *     key[30] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))
  *     key[29] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))             # <<<<<<<<<<<<<<
@@ -3436,7 +3472,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":159
+  /* "fastgm/sm4.pyx":167
  *     key[30] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 1])))
  *     key[29] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))             # <<<<<<<<<<<<<<
@@ -3448,7 +3484,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":160
+  /* "fastgm/sm4.pyx":168
  *     key[29] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 2])))
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))
  *     key[27] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))             # <<<<<<<<<<<<<<
@@ -3460,7 +3496,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":161
+  /* "fastgm/sm4.pyx":169
  *     key[28] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 3])))
  *     key[27] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))
  *     key[26] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))             # <<<<<<<<<<<<<<
@@ -3472,7 +3508,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":162
+  /* "fastgm/sm4.pyx":170
  *     key[27] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 4])))
  *     key[26] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))
  *     key[25] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))             # <<<<<<<<<<<<<<
@@ -3484,7 +3520,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":163
+  /* "fastgm/sm4.pyx":171
  *     key[26] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[ 5])))
  *     key[25] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))
  *     key[24] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))             # <<<<<<<<<<<<<<
@@ -3496,7 +3532,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":164
+  /* "fastgm/sm4.pyx":172
  *     key[25] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[ 6])))
  *     key[24] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))             # <<<<<<<<<<<<<<
@@ -3508,7 +3544,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":165
+  /* "fastgm/sm4.pyx":173
  *     key[24] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[ 7])))
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))
  *     key[22] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))             # <<<<<<<<<<<<<<
@@ -3520,7 +3556,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":166
+  /* "fastgm/sm4.pyx":174
  *     key[23] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[ 8])))
  *     key[22] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))
  *     key[21] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))             # <<<<<<<<<<<<<<
@@ -3532,7 +3568,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":167
+  /* "fastgm/sm4.pyx":175
  *     key[22] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[ 9])))
  *     key[21] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))
  *     key[20] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))             # <<<<<<<<<<<<<<
@@ -3544,7 +3580,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":168
+  /* "fastgm/sm4.pyx":176
  *     key[21] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[10])))
  *     key[20] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))
  *     key[19] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))             # <<<<<<<<<<<<<<
@@ -3556,7 +3592,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":169
+  /* "fastgm/sm4.pyx":177
  *     key[20] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[11])))
  *     key[19] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))             # <<<<<<<<<<<<<<
@@ -3568,7 +3604,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":170
+  /* "fastgm/sm4.pyx":178
  *     key[19] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[12])))
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))
  *     key[17] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))             # <<<<<<<<<<<<<<
@@ -3580,7 +3616,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":171
+  /* "fastgm/sm4.pyx":179
  *     key[18] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[13])))
  *     key[17] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))
  *     key[16] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))             # <<<<<<<<<<<<<<
@@ -3592,7 +3628,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":172
+  /* "fastgm/sm4.pyx":180
  *     key[17] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[14])))
  *     key[16] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))
  *     key[15] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))             # <<<<<<<<<<<<<<
@@ -3604,7 +3640,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":173
+  /* "fastgm/sm4.pyx":181
  *     key[16] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[15])))
  *     key[15] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))
  *     key[14] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))             # <<<<<<<<<<<<<<
@@ -3616,7 +3652,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":174
+  /* "fastgm/sm4.pyx":182
  *     key[15] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[16])))
  *     key[14] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))             # <<<<<<<<<<<<<<
@@ -3628,7 +3664,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":175
+  /* "fastgm/sm4.pyx":183
  *     key[14] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[17])))
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))
  *     key[12] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))             # <<<<<<<<<<<<<<
@@ -3640,7 +3676,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":176
+  /* "fastgm/sm4.pyx":184
  *     key[13] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[18])))
  *     key[12] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))
  *     key[11] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))             # <<<<<<<<<<<<<<
@@ -3652,7 +3688,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":177
+  /* "fastgm/sm4.pyx":185
  *     key[12] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[19])))
  *     key[11] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))
  *     key[10] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))             # <<<<<<<<<<<<<<
@@ -3664,7 +3700,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":178
+  /* "fastgm/sm4.pyx":186
  *     key[11] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[20])))
  *     key[10] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))
  *     key[ 9] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))             # <<<<<<<<<<<<<<
@@ -3676,7 +3712,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":179
+  /* "fastgm/sm4.pyx":187
  *     key[10] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[21])))
  *     key[ 9] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))             # <<<<<<<<<<<<<<
@@ -3688,7 +3724,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":180
+  /* "fastgm/sm4.pyx":188
  *     key[ 9] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[22])))
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))
  *     key[ 7] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))             # <<<<<<<<<<<<<<
@@ -3700,7 +3736,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":181
+  /* "fastgm/sm4.pyx":189
  *     key[ 8] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[23])))
  *     key[ 7] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))
  *     key[ 6] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))             # <<<<<<<<<<<<<<
@@ -3712,7 +3748,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":182
+  /* "fastgm/sm4.pyx":190
  *     key[ 7] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[24])))
  *     key[ 6] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))
  *     key[ 5] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))             # <<<<<<<<<<<<<<
@@ -3724,7 +3760,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":183
+  /* "fastgm/sm4.pyx":191
  *     key[ 6] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[25])))
  *     key[ 5] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))
  *     key[ 4] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))             # <<<<<<<<<<<<<<
@@ -3736,7 +3772,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x1 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":184
+  /* "fastgm/sm4.pyx":192
  *     key[ 5] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[26])))
  *     key[ 4] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))             # <<<<<<<<<<<<<<
@@ -3748,7 +3784,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x2 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":185
+  /* "fastgm/sm4.pyx":193
  *     key[ 4] = x1 = (x2 ^ SM4_L32_(SM4_S32(x3 ^ x4 ^ x0 ^ SM4_CK[27])))
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))
  *     key[ 2] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))             # <<<<<<<<<<<<<<
@@ -3760,7 +3796,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x3 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":186
+  /* "fastgm/sm4.pyx":194
  *     key[ 3] = x2 = (x3 ^ SM4_L32_(SM4_S32(x4 ^ x0 ^ x1 ^ SM4_CK[28])))
  *     key[ 2] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))
  *     key[ 1] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))             # <<<<<<<<<<<<<<
@@ -3772,7 +3808,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x4 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":187
+  /* "fastgm/sm4.pyx":195
  *     key[ 2] = x3 = (x4 ^ SM4_L32_(SM4_S32(x0 ^ x1 ^ x2 ^ SM4_CK[29])))
  *     key[ 1] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))
  *     key[ 0] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))             # <<<<<<<<<<<<<<
@@ -3784,7 +3820,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   *((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_2 * __pyx_v_key.strides[0]) )) = __pyx_t_1;
   __pyx_v_x0 = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":188
+  /* "fastgm/sm4.pyx":196
  *     key[ 1] = x4 = (x0 ^ SM4_L32_(SM4_S32(x1 ^ x2 ^ x3 ^ SM4_CK[30])))
  *     key[ 0] = x0 = (x1 ^ SM4_L32_(SM4_S32(x2 ^ x3 ^ x4 ^ SM4_CK[31])))
  *     x0 = x1 = x3 = x3 = x4 = 0             # <<<<<<<<<<<<<<
@@ -3797,7 +3833,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   __pyx_v_x3 = 0;
   __pyx_v_x4 = 0;
 
-  /* "fastgm/sm4.pyx":150
+  /* "fastgm/sm4.pyx":158
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_set_decrypt_key(unsigned int[:] key, const unsigned char[:] user_key):             # <<<<<<<<<<<<<<
@@ -3809,7 +3845,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__Pyx_memviewslice __pyx_v_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":192
+/* "fastgm/sm4.pyx":200
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_encrypt(const unsigned char[:] inbuf, unsigned long in_offset,             # <<<<<<<<<<<<<<
@@ -3827,7 +3863,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   Py_ssize_t __pyx_t_1;
   __Pyx_RefNannySetupContext("sm4_encrypt", 0);
 
-  /* "fastgm/sm4.pyx":196
+  /* "fastgm/sm4.pyx":204
  *                 unsigned int[:] key):
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(inbuf, in_offset)             # <<<<<<<<<<<<<<
@@ -3836,7 +3872,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_v_x0 = __pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_inbuf, __pyx_v_in_offset);
 
-  /* "fastgm/sm4.pyx":197
+  /* "fastgm/sm4.pyx":205
  *     cdef unsigned int x0, x1, x2, x3, x4
  *     x0 = SM4_GETU32(inbuf, in_offset)
  *     x1 = SM4_GETU32(inbuf, in_offset + 4)             # <<<<<<<<<<<<<<
@@ -3845,7 +3881,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_v_x1 = __pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_inbuf, (__pyx_v_in_offset + 4));
 
-  /* "fastgm/sm4.pyx":198
+  /* "fastgm/sm4.pyx":206
  *     x0 = SM4_GETU32(inbuf, in_offset)
  *     x1 = SM4_GETU32(inbuf, in_offset + 4)
  *     x2 = SM4_GETU32(inbuf, in_offset + 8)             # <<<<<<<<<<<<<<
@@ -3854,7 +3890,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_v_x2 = __pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_inbuf, (__pyx_v_in_offset + 8));
 
-  /* "fastgm/sm4.pyx":199
+  /* "fastgm/sm4.pyx":207
  *     x1 = SM4_GETU32(inbuf, in_offset + 4)
  *     x2 = SM4_GETU32(inbuf, in_offset + 8)
  *     x3 = SM4_GETU32(inbuf, in_offset + 12)             # <<<<<<<<<<<<<<
@@ -3863,7 +3899,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_v_x3 = __pyx_f_6fastgm_3sm4_SM4_GETU32(__pyx_v_inbuf, (__pyx_v_in_offset + 12));
 
-  /* "fastgm/sm4.pyx":200
+  /* "fastgm/sm4.pyx":208
  *     x2 = SM4_GETU32(inbuf, in_offset + 8)
  *     x3 = SM4_GETU32(inbuf, in_offset + 12)
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[0]))             # <<<<<<<<<<<<<<
@@ -3873,7 +3909,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 0;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":201
+  /* "fastgm/sm4.pyx":209
  *     x3 = SM4_GETU32(inbuf, in_offset + 12)
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[0]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[1]))             # <<<<<<<<<<<<<<
@@ -3883,7 +3919,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 1;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":202
+  /* "fastgm/sm4.pyx":210
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[0]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[1]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[2]))             # <<<<<<<<<<<<<<
@@ -3893,7 +3929,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 2;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":203
+  /* "fastgm/sm4.pyx":211
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[1]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[2]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[3]))             # <<<<<<<<<<<<<<
@@ -3903,7 +3939,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 3;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":204
+  /* "fastgm/sm4.pyx":212
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[2]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[3]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[4]))             # <<<<<<<<<<<<<<
@@ -3913,7 +3949,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 4;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":205
+  /* "fastgm/sm4.pyx":213
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[3]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[4]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[5]))             # <<<<<<<<<<<<<<
@@ -3923,7 +3959,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 5;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":206
+  /* "fastgm/sm4.pyx":214
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[4]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[5]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[6]))             # <<<<<<<<<<<<<<
@@ -3933,7 +3969,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 6;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":207
+  /* "fastgm/sm4.pyx":215
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[5]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[6]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[7]))             # <<<<<<<<<<<<<<
@@ -3943,7 +3979,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 7;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":208
+  /* "fastgm/sm4.pyx":216
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[6]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[7]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[8]))             # <<<<<<<<<<<<<<
@@ -3953,7 +3989,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 8;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":209
+  /* "fastgm/sm4.pyx":217
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[7]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[8]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[9]))             # <<<<<<<<<<<<<<
@@ -3963,7 +3999,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 9;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":210
+  /* "fastgm/sm4.pyx":218
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[8]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[9]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[10]))             # <<<<<<<<<<<<<<
@@ -3973,7 +4009,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 10;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":211
+  /* "fastgm/sm4.pyx":219
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[9]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[10]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[11]))             # <<<<<<<<<<<<<<
@@ -3983,7 +4019,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 11;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":212
+  /* "fastgm/sm4.pyx":220
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[10]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[11]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[12]))             # <<<<<<<<<<<<<<
@@ -3993,7 +4029,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 12;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":213
+  /* "fastgm/sm4.pyx":221
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[11]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[12]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[13]))             # <<<<<<<<<<<<<<
@@ -4003,7 +4039,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 13;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":214
+  /* "fastgm/sm4.pyx":222
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[12]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[13]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[14]))             # <<<<<<<<<<<<<<
@@ -4013,7 +4049,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 14;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":215
+  /* "fastgm/sm4.pyx":223
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[13]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[14]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[15]))             # <<<<<<<<<<<<<<
@@ -4023,7 +4059,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 15;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":216
+  /* "fastgm/sm4.pyx":224
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[14]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[15]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[16]))             # <<<<<<<<<<<<<<
@@ -4033,7 +4069,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 16;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":217
+  /* "fastgm/sm4.pyx":225
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[15]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[16]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[17]))             # <<<<<<<<<<<<<<
@@ -4043,7 +4079,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 17;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":218
+  /* "fastgm/sm4.pyx":226
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[16]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[17]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[18]))             # <<<<<<<<<<<<<<
@@ -4053,7 +4089,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 18;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":219
+  /* "fastgm/sm4.pyx":227
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[17]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[18]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[19]))             # <<<<<<<<<<<<<<
@@ -4063,7 +4099,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 19;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":220
+  /* "fastgm/sm4.pyx":228
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[18]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[19]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[20]))             # <<<<<<<<<<<<<<
@@ -4073,7 +4109,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 20;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":221
+  /* "fastgm/sm4.pyx":229
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[19]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[20]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[21]))             # <<<<<<<<<<<<<<
@@ -4083,7 +4119,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 21;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":222
+  /* "fastgm/sm4.pyx":230
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[20]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[21]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[22]))             # <<<<<<<<<<<<<<
@@ -4093,7 +4129,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 22;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":223
+  /* "fastgm/sm4.pyx":231
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[21]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[22]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[23]))             # <<<<<<<<<<<<<<
@@ -4103,7 +4139,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 23;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":224
+  /* "fastgm/sm4.pyx":232
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[22]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[23]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[24]))             # <<<<<<<<<<<<<<
@@ -4113,7 +4149,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 24;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":225
+  /* "fastgm/sm4.pyx":233
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[23]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[24]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[25]))             # <<<<<<<<<<<<<<
@@ -4123,7 +4159,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 25;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":226
+  /* "fastgm/sm4.pyx":234
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[24]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[25]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[26]))             # <<<<<<<<<<<<<<
@@ -4133,7 +4169,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 26;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":227
+  /* "fastgm/sm4.pyx":235
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[25]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[26]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[27]))             # <<<<<<<<<<<<<<
@@ -4143,7 +4179,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 27;
   __pyx_v_x1 = (__pyx_v_x2 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x3 ^ __pyx_v_x4) ^ __pyx_v_x0) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":228
+  /* "fastgm/sm4.pyx":236
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[26]))
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[27]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[28]))             # <<<<<<<<<<<<<<
@@ -4153,7 +4189,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 28;
   __pyx_v_x2 = (__pyx_v_x3 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x4 ^ __pyx_v_x0) ^ __pyx_v_x1) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":229
+  /* "fastgm/sm4.pyx":237
  *     x1 = x2 ^ SM4_L32(SM4_S32(x3 ^ x4 ^ x0 ^ key[27]))
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[28]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[29]))             # <<<<<<<<<<<<<<
@@ -4163,7 +4199,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 29;
   __pyx_v_x3 = (__pyx_v_x4 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x0 ^ __pyx_v_x1) ^ __pyx_v_x2) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":230
+  /* "fastgm/sm4.pyx":238
  *     x2 = x3 ^ SM4_L32(SM4_S32(x4 ^ x0 ^ x1 ^ key[28]))
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[29]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[30]))             # <<<<<<<<<<<<<<
@@ -4173,7 +4209,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 30;
   __pyx_v_x4 = (__pyx_v_x0 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x1 ^ __pyx_v_x2) ^ __pyx_v_x3) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":231
+  /* "fastgm/sm4.pyx":239
  *     x3 = x4 ^ SM4_L32(SM4_S32(x0 ^ x1 ^ x2 ^ key[29]))
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[30]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[31]))             # <<<<<<<<<<<<<<
@@ -4183,7 +4219,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __pyx_t_1 = 31;
   __pyx_v_x0 = (__pyx_v_x1 ^ __pyx_f_6fastgm_3sm4_SM4_L32(__pyx_f_6fastgm_3sm4_SM4_S32((((__pyx_v_x2 ^ __pyx_v_x3) ^ __pyx_v_x4) ^ (*((unsigned int *) ( /* dim=0 */ (__pyx_v_key.data + __pyx_t_1 * __pyx_v_key.strides[0]) )))))));
 
-  /* "fastgm/sm4.pyx":232
+  /* "fastgm/sm4.pyx":240
  *     x4 = x0 ^ SM4_L32(SM4_S32(x1 ^ x2 ^ x3 ^ key[30]))
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[31]))
  *     SM4_PUTU32(outbuf, out_offset, x0)             # <<<<<<<<<<<<<<
@@ -4192,7 +4228,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_f_6fastgm_3sm4_SM4_PUTU32(__pyx_v_outbuf, __pyx_v_out_offset, __pyx_v_x0);
 
-  /* "fastgm/sm4.pyx":233
+  /* "fastgm/sm4.pyx":241
  *     x0 = x1 ^ SM4_L32(SM4_S32(x2 ^ x3 ^ x4 ^ key[31]))
  *     SM4_PUTU32(outbuf, out_offset, x0)
  *     SM4_PUTU32(outbuf, out_offset + 4, x4)             # <<<<<<<<<<<<<<
@@ -4201,7 +4237,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_f_6fastgm_3sm4_SM4_PUTU32(__pyx_v_outbuf, (__pyx_v_out_offset + 4), __pyx_v_x4);
 
-  /* "fastgm/sm4.pyx":234
+  /* "fastgm/sm4.pyx":242
  *     SM4_PUTU32(outbuf, out_offset, x0)
  *     SM4_PUTU32(outbuf, out_offset + 4, x4)
  *     SM4_PUTU32(outbuf, out_offset + 8, x3)             # <<<<<<<<<<<<<<
@@ -4210,7 +4246,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_f_6fastgm_3sm4_SM4_PUTU32(__pyx_v_outbuf, (__pyx_v_out_offset + 8), __pyx_v_x3);
 
-  /* "fastgm/sm4.pyx":235
+  /* "fastgm/sm4.pyx":243
  *     SM4_PUTU32(outbuf, out_offset + 4, x4)
  *     SM4_PUTU32(outbuf, out_offset + 8, x3)
  *     SM4_PUTU32(outbuf, out_offset + 12, x2)             # <<<<<<<<<<<<<<
@@ -4219,7 +4255,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_f_6fastgm_3sm4_SM4_PUTU32(__pyx_v_outbuf, (__pyx_v_out_offset + 12), __pyx_v_x2);
 
-  /* "fastgm/sm4.pyx":192
+  /* "fastgm/sm4.pyx":200
  * @cython.boundscheck(False) # turn off bounds-checking for entire function
  * @cython.wraparound(False)  # turn off negative index wrapping for entire function
  * cdef void sm4_encrypt(const unsigned char[:] inbuf, unsigned long in_offset,             # <<<<<<<<<<<<<<
@@ -4231,7 +4267,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":237
+/* "fastgm/sm4.pyx":245
  *     SM4_PUTU32(outbuf, out_offset + 12, x2)
  * 
  * cdef void sm4_decrypt(const unsigned char[:] inbuf, unsigned long in_offset,             # <<<<<<<<<<<<<<
@@ -4243,7 +4279,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("sm4_decrypt", 0);
 
-  /* "fastgm/sm4.pyx":240
+  /* "fastgm/sm4.pyx":248
  *                 unsigned char[:] outbuf, unsigned long out_offset,
  *                 unsigned int[:] key):
  *     sm4_encrypt(inbuf, in_offset, outbuf, out_offset, key)             # <<<<<<<<<<<<<<
@@ -4252,7 +4288,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt(__Pyx_memviewslice __pyx_v_inbuf, u
  */
   __pyx_f_6fastgm_3sm4_sm4_encrypt(__pyx_v_inbuf, __pyx_v_in_offset, __pyx_v_outbuf, __pyx_v_out_offset, __pyx_v_key);
 
-  /* "fastgm/sm4.pyx":237
+  /* "fastgm/sm4.pyx":245
  *     SM4_PUTU32(outbuf, out_offset + 12, x2)
  * 
  * cdef void sm4_decrypt(const unsigned char[:] inbuf, unsigned long in_offset,             # <<<<<<<<<<<<<<
@@ -4264,7 +4300,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt(__Pyx_memviewslice __pyx_v_inbuf, u
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":242
+/* "fastgm/sm4.pyx":250
  *     sm4_encrypt(inbuf, in_offset, outbuf, out_offset, key)
  * 
  * cdef void sm4_encrypt_ecb(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4287,7 +4323,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sm4_encrypt_ecb", 0);
 
-  /* "fastgm/sm4.pyx":246
+  /* "fastgm/sm4.pyx":254
  *                     unsigned int[:] key):
  * 
  *     cdef unsigned long buf_len = len(inbuf)             # <<<<<<<<<<<<<<
@@ -4297,7 +4333,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_inbuf); 
   __pyx_v_buf_len = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":247
+  /* "fastgm/sm4.pyx":255
  * 
  *     cdef unsigned long buf_len = len(inbuf)
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)             # <<<<<<<<<<<<<<
@@ -4324,12 +4360,12 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
     __pyx_L3_bool_binop_done:;
     if (unlikely(!__pyx_t_2)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 247, __pyx_L1_error)
+      __PYX_ERR(0, 255, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":249
+  /* "fastgm/sm4.pyx":257
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
@@ -4341,7 +4377,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=16) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "fastgm/sm4.pyx":250
+    /* "fastgm/sm4.pyx":258
  * 
  *     for i in range(0, buf_len, 16):
  *         sm4_encrypt(inbuf, i, outbuf, i, key)             # <<<<<<<<<<<<<<
@@ -4351,7 +4387,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
     __pyx_f_6fastgm_3sm4_sm4_encrypt(__pyx_v_inbuf, __pyx_v_i, __pyx_v_outbuf, __pyx_v_i, __pyx_v_key);
   }
 
-  /* "fastgm/sm4.pyx":242
+  /* "fastgm/sm4.pyx":250
  *     sm4_encrypt(inbuf, in_offset, outbuf, out_offset, key)
  * 
  * cdef void sm4_encrypt_ecb(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4367,7 +4403,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":252
+/* "fastgm/sm4.pyx":260
  *         sm4_encrypt(inbuf, i, outbuf, i, key)
  * 
  * cdef void sm4_decrypt_ecb(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4390,7 +4426,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sm4_decrypt_ecb", 0);
 
-  /* "fastgm/sm4.pyx":256
+  /* "fastgm/sm4.pyx":264
  *                     unsigned int[:] key):
  * 
  *     cdef unsigned long buf_len = len(inbuf)             # <<<<<<<<<<<<<<
@@ -4400,7 +4436,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_inbuf); 
   __pyx_v_buf_len = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":257
+  /* "fastgm/sm4.pyx":265
  * 
  *     cdef unsigned long buf_len = len(inbuf)
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)             # <<<<<<<<<<<<<<
@@ -4427,12 +4463,12 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
     __pyx_L3_bool_binop_done:;
     if (unlikely(!__pyx_t_2)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 257, __pyx_L1_error)
+      __PYX_ERR(0, 265, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":259
+  /* "fastgm/sm4.pyx":267
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
@@ -4444,7 +4480,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=16) {
     __pyx_v_i = __pyx_t_6;
 
-    /* "fastgm/sm4.pyx":260
+    /* "fastgm/sm4.pyx":268
  * 
  *     for i in range(0, buf_len, 16):
  *         sm4_decrypt(inbuf, i, outbuf, i, key)             # <<<<<<<<<<<<<<
@@ -4454,7 +4490,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
     __pyx_f_6fastgm_3sm4_sm4_decrypt(__pyx_v_inbuf, __pyx_v_i, __pyx_v_outbuf, __pyx_v_i, __pyx_v_key);
   }
 
-  /* "fastgm/sm4.pyx":252
+  /* "fastgm/sm4.pyx":260
  *         sm4_encrypt(inbuf, i, outbuf, i, key)
  * 
  * cdef void sm4_decrypt_ecb(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4470,7 +4506,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__Pyx_memviewslice __pyx_v_inbu
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":262
+/* "fastgm/sm4.pyx":270
  *         sm4_decrypt(inbuf, i, outbuf, i, key)
  * 
  * cdef void sm4_encrypt_cbc(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4509,7 +4545,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sm4_encrypt_cbc", 0);
 
-  /* "fastgm/sm4.pyx":267
+  /* "fastgm/sm4.pyx":275
  *                           unsigned int[:] key):
  * 
  *     cdef unsigned int buf_len = len(inbuf)             # <<<<<<<<<<<<<<
@@ -4519,7 +4555,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
   __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_inbuf); 
   __pyx_v_buf_len = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":268
+  /* "fastgm/sm4.pyx":276
  * 
  *     cdef unsigned int buf_len = len(inbuf)
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)             # <<<<<<<<<<<<<<
@@ -4546,12 +4582,12 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
     __pyx_L3_bool_binop_done:;
     if (unlikely(!__pyx_t_2)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 268, __pyx_L1_error)
+      __PYX_ERR(0, 276, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":270
+  /* "fastgm/sm4.pyx":278
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
  * 
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()             # <<<<<<<<<<<<<<
@@ -4576,10 +4612,10 @@ static void __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 270, __pyx_L1_error)
+    __PYX_ERR(0, 278, __pyx_L1_error)
 }
 
-__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 270, __pyx_L1_error)
+__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 278, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
   __pyx_t_4.memview = NULL;
   __pyx_t_4.data = NULL;
@@ -4587,16 +4623,16 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastgm/sm4.pyx":272
+  /* "fastgm/sm4.pyx":280
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
  *         for _i in range(16):
  *             outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]
  */
-  __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_v_buf_len); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_v_buf_len); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 272, __pyx_L1_error)
+  __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -4607,16 +4643,16 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
   __Pyx_GIVEREF(__pyx_int_16);
   PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_int_16);
   __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 280, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   if (likely(PyList_CheckExact(__pyx_t_7)) || PyTuple_CheckExact(__pyx_t_7)) {
     __pyx_t_8 = __pyx_t_7; __Pyx_INCREF(__pyx_t_8); __pyx_t_9 = 0;
     __pyx_t_10 = NULL;
   } else {
-    __pyx_t_9 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 272, __pyx_L1_error)
+    __pyx_t_9 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 272, __pyx_L1_error)
+    __pyx_t_10 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 280, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   for (;;) {
@@ -4624,17 +4660,17 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       if (likely(PyList_CheckExact(__pyx_t_8))) {
         if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_8)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 280, __pyx_L1_error)
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 280, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
       } else {
         if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 280, __pyx_L1_error)
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 272, __pyx_L1_error)
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 280, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
       }
@@ -4644,7 +4680,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 272, __pyx_L1_error)
+          else __PYX_ERR(0, 280, __pyx_L1_error)
         }
         break;
       }
@@ -4653,7 +4689,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "fastgm/sm4.pyx":273
+    /* "fastgm/sm4.pyx":281
  * 
  *     for i in range(0, buf_len, 16):
  *         for _i in range(16):             # <<<<<<<<<<<<<<
@@ -4661,21 +4697,21 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
  *         sm4_encrypt(outbuf, i, outbuf, i, key)
  */
     for (__pyx_t_11 = 0; __pyx_t_11 < 16; __pyx_t_11+=1) {
-      __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_11); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 273, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_11); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 281, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_XDECREF_SET(__pyx_v__i, __pyx_t_7);
       __pyx_t_7 = 0;
 
-      /* "fastgm/sm4.pyx":274
+      /* "fastgm/sm4.pyx":282
  *     for i in range(0, buf_len, 16):
  *         for _i in range(16):
  *             outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]             # <<<<<<<<<<<<<<
  *         sm4_encrypt(outbuf, i, outbuf, i, key)
  *         tmp_iv = outbuf[i:i + 16]
  */
-      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 274, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_13 = __pyx_t_12;
       __pyx_t_5 = -1;
@@ -4685,9 +4721,9 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_13 >= __pyx_v_inbuf.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 274, __pyx_L1_error)
+        __PYX_ERR(0, 282, __pyx_L1_error)
       }
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_v__i); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_v__i); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
       __pyx_t_15 = __pyx_t_14;
       __pyx_t_5 = -1;
       if (__pyx_t_15 < 0) {
@@ -4696,11 +4732,11 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_15 >= __pyx_v_tmp_iv.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 274, __pyx_L1_error)
+        __PYX_ERR(0, 282, __pyx_L1_error)
       }
-      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 274, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 274, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 282, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_17 = __pyx_t_16;
       __pyx_t_5 = -1;
@@ -4710,33 +4746,33 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_17 >= __pyx_v_outbuf.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 274, __pyx_L1_error)
+        __PYX_ERR(0, 282, __pyx_L1_error)
       }
       *((unsigned char *) ( /* dim=0 */ (__pyx_v_outbuf.data + __pyx_t_17 * __pyx_v_outbuf.strides[0]) )) = ((*((unsigned char const  *) ( /* dim=0 */ (__pyx_v_inbuf.data + __pyx_t_13 * __pyx_v_inbuf.strides[0]) ))) ^ (*((unsigned char *) ( /* dim=0 */ (__pyx_v_tmp_iv.data + __pyx_t_15 * __pyx_v_tmp_iv.strides[0]) ))));
     }
 
-    /* "fastgm/sm4.pyx":275
+    /* "fastgm/sm4.pyx":283
  *         for _i in range(16):
  *             outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]
  *         sm4_encrypt(outbuf, i, outbuf, i, key)             # <<<<<<<<<<<<<<
  *         tmp_iv = outbuf[i:i + 16]
  * 
  */
-    __pyx_t_18 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_18 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
-    __pyx_t_19 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_19 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 275, __pyx_L1_error)
+    __pyx_t_18 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_18 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 283, __pyx_L1_error)
+    __pyx_t_19 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_19 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 283, __pyx_L1_error)
     __pyx_f_6fastgm_3sm4_sm4_encrypt(__pyx_v_outbuf, __pyx_t_18, __pyx_v_outbuf, __pyx_t_19, __pyx_v_key);
 
-    /* "fastgm/sm4.pyx":276
+    /* "fastgm/sm4.pyx":284
  *             outbuf[_i+i] = inbuf[_i+i] ^ tmp_iv[_i]
  *         sm4_encrypt(outbuf, i, outbuf, i, key)
  *         tmp_iv = outbuf[i:i + 16]             # <<<<<<<<<<<<<<
  * 
  * cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,
  */
-    __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 284, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 276, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 284, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_20.data = __pyx_v_outbuf.data;
     __pyx_t_20.memview = __pyx_v_outbuf.memview;
@@ -4756,7 +4792,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 276, __pyx_L1_error)
+    __PYX_ERR(0, 284, __pyx_L1_error)
 }
 
 __PYX_XDEC_MEMVIEW(&__pyx_v_tmp_iv, 1);
@@ -4764,7 +4800,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_tmp_iv, 1);
     __pyx_t_20.memview = NULL;
     __pyx_t_20.data = NULL;
 
-    /* "fastgm/sm4.pyx":272
+    /* "fastgm/sm4.pyx":280
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
@@ -4774,7 +4810,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_tmp_iv, 1);
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "fastgm/sm4.pyx":262
+  /* "fastgm/sm4.pyx":270
  *         sm4_decrypt(inbuf, i, outbuf, i, key)
  * 
  * cdef void sm4_encrypt_cbc(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4798,7 +4834,7 @@ __PYX_XDEC_MEMVIEW(&__pyx_v_tmp_iv, 1);
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":278
+/* "fastgm/sm4.pyx":286
  *         tmp_iv = outbuf[i:i + 16]
  * 
  * cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -4837,7 +4873,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sm4_decrypt_cbc", 0);
 
-  /* "fastgm/sm4.pyx":283
+  /* "fastgm/sm4.pyx":291
  *                           unsigned int[:] key):
  * 
  *     cdef unsigned int buf_len = len(inbuf)             # <<<<<<<<<<<<<<
@@ -4847,7 +4883,7 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
   __pyx_t_1 = __Pyx_MemoryView_Len(__pyx_v_inbuf); 
   __pyx_v_buf_len = __pyx_t_1;
 
-  /* "fastgm/sm4.pyx":284
+  /* "fastgm/sm4.pyx":292
  * 
  *     cdef unsigned int buf_len = len(inbuf)
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)             # <<<<<<<<<<<<<<
@@ -4874,12 +4910,12 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
     __pyx_L3_bool_binop_done:;
     if (unlikely(!__pyx_t_2)) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 284, __pyx_L1_error)
+      __PYX_ERR(0, 292, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":286
+  /* "fastgm/sm4.pyx":294
  *     assert buf_len >= 16 and buf_len % 16 == 0 and buf_len == len(outbuf)
  * 
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()             # <<<<<<<<<<<<<<
@@ -4904,10 +4940,10 @@ static void __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__Pyx_memviewslice __pyx_v_inbu
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 286, __pyx_L1_error)
+    __PYX_ERR(0, 294, __pyx_L1_error)
 }
 
-__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 286, __pyx_L1_error)
+__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 294, __pyx_L1_error)
   __PYX_XDEC_MEMVIEW(&__pyx_t_4, 1);
   __pyx_t_4.memview = NULL;
   __pyx_t_4.data = NULL;
@@ -4915,16 +4951,16 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
 
-  /* "fastgm/sm4.pyx":288
+  /* "fastgm/sm4.pyx":296
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
  *         sm4_decrypt(inbuf, i, outbuf, i, key)
  *         for _i in range(16):
  */
-  __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_v_buf_len); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_From_unsigned_int(__pyx_v_buf_len); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -4935,16 +4971,16 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
   __Pyx_GIVEREF(__pyx_int_16);
   PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_int_16);
   __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 288, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 296, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   if (likely(PyList_CheckExact(__pyx_t_7)) || PyTuple_CheckExact(__pyx_t_7)) {
     __pyx_t_8 = __pyx_t_7; __Pyx_INCREF(__pyx_t_8); __pyx_t_9 = 0;
     __pyx_t_10 = NULL;
   } else {
-    __pyx_t_9 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __pyx_t_9 = -1; __pyx_t_8 = PyObject_GetIter(__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 296, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __pyx_t_10 = Py_TYPE(__pyx_t_8)->tp_iternext; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 296, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   for (;;) {
@@ -4952,17 +4988,17 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       if (likely(PyList_CheckExact(__pyx_t_8))) {
         if (__pyx_t_9 >= PyList_GET_SIZE(__pyx_t_8)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 288, __pyx_L1_error)
+        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 296, __pyx_L1_error)
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 288, __pyx_L1_error)
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 296, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
       } else {
         if (__pyx_t_9 >= PyTuple_GET_SIZE(__pyx_t_8)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 288, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_8, __pyx_t_9); __Pyx_INCREF(__pyx_t_7); __pyx_t_9++; if (unlikely(0 < 0)) __PYX_ERR(0, 296, __pyx_L1_error)
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 288, __pyx_L1_error)
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_8, __pyx_t_9); __pyx_t_9++; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 296, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         #endif
       }
@@ -4972,7 +5008,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 288, __pyx_L1_error)
+          else __PYX_ERR(0, 296, __pyx_L1_error)
         }
         break;
       }
@@ -4981,18 +5017,18 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "fastgm/sm4.pyx":289
+    /* "fastgm/sm4.pyx":297
  * 
  *     for i in range(0, buf_len, 16):
  *         sm4_decrypt(inbuf, i, outbuf, i, key)             # <<<<<<<<<<<<<<
  *         for _i in range(16):
  *             outbuf[_i + i] = outbuf[_i + i] ^ tmp_iv[_i]
  */
-    __pyx_t_11 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_11 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 289, __pyx_L1_error)
-    __pyx_t_12 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_12 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 289, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_11 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 297, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_As_unsigned_long(__pyx_v_i); if (unlikely((__pyx_t_12 == (unsigned long)-1) && PyErr_Occurred())) __PYX_ERR(0, 297, __pyx_L1_error)
     __pyx_f_6fastgm_3sm4_sm4_decrypt(__pyx_v_inbuf, __pyx_t_11, __pyx_v_outbuf, __pyx_t_12, __pyx_v_key);
 
-    /* "fastgm/sm4.pyx":290
+    /* "fastgm/sm4.pyx":298
  *     for i in range(0, buf_len, 16):
  *         sm4_decrypt(inbuf, i, outbuf, i, key)
  *         for _i in range(16):             # <<<<<<<<<<<<<<
@@ -5000,21 +5036,21 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
  *         tmp_iv = inbuf[i:i + 16].copy()
  */
     for (__pyx_t_13 = 0; __pyx_t_13 < 16; __pyx_t_13+=1) {
-      __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_13); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_From_long(__pyx_t_13); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 298, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_XDECREF_SET(__pyx_v__i, __pyx_t_7);
       __pyx_t_7 = 0;
 
-      /* "fastgm/sm4.pyx":291
+      /* "fastgm/sm4.pyx":299
  *         sm4_decrypt(inbuf, i, outbuf, i, key)
  *         for _i in range(16):
  *             outbuf[_i + i] = outbuf[_i + i] ^ tmp_iv[_i]             # <<<<<<<<<<<<<<
  *         tmp_iv = inbuf[i:i + 16].copy()
  * 
  */
-      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 299, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 299, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_15 = __pyx_t_14;
       __pyx_t_5 = -1;
@@ -5024,9 +5060,9 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_15 >= __pyx_v_outbuf.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 291, __pyx_L1_error)
+        __PYX_ERR(0, 299, __pyx_L1_error)
       }
-      __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_v__i); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_v__i); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 299, __pyx_L1_error)
       __pyx_t_17 = __pyx_t_16;
       __pyx_t_5 = -1;
       if (__pyx_t_17 < 0) {
@@ -5035,11 +5071,11 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_17 >= __pyx_v_tmp_iv.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 291, __pyx_L1_error)
+        __PYX_ERR(0, 299, __pyx_L1_error)
       }
-      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_7 = PyNumber_Add(__pyx_v__i, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 299, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_18 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_18 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_18 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_18 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 299, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_19 = __pyx_t_18;
       __pyx_t_5 = -1;
@@ -5049,22 +5085,22 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
       } else if (unlikely(__pyx_t_19 >= __pyx_v_outbuf.shape[0])) __pyx_t_5 = 0;
       if (unlikely(__pyx_t_5 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_5);
-        __PYX_ERR(0, 291, __pyx_L1_error)
+        __PYX_ERR(0, 299, __pyx_L1_error)
       }
       *((unsigned char *) ( /* dim=0 */ (__pyx_v_outbuf.data + __pyx_t_19 * __pyx_v_outbuf.strides[0]) )) = ((*((unsigned char *) ( /* dim=0 */ (__pyx_v_outbuf.data + __pyx_t_15 * __pyx_v_outbuf.strides[0]) ))) ^ (*((unsigned char *) ( /* dim=0 */ (__pyx_v_tmp_iv.data + __pyx_t_17 * __pyx_v_tmp_iv.strides[0]) ))));
     }
 
-    /* "fastgm/sm4.pyx":292
+    /* "fastgm/sm4.pyx":300
  *         for _i in range(16):
  *             outbuf[_i + i] = outbuf[_i + i] ^ tmp_iv[_i]
  *         tmp_iv = inbuf[i:i + 16].copy()             # <<<<<<<<<<<<<<
  * 
  * def sm4_key_new():
  */
-    __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 292, __pyx_L1_error)
-    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 292, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_16 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_i, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 300, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 292, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 300, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_t_20.data = __pyx_v_inbuf.data;
     __pyx_t_20.memview = __pyx_v_inbuf.memview;
@@ -5084,10 +5120,10 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_4); if (unlik
     0,
     1) < 0))
 {
-    __PYX_ERR(0, 292, __pyx_L1_error)
+    __PYX_ERR(0, 300, __pyx_L1_error)
 }
 
-__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_20); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 292, __pyx_L1_error)
+__pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_20); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 300, __pyx_L1_error)
     __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
     __pyx_t_20.memview = NULL;
     __pyx_t_20.data = NULL;
@@ -5096,7 +5132,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_20); if (unli
     __pyx_t_6.memview = NULL;
     __pyx_t_6.data = NULL;
 
-    /* "fastgm/sm4.pyx":288
+    /* "fastgm/sm4.pyx":296
  *     cdef unsigned char[:] tmp_iv = iv[0:16].copy()
  * 
  *     for i in range(0, buf_len, 16):             # <<<<<<<<<<<<<<
@@ -5106,7 +5142,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_20); if (unli
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-  /* "fastgm/sm4.pyx":278
+  /* "fastgm/sm4.pyx":286
  *         tmp_iv = outbuf[i:i + 16]
  * 
  * cdef void sm4_decrypt_cbc(const unsigned char[:] inbuf,             # <<<<<<<<<<<<<<
@@ -5130,7 +5166,7 @@ __pyx_t_6 = __pyx_memoryview_copy_slice_dc_unsigned_char_c(__pyx_t_20); if (unli
   __Pyx_RefNannyFinishContext();
 }
 
-/* "fastgm/sm4.pyx":294
+/* "fastgm/sm4.pyx":302
  *         tmp_iv = inbuf[i:i + 16].copy()
  * 
  * def sm4_key_new():             # <<<<<<<<<<<<<<
@@ -5163,7 +5199,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_sm4_key_new(CYTHON_UNUSED PyObject *__pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("sm4_key_new", 0);
 
-  /* "fastgm/sm4.pyx":295
+  /* "fastgm/sm4.pyx":303
  * 
  * def sm4_key_new():
  *     return array.array('I', [0] * SM4_NUM_ROUNDS)             # <<<<<<<<<<<<<<
@@ -5171,7 +5207,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_sm4_key_new(CYTHON_UNUSED PyObject *__pyx
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(1 * (__pyx_v_6fastgm_3sm4_SM4_NUM_ROUNDS)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(1 * (__pyx_v_6fastgm_3sm4_SM4_NUM_ROUNDS)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   { Py_ssize_t __pyx_temp;
     for (__pyx_temp=0; __pyx_temp < __pyx_v_6fastgm_3sm4_SM4_NUM_ROUNDS; __pyx_temp++) {
@@ -5180,22 +5216,22 @@ static PyObject *__pyx_pf_6fastgm_3sm4_sm4_key_new(CYTHON_UNUSED PyObject *__pyx
       PyList_SET_ITEM(__pyx_t_1, __pyx_temp, __pyx_int_0);
     }
   }
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_INCREF(__pyx_n_u_I);
-  __Pyx_GIVEREF(__pyx_n_u_I);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_n_u_I);
+  __Pyx_INCREF(__pyx_n_s_I);
+  __Pyx_GIVEREF(__pyx_n_s_I);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_I);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 303, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":294
+  /* "fastgm/sm4.pyx":302
  *         tmp_iv = inbuf[i:i + 16].copy()
  * 
  * def sm4_key_new():             # <<<<<<<<<<<<<<
@@ -5215,7 +5251,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_sm4_key_new(CYTHON_UNUSED PyObject *__pyx
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":298
+/* "fastgm/sm4.pyx":306
  * 
  * 
  * def zero_pad(data):             # <<<<<<<<<<<<<<
@@ -5252,36 +5288,36 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("zero_pad", 0);
 
-  /* "fastgm/sm4.pyx":299
+  /* "fastgm/sm4.pyx":307
  * 
  * def zero_pad(data):
  *     buf_len = len(data)             # <<<<<<<<<<<<<<
  * 
  *     if buf_len % 16 == 0:
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_data); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 299, __pyx_L1_error)
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 299, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_data); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 307, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_buf_len = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":301
+  /* "fastgm/sm4.pyx":309
  *     buf_len = len(data)
  * 
  *     if buf_len % 16 == 0:             # <<<<<<<<<<<<<<
  *         return data
  *     else:
  */
-  __pyx_t_2 = __Pyx_PyInt_RemainderObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_RemainderObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 301, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 309, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   if (__pyx_t_4) {
 
-    /* "fastgm/sm4.pyx":302
+    /* "fastgm/sm4.pyx":310
  * 
  *     if buf_len % 16 == 0:
  *         return data             # <<<<<<<<<<<<<<
@@ -5293,7 +5329,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
     __pyx_r = __pyx_v_data;
     goto __pyx_L0;
 
-    /* "fastgm/sm4.pyx":301
+    /* "fastgm/sm4.pyx":309
  *     buf_len = len(data)
  * 
  *     if buf_len % 16 == 0:             # <<<<<<<<<<<<<<
@@ -5302,7 +5338,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
  */
   }
 
-  /* "fastgm/sm4.pyx":304
+  /* "fastgm/sm4.pyx":312
  *         return data
  *     else:
  *         new_len = (buf_len // 16 + 1) * 16             # <<<<<<<<<<<<<<
@@ -5310,18 +5346,18 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
  * 
  */
   /*else*/ {
-    __pyx_t_3 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_Multiply(__pyx_t_2, __pyx_int_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_2, __pyx_int_16); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 312, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_new_len = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "fastgm/sm4.pyx":305
+    /* "fastgm/sm4.pyx":313
  *     else:
  *         new_len = (buf_len // 16 + 1) * 16
  *         return data + b'\0' * (new_len - buf_len)             # <<<<<<<<<<<<<<
@@ -5329,12 +5365,12 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
  * def pkcs7_pad(data):
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 305, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_Add(__pyx_v_data, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 305, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Add(__pyx_v_data, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 313, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -5342,7 +5378,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
     goto __pyx_L0;
   }
 
-  /* "fastgm/sm4.pyx":298
+  /* "fastgm/sm4.pyx":306
  * 
  * 
  * def zero_pad(data):             # <<<<<<<<<<<<<<
@@ -5364,7 +5400,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_2zero_pad(CYTHON_UNUSED PyObject *__pyx_s
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":307
+/* "fastgm/sm4.pyx":315
  *         return data + b'\0' * (new_len - buf_len)
  * 
  * def pkcs7_pad(data):             # <<<<<<<<<<<<<<
@@ -5396,72 +5432,121 @@ static PyObject *__pyx_pf_6fastgm_3sm4_4pkcs7_pad(CYTHON_UNUSED PyObject *__pyx_
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  int __pyx_t_6;
+  PyObject *__pyx_t_7 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("pkcs7_pad", 0);
 
-  /* "fastgm/sm4.pyx":308
+  /* "fastgm/sm4.pyx":316
  * 
  * def pkcs7_pad(data):
  *     buf_len = len(data)             # <<<<<<<<<<<<<<
  * 
  *     new_len = (buf_len // 16 + 1) * 16
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_data); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 308, __pyx_L1_error)
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_data); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 316, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 316, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_buf_len = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":310
+  /* "fastgm/sm4.pyx":318
  *     buf_len = len(data)
  * 
  *     new_len = (buf_len // 16 + 1) * 16             # <<<<<<<<<<<<<<
- *     return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)
+ *     return data + struct.pack("B", new_len - buf_len) * (new_len - buf_len)
  * 
  */
-  __pyx_t_2 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_FloorDivideObjC(__pyx_v_buf_len, __pyx_int_16, 16, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 310, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_t_2, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_int_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_int_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 318, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_new_len = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":311
+  /* "fastgm/sm4.pyx":319
  * 
  *     new_len = (buf_len // 16 + 1) * 16
- *     return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)             # <<<<<<<<<<<<<<
+ *     return data + struct.pack("B", new_len - buf_len) * (new_len - buf_len)             # <<<<<<<<<<<<<<
  * 
  * class SM4:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_to_bytes); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_struct); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 319, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_pack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 319, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_v_data, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 311, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 319, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = NULL;
+  __pyx_t_6 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_4, function);
+      __pyx_t_6 = 1;
+    }
+  }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_4)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_n_s_B, __pyx_t_3};
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 319, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_5, __pyx_n_s_B, __pyx_t_3};
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_6, 2+__pyx_t_6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 319, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  } else
+  #endif
+  {
+    __pyx_t_7 = PyTuple_New(2+__pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 319, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
+    if (__pyx_t_5) {
+      __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
+    }
+    __Pyx_INCREF(__pyx_n_s_B);
+    __Pyx_GIVEREF(__pyx_n_s_B);
+    PyTuple_SET_ITEM(__pyx_t_7, 0+__pyx_t_6, __pyx_n_s_B);
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_7, 1+__pyx_t_6, __pyx_t_3);
+    __pyx_t_3 = 0;
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 319, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_r = __pyx_t_3;
-  __pyx_t_3 = 0;
+  __pyx_t_4 = PyNumber_Subtract(__pyx_v_new_len, __pyx_v_buf_len); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyNumber_Add(__pyx_v_data, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 319, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_r = __pyx_t_4;
+  __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":307
+  /* "fastgm/sm4.pyx":315
  *         return data + b'\0' * (new_len - buf_len)
  * 
  * def pkcs7_pad(data):             # <<<<<<<<<<<<<<
@@ -5474,6 +5559,8 @@ static PyObject *__pyx_pf_6fastgm_3sm4_4pkcs7_pad(CYTHON_UNUSED PyObject *__pyx_
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_AddTraceback("fastgm.sm4.pkcs7_pad", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -5484,7 +5571,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_4pkcs7_pad(CYTHON_UNUSED PyObject *__pyx_
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":314
+/* "fastgm/sm4.pyx":322
  * 
  * class SM4:
  *     def __init__(self, key, padding='zero'):             # <<<<<<<<<<<<<<
@@ -5494,7 +5581,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_4pkcs7_pad(CYTHON_UNUSED PyObject *__pyx_
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6fastgm_3sm4_3SM4___init__[] = "SM4.__init__(self, key, padding=u'zero')\n\n        key: \345\212\240\345\257\206key\357\274\214\351\225\277\345\272\246\344\270\27216\347\232\204bytes\344\270\262\343\200\202\345\217\257\344\273\245\351\200\232\350\277\207SM4.generate_key()\346\226\271\346\263\225\347\224\237\346\210\220\343\200\202\n        padding: padding\346\226\271\345\274\217\357\274\214\345\217\257\351\200\211zero\344\270\216pkcs7\357\274\214\351\273\230\350\256\244\344\270\272zero\n        ";
+static char __pyx_doc_6fastgm_3sm4_3SM4___init__[] = "SM4.__init__(self, key, padding='zero')\n\n        key: \345\212\240\345\257\206key\357\274\214\351\225\277\345\272\246\344\270\27216\347\232\204bytes\344\270\262\343\200\202\345\217\257\344\273\245\351\200\232\350\277\207SM4.generate_key()\346\226\271\346\263\225\347\224\237\346\210\220\343\200\202\n        padding: padding\346\226\271\345\274\217\357\274\214\345\217\257\351\200\211zero\344\270\216pkcs7\357\274\214\351\273\230\350\256\244\344\270\272zero\n        ";
 static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_1__init__ = {"__init__", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_1__init__, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4___init__};
 static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
@@ -5509,7 +5596,7 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyOb
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_key,&__pyx_n_s_padding,0};
     PyObject* values[3] = {0,0,0};
-    values[2] = ((PyObject *)((PyObject*)__pyx_n_u_zero));
+    values[2] = ((PyObject *)((PyObject*)__pyx_n_s_zero));
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
@@ -5532,7 +5619,7 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyOb
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_key)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 3, 1); __PYX_ERR(0, 314, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 3, 1); __PYX_ERR(0, 322, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -5542,7 +5629,7 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyOb
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 314, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) __PYX_ERR(0, 322, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -5560,7 +5647,7 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_1__init__(PyObject *__pyx_self, PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 314, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 322, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastgm.sm4.SM4.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -5585,7 +5672,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4___init__(CYTHON_UNUSED PyObject *__p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "fastgm/sm4.pyx":319
+  /* "fastgm/sm4.pyx":327
  *         padding: paddingzeropkcs7zero
  *         """
  *         assert len(key) == 16             # <<<<<<<<<<<<<<
@@ -5594,42 +5681,42 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4___init__(CYTHON_UNUSED PyObject *__p
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_1 = PyObject_Length(__pyx_v_key); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 319, __pyx_L1_error)
+    __pyx_t_1 = PyObject_Length(__pyx_v_key); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 327, __pyx_L1_error)
     if (unlikely(!((__pyx_t_1 == 16) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      __PYX_ERR(0, 319, __pyx_L1_error)
+      __PYX_ERR(0, 327, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":320
+  /* "fastgm/sm4.pyx":328
  *         """
  *         assert len(key) == 16
  *         self._raw_key = key             # <<<<<<<<<<<<<<
  *         self._enc_key = None
  *         self._dec_key = None
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_raw_key, __pyx_v_key) < 0) __PYX_ERR(0, 320, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_raw_key, __pyx_v_key) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":321
+  /* "fastgm/sm4.pyx":329
  *         assert len(key) == 16
  *         self._raw_key = key
  *         self._enc_key = None             # <<<<<<<<<<<<<<
  *         self._dec_key = None
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_enc_key, Py_None) < 0) __PYX_ERR(0, 321, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_enc_key, Py_None) < 0) __PYX_ERR(0, 329, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":322
+  /* "fastgm/sm4.pyx":330
  *         self._raw_key = key
  *         self._enc_key = None
  *         self._dec_key = None             # <<<<<<<<<<<<<<
  * 
  *         assert padding in ('zero', 'pkcs7'), 'paddingzeropkcs7'
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_dec_key, Py_None) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_dec_key, Py_None) < 0) __PYX_ERR(0, 330, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":324
+  /* "fastgm/sm4.pyx":332
  *         self._dec_key = None
  * 
  *         assert padding in ('zero', 'pkcs7'), 'paddingzeropkcs7'             # <<<<<<<<<<<<<<
@@ -5640,33 +5727,33 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4___init__(CYTHON_UNUSED PyObject *__p
   if (unlikely(!Py_OptimizeFlag)) {
     __Pyx_INCREF(__pyx_v_padding);
     __pyx_t_2 = __pyx_v_padding;
-    __pyx_t_4 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_zero, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_t_2, __pyx_n_s_zero, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 332, __pyx_L1_error)
     if (!__pyx_t_4) {
     } else {
       __pyx_t_3 = __pyx_t_4;
       goto __pyx_L3_bool_binop_done;
     }
-    __pyx_t_4 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_pkcs7, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_t_2, __pyx_n_s_pkcs7, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) __PYX_ERR(0, 332, __pyx_L1_error)
     __pyx_t_3 = __pyx_t_4;
     __pyx_L3_bool_binop_done:;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(!(__pyx_t_3 != 0))) {
-      PyErr_SetObject(PyExc_AssertionError, __pyx_kp_u_paddingzeropkcs7);
-      __PYX_ERR(0, 324, __pyx_L1_error)
+      PyErr_SetObject(PyExc_AssertionError, __pyx_kp_s_paddingzeropkcs7);
+      __PYX_ERR(0, 332, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":325
+  /* "fastgm/sm4.pyx":333
  * 
  *         assert padding in ('zero', 'pkcs7'), 'paddingzeropkcs7'
  *         self.padding = padding             # <<<<<<<<<<<<<<
  * 
  *     @classmethod
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_padding, __pyx_v_padding) < 0) __PYX_ERR(0, 325, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_padding, __pyx_v_padding) < 0) __PYX_ERR(0, 333, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":314
+  /* "fastgm/sm4.pyx":322
  * 
  * class SM4:
  *     def __init__(self, key, padding='zero'):             # <<<<<<<<<<<<<<
@@ -5687,7 +5774,7 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4___init__(CYTHON_UNUSED PyObject *__p
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":328
+/* "fastgm/sm4.pyx":336
  * 
  *     @classmethod
  *     def generate_key(cls):             # <<<<<<<<<<<<<<
@@ -5721,17 +5808,17 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_2generate_key(CYTHON_UNUSED PyObject
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("generate_key", 0);
 
-  /* "fastgm/sm4.pyx":329
+  /* "fastgm/sm4.pyx":337
  *     @classmethod
  *     def generate_key(cls):
  *         return os.urandom(16)             # <<<<<<<<<<<<<<
  * 
- *     def encrypt_ecb(self, message):
+ *     def _set_enc_key(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_os); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_os); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 337, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_urandom); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 329, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_urandom); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 337, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -5746,14 +5833,14 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_2generate_key(CYTHON_UNUSED PyObject
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_2, __pyx_int_16) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_int_16);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 329, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":328
+  /* "fastgm/sm4.pyx":336
  * 
  *     @classmethod
  *     def generate_key(cls):             # <<<<<<<<<<<<<<
@@ -5774,8 +5861,902 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_2generate_key(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":331
+/* "fastgm/sm4.pyx":339
  *         return os.urandom(16)
+ * 
+ *     def _set_enc_key(self):             # <<<<<<<<<<<<<<
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5_set_enc_key(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_4_set_enc_key[] = "SM4._set_enc_key(self)";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_5_set_enc_key = {"_set_enc_key", (PyCFunction)__pyx_pw_6fastgm_3sm4_3SM4_5_set_enc_key, METH_O, __pyx_doc_6fastgm_3sm4_3SM4_4_set_enc_key};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5_set_enc_key(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_set_enc_key (wrapper)", 0);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_4_set_enc_key(__pyx_self, ((PyObject *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4_set_enc_key(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_set_enc_key", 0);
+
+  /* "fastgm/sm4.pyx":340
+ * 
+ *     def _set_enc_key(self):
+ *         if self._enc_key is None:             # <<<<<<<<<<<<<<
+ *             self._enc_key = sm4_key_new()
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = (__pyx_t_1 == Py_None);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = (__pyx_t_2 != 0);
+  if (__pyx_t_3) {
+
+    /* "fastgm/sm4.pyx":341
+ *     def _set_enc_key(self):
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()             # <<<<<<<<<<<<<<
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ * 
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 341, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_enc_key, __pyx_t_1) < 0) __PYX_ERR(0, 341, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "fastgm/sm4.pyx":342
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)             # <<<<<<<<<<<<<<
+ * 
+ *     def _set_dec_key(self):
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 342, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__pyx_t_6, __pyx_t_7);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
+    __pyx_t_6.memview = NULL;
+    __pyx_t_6.data = NULL;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __pyx_t_7.memview = NULL;
+    __pyx_t_7.data = NULL;
+
+    /* "fastgm/sm4.pyx":340
+ * 
+ *     def _set_enc_key(self):
+ *         if self._enc_key is None:             # <<<<<<<<<<<<<<
+ *             self._enc_key = sm4_key_new()
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ */
+  }
+
+  /* "fastgm/sm4.pyx":339
+ *         return os.urandom(16)
+ * 
+ *     def _set_enc_key(self):             # <<<<<<<<<<<<<<
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __Pyx_AddTraceback("fastgm.sm4.SM4._set_enc_key", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fastgm/sm4.pyx":344
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ * 
+ *     def _set_dec_key(self):             # <<<<<<<<<<<<<<
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7_set_dec_key(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_6_set_dec_key[] = "SM4._set_dec_key(self)";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_7_set_dec_key = {"_set_dec_key", (PyCFunction)__pyx_pw_6fastgm_3sm4_3SM4_7_set_dec_key, METH_O, __pyx_doc_6fastgm_3sm4_3SM4_6_set_dec_key};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7_set_dec_key(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_set_dec_key (wrapper)", 0);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_6_set_dec_key(__pyx_self, ((PyObject *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6_set_dec_key(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_set_dec_key", 0);
+
+  /* "fastgm/sm4.pyx":345
+ * 
+ *     def _set_dec_key(self):
+ *         if self._dec_key is None:             # <<<<<<<<<<<<<<
+ *             self._dec_key = sm4_key_new()
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = (__pyx_t_1 == Py_None);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = (__pyx_t_2 != 0);
+  if (__pyx_t_3) {
+
+    /* "fastgm/sm4.pyx":346
+ *     def _set_dec_key(self):
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()             # <<<<<<<<<<<<<<
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ * 
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 346, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_dec_key, __pyx_t_1) < 0) __PYX_ERR(0, 346, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "fastgm/sm4.pyx":347
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)             # <<<<<<<<<<<<<<
+ * 
+ *     def _padding(self, message):
+ */
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 347, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__pyx_t_6, __pyx_t_7);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
+    __pyx_t_6.memview = NULL;
+    __pyx_t_6.data = NULL;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __pyx_t_7.memview = NULL;
+    __pyx_t_7.data = NULL;
+
+    /* "fastgm/sm4.pyx":345
+ * 
+ *     def _set_dec_key(self):
+ *         if self._dec_key is None:             # <<<<<<<<<<<<<<
+ *             self._dec_key = sm4_key_new()
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ */
+  }
+
+  /* "fastgm/sm4.pyx":344
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ * 
+ *     def _set_dec_key(self):             # <<<<<<<<<<<<<<
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __Pyx_AddTraceback("fastgm.sm4.SM4._set_dec_key", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fastgm/sm4.pyx":349
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ * 
+ *     def _padding(self, message):             # <<<<<<<<<<<<<<
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9_padding(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_8_padding[] = "SM4._padding(self, message)";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_9_padding = {"_padding", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_9_padding, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_8_padding};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9_padding(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_message = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_padding (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_message,0};
+    PyObject* values[2] = {0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_padding", 1, 2, 2, 1); __PYX_ERR(0, 349, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_padding") < 0)) __PYX_ERR(0, 349, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_message = values[1];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_padding", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 349, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fastgm.sm4.SM4._padding", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_8_padding(__pyx_self, __pyx_v_self, __pyx_v_message);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8_padding(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_t_2;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_padding", 0);
+  __Pyx_INCREF(__pyx_v_message);
+
+  /* "fastgm/sm4.pyx":350
+ * 
+ *     def _padding(self, message):
+ *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
+ *             message = zero_pad(message)
+ *         elif self.padding == 'pkcs7':
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 350, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_t_1, __pyx_n_s_zero, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 350, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__pyx_t_2) {
+
+    /* "fastgm/sm4.pyx":351
+ *     def _padding(self, message):
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)             # <<<<<<<<<<<<<<
+ *         elif self.padding == 'pkcs7':
+ *             message = pkcs7_pad(message)
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_zero_pad); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 351, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_4)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_message);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 351, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "fastgm/sm4.pyx":350
+ * 
+ *     def _padding(self, message):
+ *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
+ *             message = zero_pad(message)
+ *         elif self.padding == 'pkcs7':
+ */
+    goto __pyx_L3;
+  }
+
+  /* "fastgm/sm4.pyx":352
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
+ *             message = pkcs7_pad(message)
+ *         else:
+ */
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = (__Pyx_PyString_Equals(__pyx_t_1, __pyx_n_s_pkcs7, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (likely(__pyx_t_2)) {
+
+    /* "fastgm/sm4.pyx":353
+ *             message = zero_pad(message)
+ *         elif self.padding == 'pkcs7':
+ *             message = pkcs7_pad(message)             # <<<<<<<<<<<<<<
+ *         else:
+ *             raise Exception('paddingzeropkcs7')
+ */
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_pkcs7_pad); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 353, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_4 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+      __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+      if (likely(__pyx_t_4)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_3, function);
+      }
+    }
+    __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_message);
+    __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 353, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "fastgm/sm4.pyx":352
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
+ *             message = pkcs7_pad(message)
+ *         else:
+ */
+    goto __pyx_L3;
+  }
+
+  /* "fastgm/sm4.pyx":355
+ *             message = pkcs7_pad(message)
+ *         else:
+ *             raise Exception('paddingzeropkcs7')             # <<<<<<<<<<<<<<
+ *         return message
+ * 
+ */
+  /*else*/ {
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __PYX_ERR(0, 355, __pyx_L1_error)
+  }
+  __pyx_L3:;
+
+  /* "fastgm/sm4.pyx":356
+ *         else:
+ *             raise Exception('paddingzeropkcs7')
+ *         return message             # <<<<<<<<<<<<<<
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_message);
+  __pyx_r = __pyx_v_message;
+  goto __pyx_L0;
+
+  /* "fastgm/sm4.pyx":349
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ * 
+ *     def _padding(self, message):             # <<<<<<<<<<<<<<
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_AddTraceback("fastgm.sm4.SM4._padding", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_message);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fastgm/sm4.pyx":358
+ *         return message
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):             # <<<<<<<<<<<<<<
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11_bytes_array_to_string(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_10_bytes_array_to_string[] = "SM4._bytes_array_to_string(self, buf, mode)";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_11_bytes_array_to_string = {"_bytes_array_to_string", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_11_bytes_array_to_string, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_10_bytes_array_to_string};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11_bytes_array_to_string(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  PyObject *__pyx_v_self = 0;
+  PyObject *__pyx_v_buf = 0;
+  PyObject *__pyx_v_mode = 0;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("_bytes_array_to_string (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_self,&__pyx_n_s_buf,&__pyx_n_s_mode,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_self)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_buf)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_bytes_array_to_string", 1, 3, 3, 1); __PYX_ERR(0, 358, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mode)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_bytes_array_to_string", 1, 3, 3, 2); __PYX_ERR(0, 358, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_bytes_array_to_string") < 0)) __PYX_ERR(0, 358, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v_self = values[0];
+    __pyx_v_buf = values[1];
+    __pyx_v_mode = values[2];
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("_bytes_array_to_string", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 358, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("fastgm.sm4.SM4._bytes_array_to_string", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_10_bytes_array_to_string(__pyx_self, __pyx_v_self, __pyx_v_buf, __pyx_v_mode);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_10_bytes_array_to_string(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_buf, PyObject *__pyx_v_mode) {
+  PyObject *__pyx_v_pad_len = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("_bytes_array_to_string", 0);
+
+  /* "fastgm/sm4.pyx":359
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):
+ *         if mode == 'decrypt':             # <<<<<<<<<<<<<<
+ *             if self.padding == 'pkcs7':
+ *                 pad_len = buf[-1]
+ */
+  __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_v_mode, __pyx_n_s_decrypt, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 359, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "fastgm/sm4.pyx":360
+ *     def _bytes_array_to_string(self, buf, mode):
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
+ *                 pad_len = buf[-1]
+ *                 if PY2:
+ */
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __pyx_t_1 = (__Pyx_PyString_Equals(__pyx_t_2, __pyx_n_s_pkcs7, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    if (__pyx_t_1) {
+
+      /* "fastgm/sm4.pyx":361
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':
+ *                 pad_len = buf[-1]             # <<<<<<<<<<<<<<
+ *                 if PY2:
+ *                     return buf[:-pad_len].tostring()
+ */
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_buf, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 361, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_v_pad_len = __pyx_t_2;
+      __pyx_t_2 = 0;
+
+      /* "fastgm/sm4.pyx":362
+ *             if self.padding == 'pkcs7':
+ *                 pad_len = buf[-1]
+ *                 if PY2:             # <<<<<<<<<<<<<<
+ *                     return buf[:-pad_len].tostring()
+ *                 else:
+ */
+      __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PY2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 362, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 362, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (__pyx_t_1) {
+
+        /* "fastgm/sm4.pyx":363
+ *                 pad_len = buf[-1]
+ *                 if PY2:
+ *                     return buf[:-pad_len].tostring()             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     return buf[:-pad_len].tobytes()
+ */
+        __Pyx_XDECREF(__pyx_r);
+        __pyx_t_3 = PyNumber_Negative(__pyx_v_pad_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_4 = __Pyx_PyObject_GetSlice(__pyx_v_buf, 0, 0, NULL, &__pyx_t_3, NULL, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_tostring); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_4 = NULL;
+        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+          if (likely(__pyx_t_4)) {
+            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+            __Pyx_INCREF(__pyx_t_4);
+            __Pyx_INCREF(function);
+            __Pyx_DECREF_SET(__pyx_t_3, function);
+          }
+        }
+        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 363, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_r = __pyx_t_2;
+        __pyx_t_2 = 0;
+        goto __pyx_L0;
+
+        /* "fastgm/sm4.pyx":362
+ *             if self.padding == 'pkcs7':
+ *                 pad_len = buf[-1]
+ *                 if PY2:             # <<<<<<<<<<<<<<
+ *                     return buf[:-pad_len].tostring()
+ *                 else:
+ */
+      }
+
+      /* "fastgm/sm4.pyx":365
+ *                     return buf[:-pad_len].tostring()
+ *                 else:
+ *                     return buf[:-pad_len].tobytes()             # <<<<<<<<<<<<<<
+ *         if PY2:
+ *             return buf.tostring().rstrip(b'\0')
+ */
+      /*else*/ {
+        __Pyx_XDECREF(__pyx_r);
+        __pyx_t_3 = PyNumber_Negative(__pyx_v_pad_len); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_4 = __Pyx_PyObject_GetSlice(__pyx_v_buf, 0, 0, NULL, &__pyx_t_3, NULL, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_4);
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_4 = NULL;
+        if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+          __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+          if (likely(__pyx_t_4)) {
+            PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+            __Pyx_INCREF(__pyx_t_4);
+            __Pyx_INCREF(function);
+            __Pyx_DECREF_SET(__pyx_t_3, function);
+          }
+        }
+        __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+        __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 365, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_r = __pyx_t_2;
+        __pyx_t_2 = 0;
+        goto __pyx_L0;
+      }
+
+      /* "fastgm/sm4.pyx":360
+ *     def _bytes_array_to_string(self, buf, mode):
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
+ *                 pad_len = buf[-1]
+ *                 if PY2:
+ */
+    }
+
+    /* "fastgm/sm4.pyx":359
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):
+ *         if mode == 'decrypt':             # <<<<<<<<<<<<<<
+ *             if self.padding == 'pkcs7':
+ *                 pad_len = buf[-1]
+ */
+  }
+
+  /* "fastgm/sm4.pyx":366
+ *                 else:
+ *                     return buf[:-pad_len].tobytes()
+ *         if PY2:             # <<<<<<<<<<<<<<
+ *             return buf.tostring().rstrip(b'\0')
+ *         return buf.tobytes().rstrip(b'\0')
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_PY2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 366, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 366, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (__pyx_t_1) {
+
+    /* "fastgm/sm4.pyx":367
+ *                     return buf[:-pad_len].tobytes()
+ *         if PY2:
+ *             return buf.tostring().rstrip(b'\0')             # <<<<<<<<<<<<<<
+ *         return buf.tobytes().rstrip(b'\0')
+ * 
+ */
+    __Pyx_XDECREF(__pyx_r);
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tostring); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 367, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_5 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_5)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
+    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 367, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_3);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 367, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_3);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_2 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_b_);
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 367, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_r = __pyx_t_2;
+    __pyx_t_2 = 0;
+    goto __pyx_L0;
+
+    /* "fastgm/sm4.pyx":366
+ *                 else:
+ *                     return buf[:-pad_len].tobytes()
+ *         if PY2:             # <<<<<<<<<<<<<<
+ *             return buf.tostring().rstrip(b'\0')
+ *         return buf.tobytes().rstrip(b'\0')
+ */
+  }
+
+  /* "fastgm/sm4.pyx":368
+ *         if PY2:
+ *             return buf.tostring().rstrip(b'\0')
+ *         return buf.tobytes().rstrip(b'\0')             # <<<<<<<<<<<<<<
+ * 
+ *     def encrypt_ecb(self, message):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_5 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_5)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_b_);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 368, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
+
+  /* "fastgm/sm4.pyx":358
+ *         return message
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):             # <<<<<<<<<<<<<<
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_AddTraceback("fastgm.sm4.SM4._bytes_array_to_string", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_pad_len);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "fastgm/sm4.pyx":370
+ *         return buf.tobytes().rstrip(b'\0')
  * 
  *     def encrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
@@ -5783,10 +6764,10 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_2generate_key(CYTHON_UNUSED PyObject
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5encrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6fastgm_3sm4_3SM4_4encrypt_ecb[] = "SM4.encrypt_ecb(self, message)\n\n        message: \345\276\205\345\212\240\345\257\206bytes\344\270\262\n        ";
-static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_5encrypt_ecb = {"encrypt_ecb", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_5encrypt_ecb, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_4encrypt_ecb};
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5encrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_13encrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_12encrypt_ecb[] = "SM4.encrypt_ecb(self, message)\n\n        message: \345\276\205\345\212\240\345\257\206bytes\344\270\262\n        ";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_13encrypt_ecb = {"encrypt_ecb", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_13encrypt_ecb, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_12encrypt_ecb};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_13encrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_message = 0;
   int __pyx_lineno = 0;
@@ -5818,11 +6799,11 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5encrypt_ecb(PyObject *__pyx_self, P
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("encrypt_ecb", 1, 2, 2, 1); __PYX_ERR(0, 331, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("encrypt_ecb", 1, 2, 2, 1); __PYX_ERR(0, 370, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "encrypt_ecb") < 0)) __PYX_ERR(0, 331, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "encrypt_ecb") < 0)) __PYX_ERR(0, 370, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -5835,329 +6816,203 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_5encrypt_ecb(PyObject *__pyx_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("encrypt_ecb", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 331, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("encrypt_ecb", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 370, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastgm.sm4.SM4.encrypt_ecb", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(__pyx_self, __pyx_v_self, __pyx_v_message);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_12encrypt_ecb(__pyx_self, __pyx_v_self, __pyx_v_message);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_12encrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
   PyObject *__pyx_v_buf = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_8;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  PyObject *__pyx_t_11 = NULL;
+  int __pyx_t_8;
+  PyObject *__pyx_t_9 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("encrypt_ecb", 0);
   __Pyx_INCREF(__pyx_v_message);
 
-  /* "fastgm/sm4.pyx":335
+  /* "fastgm/sm4.pyx":374
  *         message: bytes
  *         """
- *         if self._enc_key is None:             # <<<<<<<<<<<<<<
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ *         self._set_enc_key()             # <<<<<<<<<<<<<<
+ *         message = self._padding(message)
+ * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_set_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 374, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__pyx_t_1 == Py_None);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
 
-    /* "fastgm/sm4.pyx":336
+  /* "fastgm/sm4.pyx":375
  *         """
- *         if self._enc_key is None:
- *             self._enc_key = sm4_key_new()             # <<<<<<<<<<<<<<
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- * 
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 336, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_enc_key, __pyx_t_1) < 0) __PYX_ERR(0, 336, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":337
- *         if self._enc_key is None:
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)             # <<<<<<<<<<<<<<
- * 
- *         if self.padding == 'zero':
- */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 337, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 337, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 337, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__pyx_t_6, __pyx_t_7);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
-
-    /* "fastgm/sm4.pyx":335
- *         message: bytes
- *         """
- *         if self._enc_key is None:             # <<<<<<<<<<<<<<
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- */
-  }
-
-  /* "fastgm/sm4.pyx":339
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 339, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_n_u_zero, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 339, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":340
- * 
- *         if self.padding == 'zero':
- *             message = zero_pad(message)             # <<<<<<<<<<<<<<
- *         elif self.padding == 'pkcs7':
- *             message = pkcs7_pad(message)
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_zero_pad); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 340, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_message);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 340, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":339
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- */
-    goto __pyx_L4;
-  }
-
-  /* "fastgm/sm4.pyx":341
- *         if self.padding == 'zero':
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
- *             message = pkcs7_pad(message)
- *         else:
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 341, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_n_u_pkcs7, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 341, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (likely(__pyx_t_3)) {
-
-    /* "fastgm/sm4.pyx":342
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- *             message = pkcs7_pad(message)             # <<<<<<<<<<<<<<
- *         else:
- *             raise Exception('paddingzeropkcs7')
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pkcs7_pad); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 342, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_message);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 342, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":341
- *         if self.padding == 'zero':
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
- *             message = pkcs7_pad(message)
- *         else:
- */
-    goto __pyx_L4;
-  }
-
-  /* "fastgm/sm4.pyx":344
- *             message = pkcs7_pad(message)
- *         else:
- *             raise Exception('paddingzeropkcs7')             # <<<<<<<<<<<<<<
+ *         self._set_enc_key()
+ *         message = self._padding(message)             # <<<<<<<<<<<<<<
  * 
  *         buf = array.array('B', b'\0' * len(message))
  */
-  /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 344, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 344, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
   }
-  __pyx_L4:;
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_message);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
+  __pyx_t_1 = 0;
 
-  /* "fastgm/sm4.pyx":346
- *             raise Exception('paddingzeropkcs7')
+  /* "fastgm/sm4.pyx":377
+ *         message = self._padding(message)
  * 
  *         buf = array.array('B', b'\0' * len(message))             # <<<<<<<<<<<<<<
- * 
  *         sm4_encrypt_ecb(message, buf, self._enc_key)
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  */
-  __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 346, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 377, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 346, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 346, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_n_u_B);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 346, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_n_s_B);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_buf = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_v_buf = __pyx_t_2;
+  __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":348
+  /* "fastgm/sm4.pyx":378
+ * 
  *         buf = array.array('B', b'\0' * len(message))
- * 
  *         sm4_encrypt_ecb(message, buf, self._enc_key)             # <<<<<<<<<<<<<<
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
- *         return buf.tobytes().rstrip(b'\0')
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 348, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 348, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 348, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 348, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__pyx_t_9, __pyx_t_10, __pyx_t_6);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __pyx_t_9.memview = NULL;
-  __pyx_t_9.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 378, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_f_6fastgm_3sm4_sm4_encrypt_ecb(__pyx_t_5, __pyx_t_6, __pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __pyx_t_7.memview = NULL;
+  __pyx_t_7.data = NULL;
 
-  /* "fastgm/sm4.pyx":350
+  /* "fastgm/sm4.pyx":379
+ *         buf = array.array('B', b'\0' * len(message))
  *         sm4_encrypt_ecb(message, buf, self._enc_key)
- * 
- *         return buf.tobytes().rstrip(b'\0')             # <<<<<<<<<<<<<<
+ *         return self._bytes_array_to_string(buf, 'encrypt')             # <<<<<<<<<<<<<<
  * 
  *     def decrypt_ecb(self, message):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_11 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_11)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_11);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_11) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_11) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 350, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_bytes_array_to_string); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 350, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_1);
+  __pyx_t_3 = NULL;
+  __pyx_t_8 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+      __pyx_t_8 = 1;
     }
   }
-  __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_1, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_kp_b_);
-  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 350, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_encrypt};
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 379, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_encrypt};
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 379, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  {
+    __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 379, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_buf);
+    __Pyx_GIVEREF(__pyx_v_buf);
+    PyTuple_SET_ITEM(__pyx_t_9, 0+__pyx_t_8, __pyx_v_buf);
+    __Pyx_INCREF(__pyx_n_s_encrypt);
+    __Pyx_GIVEREF(__pyx_n_s_encrypt);
+    PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_n_s_encrypt);
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_9, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 379, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":331
- *         return os.urandom(16)
+  /* "fastgm/sm4.pyx":370
+ *         return buf.tobytes().rstrip(b'\0')
  * 
  *     def encrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6167,13 +7022,12 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(CYTHON_UNUSED PyObject 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("fastgm.sm4.SM4.encrypt_ecb", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -6184,8 +7038,8 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":352
- *         return buf.tobytes().rstrip(b'\0')
+/* "fastgm/sm4.pyx":381
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6193,10 +7047,10 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_4encrypt_ecb(CYTHON_UNUSED PyObject 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7decrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6fastgm_3sm4_3SM4_6decrypt_ecb[] = "SM4.decrypt_ecb(self, message)\n\n        message: \345\276\205\350\247\243\345\257\206bytes\344\270\262\n        ";
-static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_7decrypt_ecb = {"decrypt_ecb", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_7decrypt_ecb, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_6decrypt_ecb};
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7decrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_15decrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_14decrypt_ecb[] = "SM4.decrypt_ecb(self, message)\n\n        message: \345\276\205\350\247\243\345\257\206bytes\344\270\262\n        ";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_15decrypt_ecb = {"decrypt_ecb", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_15decrypt_ecb, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_14decrypt_ecb};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_15decrypt_ecb(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_message = 0;
   int __pyx_lineno = 0;
@@ -6228,11 +7082,11 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7decrypt_ecb(PyObject *__pyx_self, P
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("decrypt_ecb", 1, 2, 2, 1); __PYX_ERR(0, 352, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("decrypt_ecb", 1, 2, 2, 1); __PYX_ERR(0, 381, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decrypt_ecb") < 0)) __PYX_ERR(0, 352, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decrypt_ecb") < 0)) __PYX_ERR(0, 381, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -6245,291 +7099,192 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_7decrypt_ecb(PyObject *__pyx_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("decrypt_ecb", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 352, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("decrypt_ecb", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 381, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastgm.sm4.SM4.decrypt_ecb", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_6decrypt_ecb(__pyx_self, __pyx_v_self, __pyx_v_message);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_14decrypt_ecb(__pyx_self, __pyx_v_self, __pyx_v_message);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6decrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_14decrypt_ecb(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_message) {
   PyObject *__pyx_v_buf = NULL;
-  PyObject *__pyx_v_pad_len = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_8;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_8;
+  PyObject *__pyx_t_9 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decrypt_ecb", 0);
 
-  /* "fastgm/sm4.pyx":357
+  /* "fastgm/sm4.pyx":385
+ *         message: bytes
  *         """
- * 
- *         if self._dec_key is None:             # <<<<<<<<<<<<<<
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__pyx_t_1 == Py_None);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":358
- * 
- *         if self._dec_key is None:
- *             self._dec_key = sm4_key_new()             # <<<<<<<<<<<<<<
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- * 
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 358, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_dec_key, __pyx_t_1) < 0) __PYX_ERR(0, 358, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":359
- *         if self._dec_key is None:
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)             # <<<<<<<<<<<<<<
- * 
+ *         self._set_dec_key()             # <<<<<<<<<<<<<<
  *         assert len(message) % 16 == 0, '16'
- */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 359, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 359, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 359, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__pyx_t_6, __pyx_t_7);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
-
-    /* "fastgm/sm4.pyx":357
- *         """
  * 
- *         if self._dec_key is None:             # <<<<<<<<<<<<<<
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
  */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_set_dec_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
   }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fastgm/sm4.pyx":361
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- * 
+  /* "fastgm/sm4.pyx":386
+ *         """
+ *         self._set_dec_key()
  *         assert len(message) % 16 == 0, '16'             # <<<<<<<<<<<<<<
  * 
  *         buf = array.array('B', b'\0' * len(message))
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 361, __pyx_L1_error)
-    if (unlikely(!((__Pyx_mod_Py_ssize_t(__pyx_t_8, 16) == 0) != 0))) {
-      PyErr_SetObject(PyExc_AssertionError, __pyx_n_u_16);
-      __PYX_ERR(0, 361, __pyx_L1_error)
+    __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 386, __pyx_L1_error)
+    if (unlikely(!((__Pyx_mod_Py_ssize_t(__pyx_t_4, 16) == 0) != 0))) {
+      PyErr_SetObject(PyExc_AssertionError, __pyx_kp_s_16);
+      __PYX_ERR(0, 386, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":363
+  /* "fastgm/sm4.pyx":388
  *         assert len(message) % 16 == 0, '16'
  * 
  *         buf = array.array('B', b'\0' * len(message))             # <<<<<<<<<<<<<<
- * 
  *         sm4_decrypt_ecb(message, buf, self._dec_key)
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  */
-  __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 363, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 388, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 363, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 363, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_n_u_B);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 363, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_n_s_B);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_buf = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_v_buf = __pyx_t_2;
+  __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":365
+  /* "fastgm/sm4.pyx":389
+ * 
  *         buf = array.array('B', b'\0' * len(message))
- * 
  *         sm4_decrypt_ecb(message, buf, self._dec_key)             # <<<<<<<<<<<<<<
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  * 
- *         buf = buf.tobytes()
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 365, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__pyx_t_9, __pyx_t_10, __pyx_t_6);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __pyx_t_9.memview = NULL;
-  __pyx_t_9.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 389, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_f_6fastgm_3sm4_sm4_decrypt_ecb(__pyx_t_5, __pyx_t_6, __pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __pyx_t_7.memview = NULL;
+  __pyx_t_7.data = NULL;
 
-  /* "fastgm/sm4.pyx":367
+  /* "fastgm/sm4.pyx":390
+ *         buf = array.array('B', b'\0' * len(message))
  *         sm4_decrypt_ecb(message, buf, self._dec_key)
- * 
- *         buf = buf.tobytes()             # <<<<<<<<<<<<<<
- * 
- *         if self.padding == 'zero':
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 367, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_5)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_5);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_1, function);
-    }
-  }
-  __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 367, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF_SET(__pyx_v_buf, __pyx_t_4);
-  __pyx_t_4 = 0;
-
-  /* "fastgm/sm4.pyx":369
- *         buf = buf.tobytes()
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             return buf.rstrip(b'\0')
- *         else:
- */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 369, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_n_u_zero, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 369, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":370
- * 
- *         if self.padding == 'zero':
- *             return buf.rstrip(b'\0')             # <<<<<<<<<<<<<<
- *         else:
- *             pad_len = buf[-1]
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_1, function);
-      }
-    }
-    __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_5, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_kp_b_);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 370, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_4;
-    __pyx_t_4 = 0;
-    goto __pyx_L0;
-
-    /* "fastgm/sm4.pyx":369
- *         buf = buf.tobytes()
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             return buf.rstrip(b'\0')
- *         else:
- */
-  }
-
-  /* "fastgm/sm4.pyx":372
- *             return buf.rstrip(b'\0')
- *         else:
- *             pad_len = buf[-1]             # <<<<<<<<<<<<<<
- *             return buf[:-pad_len]
- * 
- */
-  /*else*/ {
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_buf, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 372, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_v_pad_len = __pyx_t_4;
-    __pyx_t_4 = 0;
-
-    /* "fastgm/sm4.pyx":373
- *         else:
- *             pad_len = buf[-1]
- *             return buf[:-pad_len]             # <<<<<<<<<<<<<<
+ *         return self._bytes_array_to_string(buf, 'decrypt')             # <<<<<<<<<<<<<<
  * 
  *     def encrypt_cbc(self, iv, message):
  */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = PyNumber_Negative(__pyx_v_pad_len); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 373, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_v_buf, 0, 0, NULL, &__pyx_t_4, NULL, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_r = __pyx_t_1;
-    __pyx_t_1 = 0;
-    goto __pyx_L0;
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_bytes_array_to_string); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 390, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = NULL;
+  __pyx_t_8 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+      __pyx_t_8 = 1;
+    }
   }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_decrypt};
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_decrypt};
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_8, 2+__pyx_t_8); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  {
+    __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_buf);
+    __Pyx_GIVEREF(__pyx_v_buf);
+    PyTuple_SET_ITEM(__pyx_t_9, 0+__pyx_t_8, __pyx_v_buf);
+    __Pyx_INCREF(__pyx_n_s_decrypt);
+    __Pyx_GIVEREF(__pyx_n_s_decrypt);
+    PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_n_s_decrypt);
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_9, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":352
- *         return buf.tobytes().rstrip(b'\0')
+  /* "fastgm/sm4.pyx":381
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6539,24 +7294,23 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6decrypt_ecb(CYTHON_UNUSED PyObject 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_AddTraceback("fastgm.sm4.SM4.decrypt_ecb", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_buf);
-  __Pyx_XDECREF(__pyx_v_pad_len);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":375
- *             return buf[:-pad_len]
+/* "fastgm/sm4.pyx":392
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  * 
  *     def encrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6564,10 +7318,10 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_6decrypt_ecb(CYTHON_UNUSED PyObject 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9encrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6fastgm_3sm4_3SM4_8encrypt_cbc[] = "SM4.encrypt_cbc(self, iv, message)\n\n        message: \345\276\205\345\212\240\345\257\206bytes\344\270\262\n        ";
-static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_9encrypt_cbc = {"encrypt_cbc", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_9encrypt_cbc, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_8encrypt_cbc};
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9encrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_17encrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_16encrypt_cbc[] = "SM4.encrypt_cbc(self, iv, message)\n\n        message: \345\276\205\345\212\240\345\257\206bytes\344\270\262\n        ";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_17encrypt_cbc = {"encrypt_cbc", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_17encrypt_cbc, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_16encrypt_cbc};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_17encrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_iv = 0;
   PyObject *__pyx_v_message = 0;
@@ -6602,17 +7356,17 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9encrypt_cbc(PyObject *__pyx_self, P
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_iv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, 1); __PYX_ERR(0, 375, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, 1); __PYX_ERR(0, 392, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, 2); __PYX_ERR(0, 375, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, 2); __PYX_ERR(0, 392, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "encrypt_cbc") < 0)) __PYX_ERR(0, 375, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "encrypt_cbc") < 0)) __PYX_ERR(0, 392, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -6627,334 +7381,208 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_9encrypt_cbc(PyObject *__pyx_self, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 375, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("encrypt_cbc", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 392, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastgm.sm4.SM4.encrypt_cbc", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(__pyx_self, __pyx_v_self, __pyx_v_iv, __pyx_v_message);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_16encrypt_cbc(__pyx_self, __pyx_v_self, __pyx_v_iv, __pyx_v_message);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message) {
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_16encrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message) {
   PyObject *__pyx_v_buf = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_8;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_11 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  PyObject *__pyx_t_12 = NULL;
+  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("encrypt_cbc", 0);
   __Pyx_INCREF(__pyx_v_message);
 
-  /* "fastgm/sm4.pyx":379
+  /* "fastgm/sm4.pyx":396
  *         message: bytes
  *         """
- *         if self._enc_key is None:             # <<<<<<<<<<<<<<
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ *         self._set_enc_key()             # <<<<<<<<<<<<<<
+ *         message = self._padding(message)
+ * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_set_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 396, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__pyx_t_1 == Py_None);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
 
-    /* "fastgm/sm4.pyx":380
+  /* "fastgm/sm4.pyx":397
  *         """
- *         if self._enc_key is None:
- *             self._enc_key = sm4_key_new()             # <<<<<<<<<<<<<<
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- * 
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 380, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 380, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_enc_key, __pyx_t_1) < 0) __PYX_ERR(0, 380, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":381
- *         if self._enc_key is None:
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 381, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 381, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 381, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_f_6fastgm_3sm4_sm4_set_encrypt_key(__pyx_t_6, __pyx_t_7);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
-
-    /* "fastgm/sm4.pyx":379
- *         message: bytes
- *         """
- *         if self._enc_key is None:             # <<<<<<<<<<<<<<
- *             self._enc_key = sm4_key_new()
- *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
- */
-  }
-
-  /* "fastgm/sm4.pyx":384
- * 
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 384, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_n_u_zero, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 384, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":385
- * 
- *         if self.padding == 'zero':
- *             message = zero_pad(message)             # <<<<<<<<<<<<<<
- *         elif self.padding == 'pkcs7':
- *             message = pkcs7_pad(message)
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_zero_pad); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 385, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_message);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":384
- * 
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- */
-    goto __pyx_L4;
-  }
-
-  /* "fastgm/sm4.pyx":386
- *         if self.padding == 'zero':
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
- *             message = pkcs7_pad(message)
- *         else:
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 386, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_1, __pyx_n_u_pkcs7, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 386, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (likely(__pyx_t_3)) {
-
-    /* "fastgm/sm4.pyx":387
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':
- *             message = pkcs7_pad(message)             # <<<<<<<<<<<<<<
- *         else:
- *             raise Exception('paddingzeropkcs7')
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_pkcs7_pad); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 387, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_message);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 387, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
-    __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":386
- *         if self.padding == 'zero':
- *             message = zero_pad(message)
- *         elif self.padding == 'pkcs7':             # <<<<<<<<<<<<<<
- *             message = pkcs7_pad(message)
- *         else:
- */
-    goto __pyx_L4;
-  }
-
-  /* "fastgm/sm4.pyx":389
- *             message = pkcs7_pad(message)
- *         else:
- *             raise Exception('paddingzeropkcs7')             # <<<<<<<<<<<<<<
+ *         self._set_enc_key()
+ *         message = self._padding(message)             # <<<<<<<<<<<<<<
  * 
  *         buf = array.array('B', b'\0' * len(message))
  */
-  /*else*/ {
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])), __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 389, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_Raise(__pyx_t_1, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __PYX_ERR(0, 389, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
   }
-  __pyx_L4:;
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_v_message) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_message);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 397, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(__pyx_v_message, __pyx_t_1);
+  __pyx_t_1 = 0;
 
-  /* "fastgm/sm4.pyx":391
- *             raise Exception('paddingzeropkcs7')
+  /* "fastgm/sm4.pyx":399
+ *         message = self._padding(message)
  * 
  *         buf = array.array('B', b'\0' * len(message))             # <<<<<<<<<<<<<<
  *         sm4_encrypt_cbc(message, iv, buf, self._enc_key)
- *         return buf.tobytes().rstrip(b'\0')
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  */
-  __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 391, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 391, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 399, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 399, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 391, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 391, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 399, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_n_u_B);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 391, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_n_s_B);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_buf = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_v_buf = __pyx_t_2;
+  __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":392
+  /* "fastgm/sm4.pyx":400
  * 
  *         buf = array.array('B', b'\0' * len(message))
  *         sm4_encrypt_cbc(message, iv, buf, self._enc_key)             # <<<<<<<<<<<<<<
- *         return buf.tobytes().rstrip(b'\0')
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 392, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_iv, 0); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 392, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(0, 392, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 392, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 392, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_6);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __pyx_t_9.memview = NULL;
-  __pyx_t_9.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-  __pyx_t_11.memview = NULL;
-  __pyx_t_11.data = NULL;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_iv, 0); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_enc_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 400, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_f_6fastgm_3sm4_sm4_encrypt_cbc(__pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __pyx_t_7.memview = NULL;
+  __pyx_t_7.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
 
-  /* "fastgm/sm4.pyx":393
+  /* "fastgm/sm4.pyx":401
  *         buf = array.array('B', b'\0' * len(message))
  *         sm4_encrypt_cbc(message, iv, buf, self._enc_key)
- *         return buf.tobytes().rstrip(b'\0')             # <<<<<<<<<<<<<<
+ *         return self._bytes_array_to_string(buf, 'encrypt')             # <<<<<<<<<<<<<<
  * 
- * 
+ *     def decrypt_cbc(self, iv, message):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 393, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_12 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_12)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_12);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_12) ? __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_12) : __Pyx_PyObject_CallNoArg(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 393, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_bytes_array_to_string); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 401, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 393, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
-    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_5);
-    if (likely(__pyx_t_1)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
-      __Pyx_INCREF(__pyx_t_1);
+  __pyx_t_3 = NULL;
+  __pyx_t_9 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_5, function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+      __pyx_t_9 = 1;
     }
   }
-  __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_1, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_kp_b_);
-  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 393, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_encrypt};
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_9, 2+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 401, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_encrypt};
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_9, 2+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 401, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  {
+    __pyx_t_10 = PyTuple_New(2+__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 401, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_buf);
+    __Pyx_GIVEREF(__pyx_v_buf);
+    PyTuple_SET_ITEM(__pyx_t_10, 0+__pyx_t_9, __pyx_v_buf);
+    __Pyx_INCREF(__pyx_n_s_encrypt);
+    __Pyx_GIVEREF(__pyx_n_s_encrypt);
+    PyTuple_SET_ITEM(__pyx_t_10, 1+__pyx_t_9, __pyx_n_s_encrypt);
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 401, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":375
- *             return buf[:-pad_len]
+  /* "fastgm/sm4.pyx":392
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  * 
  *     def encrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6964,14 +7592,13 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(CYTHON_UNUSED PyObject 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-  __Pyx_XDECREF(__pyx_t_12);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_AddTraceback("fastgm.sm4.SM4.encrypt_cbc", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -6982,8 +7609,8 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(CYTHON_UNUSED PyObject 
   return __pyx_r;
 }
 
-/* "fastgm/sm4.pyx":396
- * 
+/* "fastgm/sm4.pyx":403
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
@@ -6991,10 +7618,10 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_8encrypt_cbc(CYTHON_UNUSED PyObject 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11decrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6fastgm_3sm4_3SM4_10decrypt_cbc[] = "SM4.decrypt_cbc(self, iv, message)\n\n        message: \345\276\205\350\247\243\345\257\206bytes\344\270\262\n        ";
-static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_11decrypt_cbc = {"decrypt_cbc", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_11decrypt_cbc, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_10decrypt_cbc};
-static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11decrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_19decrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_6fastgm_3sm4_3SM4_18decrypt_cbc[] = "SM4.decrypt_cbc(self, iv, message)\n\n        message: \345\276\205\350\247\243\345\257\206bytes\344\270\262\n        ";
+static PyMethodDef __pyx_mdef_6fastgm_3sm4_3SM4_19decrypt_cbc = {"decrypt_cbc", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_6fastgm_3sm4_3SM4_19decrypt_cbc, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6fastgm_3sm4_3SM4_18decrypt_cbc};
+static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_19decrypt_cbc(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_self = 0;
   PyObject *__pyx_v_iv = 0;
   PyObject *__pyx_v_message = 0;
@@ -7029,17 +7656,17 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11decrypt_cbc(PyObject *__pyx_self, 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_iv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, 1); __PYX_ERR(0, 396, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, 1); __PYX_ERR(0, 403, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, 2); __PYX_ERR(0, 396, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, 2); __PYX_ERR(0, 403, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decrypt_cbc") < 0)) __PYX_ERR(0, 396, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "decrypt_cbc") < 0)) __PYX_ERR(0, 403, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -7054,293 +7681,194 @@ static PyObject *__pyx_pw_6fastgm_3sm4_3SM4_11decrypt_cbc(PyObject *__pyx_self, 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 396, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("decrypt_cbc", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 403, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastgm.sm4.SM4.decrypt_cbc", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_10decrypt_cbc(__pyx_self, __pyx_v_self, __pyx_v_iv, __pyx_v_message);
+  __pyx_r = __pyx_pf_6fastgm_3sm4_3SM4_18decrypt_cbc(__pyx_self, __pyx_v_self, __pyx_v_iv, __pyx_v_message);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_10decrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message) {
+static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_18decrypt_cbc(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_self, PyObject *__pyx_v_iv, PyObject *__pyx_v_message) {
   PyObject *__pyx_v_buf = NULL;
-  PyObject *__pyx_v_pad_len = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  int __pyx_t_2;
-  int __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_7 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_8;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_10 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_t_11 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_8 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  int __pyx_t_9;
+  PyObject *__pyx_t_10 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("decrypt_cbc", 0);
 
-  /* "fastgm/sm4.pyx":400
+  /* "fastgm/sm4.pyx":407
  *         message: bytes
  *         """
- *         if self._dec_key is None:             # <<<<<<<<<<<<<<
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 400, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__pyx_t_1 == Py_None);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__pyx_t_2 != 0);
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":401
- *         """
- *         if self._dec_key is None:
- *             self._dec_key = sm4_key_new()             # <<<<<<<<<<<<<<
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- * 
- */
-    __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_sm4_key_new); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 401, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_1 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 401, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (__Pyx_PyObject_SetAttrStr(__pyx_v_self, __pyx_n_s_dec_key, __pyx_t_1) < 0) __PYX_ERR(0, 401, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-    /* "fastgm/sm4.pyx":402
- *         if self._dec_key is None:
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)             # <<<<<<<<<<<<<<
- * 
+ *         self._set_dec_key()             # <<<<<<<<<<<<<<
  *         assert len(message) % 16 == 0, '16'
- */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 402, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 402, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_raw_key); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 402, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_t_1, 0); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 402, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_f_6fastgm_3sm4_sm4_set_decrypt_key(__pyx_t_6, __pyx_t_7);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-    __pyx_t_6.memview = NULL;
-    __pyx_t_6.data = NULL;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __pyx_t_7.memview = NULL;
-    __pyx_t_7.data = NULL;
-
-    /* "fastgm/sm4.pyx":400
- *         message: bytes
- *         """
- *         if self._dec_key is None:             # <<<<<<<<<<<<<<
- *             self._dec_key = sm4_key_new()
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
- */
-  }
-
-  /* "fastgm/sm4.pyx":404
- *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
  * 
+ */
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_set_dec_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 407, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+  /* "fastgm/sm4.pyx":408
+ *         """
+ *         self._set_dec_key()
  *         assert len(message) % 16 == 0, '16'             # <<<<<<<<<<<<<<
  * 
  *         buf = array.array('B', b'\0' * len(message))
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 404, __pyx_L1_error)
-    if (unlikely(!((__Pyx_mod_Py_ssize_t(__pyx_t_8, 16) == 0) != 0))) {
-      PyErr_SetObject(PyExc_AssertionError, __pyx_n_u_16);
-      __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 408, __pyx_L1_error)
+    if (unlikely(!((__Pyx_mod_Py_ssize_t(__pyx_t_4, 16) == 0) != 0))) {
+      PyErr_SetObject(PyExc_AssertionError, __pyx_kp_s_16);
+      __PYX_ERR(0, 408, __pyx_L1_error)
     }
   }
   #endif
 
-  /* "fastgm/sm4.pyx":406
+  /* "fastgm/sm4.pyx":410
  *         assert len(message) % 16 == 0, '16'
  * 
  *         buf = array.array('B', b'\0' * len(message))             # <<<<<<<<<<<<<<
- * 
  *         sm4_decrypt_cbc(message, iv, buf, self._dec_key)
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  */
-  __pyx_t_8 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_8 == ((Py_ssize_t)-1))) __PYX_ERR(0, 406, __pyx_L1_error)
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_8); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_4 = PyObject_Length(__pyx_v_message); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(0, 410, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 406, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_2 = PyNumber_Multiply(__pyx_kp_b_, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 406, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_INCREF(__pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_n_u_B);
-  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_u_B);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 406, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_n_s_B);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_B);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cpython_5array_array), __pyx_t_1, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 410, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_buf = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_v_buf = __pyx_t_2;
+  __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":408
+  /* "fastgm/sm4.pyx":411
+ * 
  *         buf = array.array('B', b'\0' * len(message))
- * 
  *         sm4_decrypt_cbc(message, iv, buf, self._dec_key)             # <<<<<<<<<<<<<<
- * 
- *         buf = buf.tobytes()
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  */
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 408, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_iv, 0); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 408, __pyx_L1_error)
-  __pyx_t_11 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_11.memview)) __PYX_ERR(0, 408, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 408, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 408, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_6);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __pyx_t_9.memview = NULL;
-  __pyx_t_9.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __pyx_t_10.memview = NULL;
-  __pyx_t_10.data = NULL;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-  __pyx_t_11.memview = NULL;
-  __pyx_t_11.data = NULL;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_message, 0); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char__const__(__pyx_v_iv, 0); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_char(__pyx_v_buf, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_dec_key); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_ds_unsigned_int(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 411, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_f_6fastgm_3sm4_sm4_decrypt_cbc(__pyx_t_5, __pyx_t_6, __pyx_t_7, __pyx_t_8);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __pyx_t_6.memview = NULL;
   __pyx_t_6.data = NULL;
-
-  /* "fastgm/sm4.pyx":410
- *         sm4_decrypt_cbc(message, iv, buf, self._dec_key)
- * 
- *         buf = buf.tobytes()             # <<<<<<<<<<<<<<
- * 
- *         if self.padding == 'zero':
- */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_tobytes); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_5)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_5);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_1, function);
-    }
-  }
-  __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_5) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 410, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF_SET(__pyx_v_buf, __pyx_t_4);
-  __pyx_t_4 = 0;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+  __pyx_t_7.memview = NULL;
+  __pyx_t_7.data = NULL;
+  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
 
   /* "fastgm/sm4.pyx":412
- *         buf = buf.tobytes()
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             return buf.rstrip(b'\0')
- *         else:
+ *         buf = array.array('B', b'\0' * len(message))
+ *         sm4_decrypt_cbc(message, iv, buf, self._dec_key)
+ *         return self._bytes_array_to_string(buf, 'decrypt')             # <<<<<<<<<<<<<<
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_padding); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 412, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_n_u_zero, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 412, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__pyx_t_3) {
-
-    /* "fastgm/sm4.pyx":413
- * 
- *         if self.padding == 'zero':
- *             return buf.rstrip(b'\0')             # <<<<<<<<<<<<<<
- *         else:
- *             pad_len = buf[-1]
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_buf, __pyx_n_s_rstrip); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_5 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
-      __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_1);
-      if (likely(__pyx_t_5)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-        __Pyx_INCREF(__pyx_t_5);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_1, function);
-      }
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self, __pyx_n_s_bytes_array_to_string); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_3 = NULL;
+  __pyx_t_9 = 0;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
+    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_1);
+    if (likely(__pyx_t_3)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
+      __Pyx_INCREF(__pyx_t_3);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_1, function);
+      __pyx_t_9 = 1;
     }
-    __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_5, __pyx_kp_b_) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_kp_b_);
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 413, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_r = __pyx_t_4;
-    __pyx_t_4 = 0;
-    goto __pyx_L0;
-
-    /* "fastgm/sm4.pyx":412
- *         buf = buf.tobytes()
- * 
- *         if self.padding == 'zero':             # <<<<<<<<<<<<<<
- *             return buf.rstrip(b'\0')
- *         else:
- */
   }
-
-  /* "fastgm/sm4.pyx":415
- *             return buf.rstrip(b'\0')
- *         else:
- *             pad_len = buf[-1]             # <<<<<<<<<<<<<<
- *             return buf[:-pad_len]
- */
-  /*else*/ {
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_buf, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 415, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_v_pad_len = __pyx_t_4;
-    __pyx_t_4 = 0;
-
-    /* "fastgm/sm4.pyx":416
- *         else:
- *             pad_len = buf[-1]
- *             return buf[:-pad_len]             # <<<<<<<<<<<<<<
- */
-    __Pyx_XDECREF(__pyx_r);
-    __pyx_t_4 = PyNumber_Negative(__pyx_v_pad_len); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 416, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_v_buf, 0, 0, NULL, &__pyx_t_4, NULL, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 416, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_r = __pyx_t_1;
-    __pyx_t_1 = 0;
-    goto __pyx_L0;
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_decrypt};
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_9, 2+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_1)) {
+    PyObject *__pyx_temp[3] = {__pyx_t_3, __pyx_v_buf, __pyx_n_s_decrypt};
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_1, __pyx_temp+1-__pyx_t_9, 2+__pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_GOTREF(__pyx_t_2);
+  } else
+  #endif
+  {
+    __pyx_t_10 = PyTuple_New(2+__pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
+    if (__pyx_t_3) {
+      __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_3); __pyx_t_3 = NULL;
+    }
+    __Pyx_INCREF(__pyx_v_buf);
+    __Pyx_GIVEREF(__pyx_v_buf);
+    PyTuple_SET_ITEM(__pyx_t_10, 0+__pyx_t_9, __pyx_v_buf);
+    __Pyx_INCREF(__pyx_n_s_decrypt);
+    __Pyx_GIVEREF(__pyx_n_s_decrypt);
+    PyTuple_SET_ITEM(__pyx_t_10, 1+__pyx_t_9, __pyx_n_s_decrypt);
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 412, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   }
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
+  goto __pyx_L0;
 
-  /* "fastgm/sm4.pyx":396
- * 
+  /* "fastgm/sm4.pyx":403
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
@@ -7350,18 +7878,17 @@ static PyObject *__pyx_pf_6fastgm_3sm4_3SM4_10decrypt_cbc(CYTHON_UNUSED PyObject
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+  __Pyx_XDECREF(__pyx_t_10);
   __Pyx_AddTraceback("fastgm.sm4.SM4.decrypt_cbc", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_buf);
-  __Pyx_XDECREF(__pyx_v_pad_len);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -8222,7 +8749,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if itemsize <= 0:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 133, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8254,7 +8781,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if not isinstance(format, bytes):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 136, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8381,7 +8908,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 148, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 148, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8655,7 +9182,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *             if self.dtype_is_object:
  */
-      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(2, 176, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(2, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_Raise(__pyx_t_10, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -8899,7 +9426,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *         info.buf = self.data
  *         info.len = self.len
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 192, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 192, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9633,7 +10160,7 @@ static PyObject *__pyx_pf___pyx_array___reduce_cython__(CYTHON_UNUSED struct __p
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9689,7 +10216,7 @@ static PyObject *__pyx_pf___pyx_array_2__setstate_cython__(CYTHON_UNUSED struct 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -11399,7 +11926,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 418, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 418, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12447,7 +12974,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         else:
  *             if len(self.view.format) == 1:
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(2, 495, __pyx_L5_except_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(2, 495, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_Raise(__pyx_t_6, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -12809,7 +13336,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_8__getbu
  * 
  *         if flags & PyBUF_ND:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 520, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 520, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -13358,7 +13885,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_7strides___get__(st
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 570, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 570, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -13475,7 +14002,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_10suboffsets___get_
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 577, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__15, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 577, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__14, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(2, 577, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -14513,7 +15040,7 @@ static PyObject *__pyx_pf___pyx_memoryview___reduce_cython__(CYTHON_UNUSED struc
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -14569,7 +15096,7 @@ static PyObject *__pyx_pf___pyx_memoryview_2__setstate_cython__(CYTHON_UNUSED st
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -14926,9 +15453,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
         __Pyx_GOTREF(__pyx_t_7);
         { Py_ssize_t __pyx_temp;
           for (__pyx_temp=0; __pyx_temp < ((__pyx_v_ndim - __pyx_t_8) + 1); __pyx_temp++) {
-            __Pyx_INCREF(__pyx_slice__18);
-            __Pyx_GIVEREF(__pyx_slice__18);
-            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__18);
+            __Pyx_INCREF(__pyx_slice__17);
+            __Pyx_GIVEREF(__pyx_slice__17);
+            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__17);
           }
         }
         __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_7); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(2, 682, __pyx_L1_error)
@@ -14961,7 +15488,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *         else:
  */
       /*else*/ {
-        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__18); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(2, 685, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__17); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(2, 685, __pyx_L1_error)
       }
       __pyx_L7:;
 
@@ -15101,9 +15628,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
     __Pyx_GOTREF(__pyx_t_3);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < __pyx_v_nslices; __pyx_temp++) {
-        __Pyx_INCREF(__pyx_slice__18);
-        __Pyx_GIVEREF(__pyx_slice__18);
-        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__18);
+        __Pyx_INCREF(__pyx_slice__17);
+        __Pyx_GIVEREF(__pyx_slice__17);
+        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__17);
       }
     }
     __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_3); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(2, 696, __pyx_L1_error)
@@ -15230,7 +15757,7 @@ static PyObject *assert_direct_dimensions(Py_ssize_t *__pyx_v_suboffsets, int __
  * 
  * 
  */
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 703, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 703, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -17414,7 +17941,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -17470,7 +17997,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUS
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -21799,9 +22326,9 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_b_, __pyx_k_, sizeof(__pyx_k_), 0, 0, 0, 0},
-  {&__pyx_n_u_16, __pyx_k_16, sizeof(__pyx_k_16), 0, 1, 0, 1},
+  {&__pyx_kp_s_16, __pyx_k_16, sizeof(__pyx_k_16), 0, 0, 1, 0},
   {&__pyx_n_s_ASCII, __pyx_k_ASCII, sizeof(__pyx_k_ASCII), 0, 0, 1, 1},
-  {&__pyx_n_u_B, __pyx_k_B, sizeof(__pyx_k_B), 0, 1, 0, 1},
+  {&__pyx_n_s_B, __pyx_k_B, sizeof(__pyx_k_B), 0, 0, 1, 1},
   {&__pyx_kp_s_Buffer_view_does_not_expose_stri, __pyx_k_Buffer_view_does_not_expose_stri, sizeof(__pyx_k_Buffer_view_does_not_expose_stri), 0, 0, 1, 0},
   {&__pyx_kp_s_Can_only_create_a_buffer_that_is, __pyx_k_Can_only_create_a_buffer_that_is, sizeof(__pyx_k_Can_only_create_a_buffer_that_is), 0, 0, 1, 0},
   {&__pyx_kp_s_Cannot_assign_to_read_only_memor, __pyx_k_Cannot_assign_to_read_only_memor, sizeof(__pyx_k_Cannot_assign_to_read_only_memor), 0, 0, 1, 0},
@@ -21809,7 +22336,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
-  {&__pyx_n_u_I, __pyx_k_I, sizeof(__pyx_k_I), 0, 1, 0, 1},
+  {&__pyx_n_s_I, __pyx_k_I, sizeof(__pyx_k_I), 0, 0, 1, 1},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
   {&__pyx_kp_s_Indirect_dimensions_not_supporte, __pyx_k_Indirect_dimensions_not_supporte, sizeof(__pyx_k_Indirect_dimensions_not_supporte), 0, 0, 1, 0},
@@ -21820,9 +22347,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_MemoryView_of_r_object, __pyx_k_MemoryView_of_r_object, sizeof(__pyx_k_MemoryView_of_r_object), 0, 0, 1, 0},
   {&__pyx_n_b_O, __pyx_k_O, sizeof(__pyx_k_O), 0, 0, 0, 1},
   {&__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_k_Out_of_bounds_on_buffer_access_a, sizeof(__pyx_k_Out_of_bounds_on_buffer_access_a), 0, 0, 1, 0},
+  {&__pyx_n_s_PY2, __pyx_k_PY2, sizeof(__pyx_k_PY2), 0, 0, 1, 1},
   {&__pyx_n_s_PickleError, __pyx_k_PickleError, sizeof(__pyx_k_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_SM4, __pyx_k_SM4, sizeof(__pyx_k_SM4), 0, 0, 1, 1},
   {&__pyx_n_s_SM4___init, __pyx_k_SM4___init, sizeof(__pyx_k_SM4___init), 0, 0, 1, 1},
+  {&__pyx_n_s_SM4__bytes_array_to_string, __pyx_k_SM4__bytes_array_to_string, sizeof(__pyx_k_SM4__bytes_array_to_string), 0, 0, 1, 1},
+  {&__pyx_n_s_SM4__padding, __pyx_k_SM4__padding, sizeof(__pyx_k_SM4__padding), 0, 0, 1, 1},
+  {&__pyx_n_s_SM4__set_dec_key, __pyx_k_SM4__set_dec_key, sizeof(__pyx_k_SM4__set_dec_key), 0, 0, 1, 1},
+  {&__pyx_n_s_SM4__set_enc_key, __pyx_k_SM4__set_enc_key, sizeof(__pyx_k_SM4__set_enc_key), 0, 0, 1, 1},
   {&__pyx_n_s_SM4_decrypt_cbc, __pyx_k_SM4_decrypt_cbc, sizeof(__pyx_k_SM4_decrypt_cbc), 0, 0, 1, 1},
   {&__pyx_n_s_SM4_decrypt_ecb, __pyx_k_SM4_decrypt_ecb, sizeof(__pyx_k_SM4_decrypt_ecb), 0, 0, 1, 1},
   {&__pyx_n_s_SM4_encrypt_cbc, __pyx_k_SM4_encrypt_cbc, sizeof(__pyx_k_SM4_encrypt_cbc), 0, 0, 1, 1},
@@ -21835,9 +22367,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
-  {&__pyx_n_u_big, __pyx_k_big, sizeof(__pyx_k_big), 0, 1, 0, 1},
   {&__pyx_n_s_buf, __pyx_k_buf, sizeof(__pyx_k_buf), 0, 0, 1, 1},
   {&__pyx_n_s_buf_len, __pyx_k_buf_len, sizeof(__pyx_k_buf_len), 0, 0, 1, 1},
+  {&__pyx_n_s_bytes_array_to_string, __pyx_k_bytes_array_to_string, sizeof(__pyx_k_bytes_array_to_string), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
@@ -21847,6 +22379,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_data, __pyx_k_data, sizeof(__pyx_k_data), 0, 0, 1, 1},
   {&__pyx_n_s_dec_key, __pyx_k_dec_key, sizeof(__pyx_k_dec_key), 0, 0, 1, 1},
+  {&__pyx_n_s_decrypt, __pyx_k_decrypt, sizeof(__pyx_k_decrypt), 0, 0, 1, 1},
   {&__pyx_n_s_decrypt_cbc, __pyx_k_decrypt_cbc, sizeof(__pyx_k_decrypt_cbc), 0, 0, 1, 1},
   {&__pyx_n_s_decrypt_ecb, __pyx_k_decrypt_ecb, sizeof(__pyx_k_decrypt_ecb), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
@@ -21854,6 +22387,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_enc_key, __pyx_k_enc_key, sizeof(__pyx_k_enc_key), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
+  {&__pyx_n_s_encrypt, __pyx_k_encrypt, sizeof(__pyx_k_encrypt), 0, 0, 1, 1},
   {&__pyx_n_s_encrypt_cbc, __pyx_k_encrypt_cbc, sizeof(__pyx_k_encrypt_cbc), 0, 0, 1, 1},
   {&__pyx_n_s_encrypt_ecb, __pyx_k_encrypt_ecb, sizeof(__pyx_k_encrypt_ecb), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
@@ -21890,9 +22424,10 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pad_len, __pyx_k_pad_len, sizeof(__pyx_k_pad_len), 0, 0, 1, 1},
   {&__pyx_n_s_padding, __pyx_k_padding, sizeof(__pyx_k_padding), 0, 0, 1, 1},
-  {&__pyx_kp_u_paddingzeropkcs7, __pyx_k_paddingzeropkcs7, sizeof(__pyx_k_paddingzeropkcs7), 0, 1, 0, 0},
+  {&__pyx_n_s_padding_2, __pyx_k_padding_2, sizeof(__pyx_k_padding_2), 0, 0, 1, 1},
+  {&__pyx_kp_s_paddingzeropkcs7, __pyx_k_paddingzeropkcs7, sizeof(__pyx_k_paddingzeropkcs7), 0, 0, 1, 0},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
-  {&__pyx_n_u_pkcs7, __pyx_k_pkcs7, sizeof(__pyx_k_pkcs7), 0, 1, 0, 1},
+  {&__pyx_n_s_pkcs7, __pyx_k_pkcs7, sizeof(__pyx_k_pkcs7), 0, 0, 1, 1},
   {&__pyx_n_s_pkcs7_pad, __pyx_k_pkcs7_pad, sizeof(__pyx_k_pkcs7_pad), 0, 0, 1, 1},
   {&__pyx_n_s_prepare, __pyx_k_prepare, sizeof(__pyx_k_prepare), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
@@ -21911,6 +22446,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_reduce_ex, __pyx_k_reduce_ex, sizeof(__pyx_k_reduce_ex), 0, 0, 1, 1},
   {&__pyx_n_s_rstrip, __pyx_k_rstrip, sizeof(__pyx_k_rstrip), 0, 0, 1, 1},
   {&__pyx_n_s_self, __pyx_k_self, sizeof(__pyx_k_self), 0, 0, 1, 1},
+  {&__pyx_n_s_set_dec_key, __pyx_k_set_dec_key, sizeof(__pyx_k_set_dec_key), 0, 0, 1, 1},
+  {&__pyx_n_s_set_enc_key, __pyx_k_set_enc_key, sizeof(__pyx_k_set_enc_key), 0, 0, 1, 1},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
@@ -21925,20 +22462,22 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_strided_and_indirect, __pyx_k_strided_and_indirect, sizeof(__pyx_k_strided_and_indirect), 0, 0, 1, 0},
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_struct, __pyx_k_struct, sizeof(__pyx_k_struct), 0, 0, 1, 1},
+  {&__pyx_n_s_sys, __pyx_k_sys, sizeof(__pyx_k_sys), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_to_bytes, __pyx_k_to_bytes, sizeof(__pyx_k_to_bytes), 0, 0, 1, 1},
   {&__pyx_n_s_tobytes, __pyx_k_tobytes, sizeof(__pyx_k_tobytes), 0, 0, 1, 1},
+  {&__pyx_n_s_tostring, __pyx_k_tostring, sizeof(__pyx_k_tostring), 0, 0, 1, 1},
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_urandom, __pyx_k_urandom, sizeof(__pyx_k_urandom), 0, 0, 1, 1},
-  {&__pyx_n_u_zero, __pyx_k_zero, sizeof(__pyx_k_zero), 0, 1, 0, 1},
+  {&__pyx_n_s_version_info, __pyx_k_version_info, sizeof(__pyx_k_version_info), 0, 0, 1, 1},
+  {&__pyx_n_s_zero, __pyx_k_zero, sizeof(__pyx_k_zero), 0, 0, 1, 1},
   {&__pyx_n_s_zero_pad, __pyx_k_zero_pad, sizeof(__pyx_k_zero_pad), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 249, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 257, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 109, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(2, 151, __pyx_L1_error)
@@ -21955,27 +22494,16 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "fastgm/sm4.pyx":311
- * 
- *     new_len = (buf_len // 16 + 1) * 16
- *     return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)             # <<<<<<<<<<<<<<
- * 
- * class SM4:
- */
-  __pyx_tuple__2 = PyTuple_Pack(2, __pyx_int_1, __pyx_n_u_big); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 311, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__2);
-  __Pyx_GIVEREF(__pyx_tuple__2);
-
-  /* "fastgm/sm4.pyx":344
+  /* "fastgm/sm4.pyx":355
  *             message = pkcs7_pad(message)
  *         else:
  *             raise Exception('paddingzeropkcs7')             # <<<<<<<<<<<<<<
+ *         return message
  * 
- *         buf = array.array('B', b'\0' * len(message))
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_paddingzeropkcs7); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 344, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_s_paddingzeropkcs7); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__2);
+  __Pyx_GIVEREF(__pyx_tuple__2);
 
   /* "View.MemoryView":133
  * 
@@ -21984,9 +22512,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if itemsize <= 0:
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(2, 133, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(2, 133, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__3);
+  __Pyx_GIVEREF(__pyx_tuple__3);
 
   /* "View.MemoryView":136
  * 
@@ -21995,9 +22523,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if not isinstance(format, bytes):
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(2, 136, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(2, 136, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
 
   /* "View.MemoryView":148
  * 
@@ -22006,9 +22534,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(2, 148, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(2, 148, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__5);
+  __Pyx_GIVEREF(__pyx_tuple__5);
 
   /* "View.MemoryView":176
  *             self.data = <char *>malloc(self.len)
@@ -22017,9 +22545,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             if self.dtype_is_object:
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(2, 176, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(2, 176, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
 
   /* "View.MemoryView":192
  *             bufmode = PyBUF_F_CONTIGUOUS | PyBUF_ANY_CONTIGUOUS
@@ -22028,9 +22556,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         info.buf = self.data
  *         info.len = self.len
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(2, 192, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(2, 192, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__7);
+  __Pyx_GIVEREF(__pyx_tuple__7);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -22038,18 +22566,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(2, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(2, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
   /* "View.MemoryView":418
  *     def __setitem__(memoryview self, object index, object value):
@@ -22058,9 +22586,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(2, 418, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(2, 418, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
 
   /* "View.MemoryView":495
  *             result = struct.unpack(self.view.format, bytesitem)
@@ -22069,9 +22597,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         else:
  *             if len(self.view.format) == 1:
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(2, 495, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__12);
-  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(2, 495, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
 
   /* "View.MemoryView":520
  *     def __getbuffer__(self, Py_buffer *info, int flags):
@@ -22080,9 +22608,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if flags & PyBUF_ND:
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(2, 520, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(2, 520, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
 
   /* "View.MemoryView":570
  *         if self.view.strides == NULL:
@@ -22091,9 +22619,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(2, 570, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__14);
-  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(2, 570, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
 
   /* "View.MemoryView":577
  *     def suboffsets(self):
@@ -22102,12 +22630,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([suboffset for suboffset in self.view.suboffsets[:self.view.ndim]])
  */
-  __pyx_tuple__15 = PyTuple_New(1); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(2, 577, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
+  __pyx_tuple__14 = PyTuple_New(1); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(2, 577, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_INCREF(__pyx_int_neg_1);
   __Pyx_GIVEREF(__pyx_int_neg_1);
-  PyTuple_SET_ITEM(__pyx_tuple__15, 0, __pyx_int_neg_1);
-  __Pyx_GIVEREF(__pyx_tuple__15);
+  PyTuple_SET_ITEM(__pyx_tuple__14, 0, __pyx_int_neg_1);
+  __Pyx_GIVEREF(__pyx_tuple__14);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -22115,18 +22643,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(2, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__16);
-  __Pyx_GIVEREF(__pyx_tuple__16);
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(2, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__17);
-  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
 
   /* "View.MemoryView":682
  *         if item is Ellipsis:
@@ -22135,9 +22663,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *                 seen_ellipsis = True
  *             else:
  */
-  __pyx_slice__18 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__18)) __PYX_ERR(2, 682, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_slice__18);
-  __Pyx_GIVEREF(__pyx_slice__18);
+  __pyx_slice__17 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__17)) __PYX_ERR(2, 682, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_slice__17);
+  __Pyx_GIVEREF(__pyx_slice__17);
 
   /* "View.MemoryView":703
  *     for suboffset in suboffsets[:ndim]:
@@ -22146,9 +22674,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(2, 703, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__19);
-  __Pyx_GIVEREF(__pyx_tuple__19);
+  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(2, 703, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__18);
+  __Pyx_GIVEREF(__pyx_tuple__18);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -22156,126 +22684,174 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(2, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__20);
-  __Pyx_GIVEREF(__pyx_tuple__20);
+  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(2, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(2, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__21);
-  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(2, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
 
-  /* "fastgm/sm4.pyx":294
+  /* "fastgm/sm4.pyx":302
  *         tmp_iv = inbuf[i:i + 16].copy()
  * 
  * def sm4_key_new():             # <<<<<<<<<<<<<<
  *     return array.array('I', [0] * SM4_NUM_ROUNDS)
  * 
  */
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_sm4_key_new, 294, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 294, __pyx_L1_error)
+  __pyx_codeobj__21 = (PyObject*)__Pyx_PyCode_New(0, 0, 0, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_sm4_key_new, 302, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__21)) __PYX_ERR(0, 302, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":298
+  /* "fastgm/sm4.pyx":306
  * 
  * 
  * def zero_pad(data):             # <<<<<<<<<<<<<<
  *     buf_len = len(data)
  * 
  */
-  __pyx_tuple__23 = PyTuple_Pack(3, __pyx_n_s_data, __pyx_n_s_buf_len, __pyx_n_s_new_len); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(0, 298, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__23);
-  __Pyx_GIVEREF(__pyx_tuple__23);
-  __pyx_codeobj__24 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__23, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_zero_pad, 298, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__24)) __PYX_ERR(0, 298, __pyx_L1_error)
+  __pyx_tuple__22 = PyTuple_Pack(3, __pyx_n_s_data, __pyx_n_s_buf_len, __pyx_n_s_new_len); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
+  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_zero_pad, 306, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 306, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":307
+  /* "fastgm/sm4.pyx":315
  *         return data + b'\0' * (new_len - buf_len)
  * 
  * def pkcs7_pad(data):             # <<<<<<<<<<<<<<
  *     buf_len = len(data)
  * 
  */
-  __pyx_tuple__25 = PyTuple_Pack(3, __pyx_n_s_data, __pyx_n_s_buf_len, __pyx_n_s_new_len); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 307, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__25);
-  __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_pkcs7_pad, 307, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 307, __pyx_L1_error)
+  __pyx_tuple__24 = PyTuple_Pack(3, __pyx_n_s_data, __pyx_n_s_buf_len, __pyx_n_s_new_len); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 315, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
+  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_pkcs7_pad, 315, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 315, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":314
+  /* "fastgm/sm4.pyx":322
  * 
  * class SM4:
  *     def __init__(self, key, padding='zero'):             # <<<<<<<<<<<<<<
  *         """
  *         key: key16bytesSM4.generate_key()
  */
-  __pyx_tuple__27 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_key, __pyx_n_s_padding); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_init, 314, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 314, __pyx_L1_error)
-  __pyx_tuple__29 = PyTuple_Pack(1, ((PyObject*)__pyx_n_u_zero)); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_tuple__26 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_key, __pyx_n_s_padding); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_init, 322, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __pyx_tuple__28 = PyTuple_Pack(1, ((PyObject*)__pyx_n_s_zero)); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
 
-  /* "fastgm/sm4.pyx":328
+  /* "fastgm/sm4.pyx":336
  * 
  *     @classmethod
  *     def generate_key(cls):             # <<<<<<<<<<<<<<
  *         return os.urandom(16)
  * 
  */
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_n_s_cls); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 328, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_generate_key, 328, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 328, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_n_s_cls); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
+  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_generate_key, 336, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 336, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":331
+  /* "fastgm/sm4.pyx":339
  *         return os.urandom(16)
+ * 
+ *     def _set_enc_key(self):             # <<<<<<<<<<<<<<
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()
+ */
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 339, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
+  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_set_enc_key, 339, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 339, __pyx_L1_error)
+
+  /* "fastgm/sm4.pyx":344
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ * 
+ *     def _set_dec_key(self):             # <<<<<<<<<<<<<<
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()
+ */
+  __pyx_tuple__33 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_set_dec_key, 344, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(0, 344, __pyx_L1_error)
+
+  /* "fastgm/sm4.pyx":349
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ * 
+ *     def _padding(self, message):             # <<<<<<<<<<<<<<
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ */
+  __pyx_tuple__35 = PyTuple_Pack(2, __pyx_n_s_self, __pyx_n_s_message); if (unlikely(!__pyx_tuple__35)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__35);
+  __Pyx_GIVEREF(__pyx_tuple__35);
+  __pyx_codeobj__36 = (PyObject*)__Pyx_PyCode_New(2, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__35, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_padding_2, 349, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__36)) __PYX_ERR(0, 349, __pyx_L1_error)
+
+  /* "fastgm/sm4.pyx":358
+ *         return message
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):             # <<<<<<<<<<<<<<
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':
+ */
+  __pyx_tuple__37 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_buf, __pyx_n_s_mode, __pyx_n_s_pad_len); if (unlikely(!__pyx_tuple__37)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__37);
+  __Pyx_GIVEREF(__pyx_tuple__37);
+  __pyx_codeobj__38 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__37, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_bytes_array_to_string, 358, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__38)) __PYX_ERR(0, 358, __pyx_L1_error)
+
+  /* "fastgm/sm4.pyx":370
+ *         return buf.tobytes().rstrip(b'\0')
  * 
  *     def encrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_tuple__32 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 331, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__32);
-  __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_encrypt_ecb, 331, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_tuple__39 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__39)) __PYX_ERR(0, 370, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__39);
+  __Pyx_GIVEREF(__pyx_tuple__39);
+  __pyx_codeobj__40 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__39, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_encrypt_ecb, 370, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__40)) __PYX_ERR(0, 370, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":352
- *         return buf.tobytes().rstrip(b'\0')
+  /* "fastgm/sm4.pyx":381
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_tuple__34 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_message, __pyx_n_s_buf, __pyx_n_s_pad_len); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 352, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__34);
-  __Pyx_GIVEREF(__pyx_tuple__34);
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_decrypt_ecb, 352, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 352, __pyx_L1_error)
+  __pyx_tuple__41 = PyTuple_Pack(3, __pyx_n_s_self, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__41);
+  __Pyx_GIVEREF(__pyx_tuple__41);
+  __pyx_codeobj__42 = (PyObject*)__Pyx_PyCode_New(2, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__41, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_decrypt_ecb, 381, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__42)) __PYX_ERR(0, 381, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":375
- *             return buf[:-pad_len]
+  /* "fastgm/sm4.pyx":392
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  * 
  *     def encrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_tuple__36 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_iv, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 375, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__36);
-  __Pyx_GIVEREF(__pyx_tuple__36);
-  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_encrypt_cbc, 375, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __pyx_tuple__43 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_iv, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(0, 392, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__43);
+  __Pyx_GIVEREF(__pyx_tuple__43);
+  __pyx_codeobj__44 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__43, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_encrypt_cbc, 392, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__44)) __PYX_ERR(0, 392, __pyx_L1_error)
 
-  /* "fastgm/sm4.pyx":396
- * 
+  /* "fastgm/sm4.pyx":403
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_tuple__38 = PyTuple_Pack(5, __pyx_n_s_self, __pyx_n_s_iv, __pyx_n_s_message, __pyx_n_s_buf, __pyx_n_s_pad_len); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 396, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__38);
-  __Pyx_GIVEREF(__pyx_tuple__38);
-  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_decrypt_cbc, 396, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 396, __pyx_L1_error)
+  __pyx_tuple__45 = PyTuple_Pack(4, __pyx_n_s_self, __pyx_n_s_iv, __pyx_n_s_message, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__45);
+  __Pyx_GIVEREF(__pyx_tuple__45);
+  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastgm_sm4_pyx, __pyx_n_s_decrypt_cbc, 403, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(0, 403, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -22284,9 +22860,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__40 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(2, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__40);
-  __Pyx_GIVEREF(__pyx_tuple__40);
+  __pyx_tuple__47 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(2, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__47);
+  __Pyx_GIVEREF(__pyx_tuple__47);
 
   /* "View.MemoryView":287
  * 
@@ -22295,9 +22871,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__41 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__41)) __PYX_ERR(2, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__41);
-  __Pyx_GIVEREF(__pyx_tuple__41);
+  __pyx_tuple__48 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__48);
+  __Pyx_GIVEREF(__pyx_tuple__48);
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -22306,9 +22882,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__42 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(2, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__42);
-  __Pyx_GIVEREF(__pyx_tuple__42);
+  __pyx_tuple__49 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__49);
+  __Pyx_GIVEREF(__pyx_tuple__49);
 
   /* "View.MemoryView":291
  * 
@@ -22317,9 +22893,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__43 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__43)) __PYX_ERR(2, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__43);
-  __Pyx_GIVEREF(__pyx_tuple__43);
+  __pyx_tuple__50 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__50)) __PYX_ERR(2, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__50);
+  __Pyx_GIVEREF(__pyx_tuple__50);
 
   /* "View.MemoryView":292
  * 
@@ -22328,19 +22904,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__44 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(2, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__44);
-  __Pyx_GIVEREF(__pyx_tuple__44);
+  __pyx_tuple__51 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__51)) __PYX_ERR(2, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__51);
+  __Pyx_GIVEREF(__pyx_tuple__51);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__45 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__45)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__45);
-  __Pyx_GIVEREF(__pyx_tuple__45);
-  __pyx_codeobj__46 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__45, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__46)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_tuple__52 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__52)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__52);
+  __Pyx_GIVEREF(__pyx_tuple__52);
+  __pyx_codeobj__53 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__52, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__53)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -22352,6 +22928,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_16 = PyInt_FromLong(16); if (unlikely(!__pyx_int_16)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_184977713 = PyInt_FromLong(184977713L); if (unlikely(!__pyx_int_184977713)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -22615,12 +23192,13 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_sm4(PyObject *__pyx_pyinit_module)
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
-  static unsigned int __pyx_t_2[256];
-  static unsigned int __pyx_t_3[4];
-  static unsigned int __pyx_t_4[32];
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  static PyThread_type_lock __pyx_t_7[8];
+  PyObject *__pyx_t_2 = NULL;
+  int __pyx_t_3;
+  static unsigned int __pyx_t_4[256];
+  static unsigned int __pyx_t_5[4];
+  static unsigned int __pyx_t_6[32];
+  PyObject *__pyx_t_7 = NULL;
+  static PyThread_type_lock __pyx_t_8[8];
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -22728,27 +23306,109 @@ if (!__Pyx_RefNanny) {
 
   /* "fastgm/sm4.pyx":1
  * import os             # <<<<<<<<<<<<<<
- * 
- * from cpython cimport array
+ * from sys import version_info
+ * import struct
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_os, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_os, 0, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_os, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fastgm/sm4.pyx":4
+  /* "fastgm/sm4.pyx":2
+ * import os
+ * from sys import version_info             # <<<<<<<<<<<<<<
+ * import struct
+ * 
+ */
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_n_s_version_info);
+  __Pyx_GIVEREF(__pyx_n_s_version_info);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_version_info);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_sys, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_version_info); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_version_info, __pyx_t_1) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fastgm/sm4.pyx":3
+ * import os
+ * from sys import version_info
+ * import struct             # <<<<<<<<<<<<<<
+ * 
+ * from cpython cimport array
+ */
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_struct, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_struct, __pyx_t_2) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "fastgm/sm4.pyx":6
  * 
  * from cpython cimport array
  * import array             # <<<<<<<<<<<<<<
  * import cython
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_array, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_array, __pyx_t_1) < 0) __PYX_ERR(0, 4, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_array, 0, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_array, __pyx_t_2) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":27
+  /* "fastgm/sm4.pyx":9
+ * import cython
+ * 
+ * if version_info[0] == 2:             # <<<<<<<<<<<<<<
+ *     # python2
+ *     PY2 = True
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_version_info); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_2, 2, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (__pyx_t_3) {
+
+    /* "fastgm/sm4.pyx":11
+ * if version_info[0] == 2:
+ *     # python2
+ *     PY2 = True             # <<<<<<<<<<<<<<
+ * else:
+ *     # python3
+ */
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_PY2, Py_True) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
+
+    /* "fastgm/sm4.pyx":9
+ * import cython
+ * 
+ * if version_info[0] == 2:             # <<<<<<<<<<<<<<
+ *     # python2
+ *     PY2 = True
+ */
+    goto __pyx_L2;
+  }
+
+  /* "fastgm/sm4.pyx":14
+ * else:
+ *     # python3
+ *     PY2 = False             # <<<<<<<<<<<<<<
+ * 
+ * @cython.boundscheck(False) # turn off bounds-checking for entire function
+ */
+  /*else*/ {
+    if (PyDict_SetItem(__pyx_d, __pyx_n_s_PY2, Py_False) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
+  }
+  __pyx_L2:;
+
+  /* "fastgm/sm4.pyx":35
  *     data[offset] = (value & 0xff)
  * 
  * cdef unsigned int SM4_KEY_LENGTH = 16             # <<<<<<<<<<<<<<
@@ -22757,7 +23417,7 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_v_6fastgm_3sm4_SM4_KEY_LENGTH = 16;
 
-  /* "fastgm/sm4.pyx":28
+  /* "fastgm/sm4.pyx":36
  * 
  * cdef unsigned int SM4_KEY_LENGTH = 16
  * cdef unsigned int SM4_BLOCK_SIZE = 16             # <<<<<<<<<<<<<<
@@ -22766,7 +23426,7 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_v_6fastgm_3sm4_SM4_BLOCK_SIZE = 16;
 
-  /* "fastgm/sm4.pyx":29
+  /* "fastgm/sm4.pyx":37
  * cdef unsigned int SM4_KEY_LENGTH = 16
  * cdef unsigned int SM4_BLOCK_SIZE = 16
  * cdef unsigned int SM4_IV_LENGTH = SM4_BLOCK_SIZE             # <<<<<<<<<<<<<<
@@ -22775,7 +23435,7 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_v_6fastgm_3sm4_SM4_IV_LENGTH = __pyx_v_6fastgm_3sm4_SM4_BLOCK_SIZE;
 
-  /* "fastgm/sm4.pyx":30
+  /* "fastgm/sm4.pyx":38
  * cdef unsigned int SM4_BLOCK_SIZE = 16
  * cdef unsigned int SM4_IV_LENGTH = SM4_BLOCK_SIZE
  * cdef unsigned int SM4_NUM_ROUNDS = 32             # <<<<<<<<<<<<<<
@@ -22784,477 +23444,525 @@ if (!__Pyx_RefNanny) {
  */
   __pyx_v_6fastgm_3sm4_SM4_NUM_ROUNDS = 32;
 
-  /* "fastgm/sm4.pyx":32
+  /* "fastgm/sm4.pyx":40
  * cdef unsigned int SM4_NUM_ROUNDS = 32
  * 
  * cdef unsigned int* SM4_S = [             # <<<<<<<<<<<<<<
  *     0xd6, 0x90, 0xe9, 0xfe, 0xcc, 0xe1, 0x3d, 0xb7,
  *     0x16, 0xb6, 0x14, 0xc2, 0x28, 0xfb, 0x2c, 0x05,
  */
-  __pyx_t_2[0] = 0xd6;
-  __pyx_t_2[1] = 0x90;
-  __pyx_t_2[2] = 0xe9;
-  __pyx_t_2[3] = 0xfe;
-  __pyx_t_2[4] = 0xcc;
-  __pyx_t_2[5] = 0xe1;
-  __pyx_t_2[6] = 0x3d;
-  __pyx_t_2[7] = 0xb7;
-  __pyx_t_2[8] = 0x16;
-  __pyx_t_2[9] = 0xb6;
-  __pyx_t_2[10] = 0x14;
-  __pyx_t_2[11] = 0xc2;
-  __pyx_t_2[12] = 0x28;
-  __pyx_t_2[13] = 0xfb;
-  __pyx_t_2[14] = 0x2c;
-  __pyx_t_2[15] = 0x05;
-  __pyx_t_2[16] = 0x2b;
-  __pyx_t_2[17] = 0x67;
-  __pyx_t_2[18] = 0x9a;
-  __pyx_t_2[19] = 0x76;
-  __pyx_t_2[20] = 0x2a;
-  __pyx_t_2[21] = 0xbe;
-  __pyx_t_2[22] = 0x04;
-  __pyx_t_2[23] = 0xc3;
-  __pyx_t_2[24] = 0xaa;
-  __pyx_t_2[25] = 0x44;
-  __pyx_t_2[26] = 0x13;
-  __pyx_t_2[27] = 0x26;
-  __pyx_t_2[28] = 0x49;
-  __pyx_t_2[29] = 0x86;
-  __pyx_t_2[30] = 0x06;
-  __pyx_t_2[31] = 0x99;
-  __pyx_t_2[32] = 0x9c;
-  __pyx_t_2[33] = 0x42;
-  __pyx_t_2[34] = 0x50;
-  __pyx_t_2[35] = 0xf4;
-  __pyx_t_2[36] = 0x91;
-  __pyx_t_2[37] = 0xef;
-  __pyx_t_2[38] = 0x98;
-  __pyx_t_2[39] = 0x7a;
-  __pyx_t_2[40] = 0x33;
-  __pyx_t_2[41] = 0x54;
-  __pyx_t_2[42] = 0x0b;
-  __pyx_t_2[43] = 0x43;
-  __pyx_t_2[44] = 0xed;
-  __pyx_t_2[45] = 0xcf;
-  __pyx_t_2[46] = 0xac;
-  __pyx_t_2[47] = 0x62;
-  __pyx_t_2[48] = 0xe4;
-  __pyx_t_2[49] = 0xb3;
-  __pyx_t_2[50] = 0x1c;
-  __pyx_t_2[51] = 0xa9;
-  __pyx_t_2[52] = 0xc9;
-  __pyx_t_2[53] = 0x08;
-  __pyx_t_2[54] = 0xe8;
-  __pyx_t_2[55] = 0x95;
-  __pyx_t_2[56] = 0x80;
-  __pyx_t_2[57] = 0xdf;
-  __pyx_t_2[58] = 0x94;
-  __pyx_t_2[59] = 0xfa;
-  __pyx_t_2[60] = 0x75;
-  __pyx_t_2[61] = 0x8f;
-  __pyx_t_2[62] = 0x3f;
-  __pyx_t_2[63] = 0xa6;
-  __pyx_t_2[64] = 0x47;
-  __pyx_t_2[65] = 0x07;
-  __pyx_t_2[66] = 0xa7;
-  __pyx_t_2[67] = 0xfc;
-  __pyx_t_2[68] = 0xf3;
-  __pyx_t_2[69] = 0x73;
-  __pyx_t_2[70] = 0x17;
-  __pyx_t_2[71] = 0xba;
-  __pyx_t_2[72] = 0x83;
-  __pyx_t_2[73] = 0x59;
-  __pyx_t_2[74] = 0x3c;
-  __pyx_t_2[75] = 0x19;
-  __pyx_t_2[76] = 0xe6;
-  __pyx_t_2[77] = 0x85;
-  __pyx_t_2[78] = 0x4f;
-  __pyx_t_2[79] = 0xa8;
-  __pyx_t_2[80] = 0x68;
-  __pyx_t_2[81] = 0x6b;
-  __pyx_t_2[82] = 0x81;
-  __pyx_t_2[83] = 0xb2;
-  __pyx_t_2[84] = 0x71;
-  __pyx_t_2[85] = 0x64;
-  __pyx_t_2[86] = 0xda;
-  __pyx_t_2[87] = 0x8b;
-  __pyx_t_2[88] = 0xf8;
-  __pyx_t_2[89] = 0xeb;
-  __pyx_t_2[90] = 0x0f;
-  __pyx_t_2[91] = 0x4b;
-  __pyx_t_2[92] = 0x70;
-  __pyx_t_2[93] = 0x56;
-  __pyx_t_2[94] = 0x9d;
-  __pyx_t_2[95] = 0x35;
-  __pyx_t_2[96] = 0x1e;
-  __pyx_t_2[97] = 0x24;
-  __pyx_t_2[98] = 0x0e;
-  __pyx_t_2[99] = 0x5e;
-  __pyx_t_2[100] = 0x63;
-  __pyx_t_2[101] = 0x58;
-  __pyx_t_2[102] = 0xd1;
-  __pyx_t_2[103] = 0xa2;
-  __pyx_t_2[104] = 0x25;
-  __pyx_t_2[105] = 0x22;
-  __pyx_t_2[106] = 0x7c;
-  __pyx_t_2[107] = 0x3b;
-  __pyx_t_2[108] = 0x01;
-  __pyx_t_2[109] = 0x21;
-  __pyx_t_2[110] = 0x78;
-  __pyx_t_2[111] = 0x87;
-  __pyx_t_2[112] = 0xd4;
-  __pyx_t_2[113] = 0x00;
-  __pyx_t_2[114] = 0x46;
-  __pyx_t_2[115] = 0x57;
-  __pyx_t_2[116] = 0x9f;
-  __pyx_t_2[117] = 0xd3;
-  __pyx_t_2[118] = 0x27;
-  __pyx_t_2[119] = 0x52;
-  __pyx_t_2[120] = 0x4c;
-  __pyx_t_2[121] = 0x36;
-  __pyx_t_2[122] = 0x02;
-  __pyx_t_2[123] = 0xe7;
-  __pyx_t_2[124] = 0xa0;
-  __pyx_t_2[125] = 0xc4;
-  __pyx_t_2[126] = 0xc8;
-  __pyx_t_2[127] = 0x9e;
-  __pyx_t_2[128] = 0xea;
-  __pyx_t_2[129] = 0xbf;
-  __pyx_t_2[130] = 0x8a;
-  __pyx_t_2[131] = 0xd2;
-  __pyx_t_2[132] = 0x40;
-  __pyx_t_2[133] = 0xc7;
-  __pyx_t_2[134] = 0x38;
-  __pyx_t_2[135] = 0xb5;
-  __pyx_t_2[136] = 0xa3;
-  __pyx_t_2[137] = 0xf7;
-  __pyx_t_2[138] = 0xf2;
-  __pyx_t_2[139] = 0xce;
-  __pyx_t_2[140] = 0xf9;
-  __pyx_t_2[141] = 0x61;
-  __pyx_t_2[142] = 0x15;
-  __pyx_t_2[143] = 0xa1;
-  __pyx_t_2[144] = 0xe0;
-  __pyx_t_2[145] = 0xae;
-  __pyx_t_2[146] = 0x5d;
-  __pyx_t_2[147] = 0xa4;
-  __pyx_t_2[148] = 0x9b;
-  __pyx_t_2[149] = 0x34;
-  __pyx_t_2[150] = 0x1a;
-  __pyx_t_2[151] = 0x55;
-  __pyx_t_2[152] = 0xad;
-  __pyx_t_2[153] = 0x93;
-  __pyx_t_2[154] = 0x32;
-  __pyx_t_2[155] = 0x30;
-  __pyx_t_2[156] = 0xf5;
-  __pyx_t_2[157] = 0x8c;
-  __pyx_t_2[158] = 0xb1;
-  __pyx_t_2[159] = 0xe3;
-  __pyx_t_2[160] = 0x1d;
-  __pyx_t_2[161] = 0xf6;
-  __pyx_t_2[162] = 0xe2;
-  __pyx_t_2[163] = 0x2e;
-  __pyx_t_2[164] = 0x82;
-  __pyx_t_2[165] = 0x66;
-  __pyx_t_2[166] = 0xca;
-  __pyx_t_2[167] = 0x60;
-  __pyx_t_2[168] = 0xc0;
-  __pyx_t_2[169] = 0x29;
-  __pyx_t_2[170] = 0x23;
-  __pyx_t_2[171] = 0xab;
-  __pyx_t_2[172] = 0x0d;
-  __pyx_t_2[173] = 0x53;
-  __pyx_t_2[174] = 0x4e;
-  __pyx_t_2[175] = 0x6f;
-  __pyx_t_2[176] = 0xd5;
-  __pyx_t_2[177] = 0xdb;
-  __pyx_t_2[178] = 0x37;
-  __pyx_t_2[179] = 0x45;
-  __pyx_t_2[180] = 0xde;
-  __pyx_t_2[181] = 0xfd;
-  __pyx_t_2[182] = 0x8e;
-  __pyx_t_2[183] = 0x2f;
-  __pyx_t_2[184] = 0x03;
-  __pyx_t_2[185] = 0xff;
-  __pyx_t_2[186] = 0x6a;
-  __pyx_t_2[187] = 0x72;
-  __pyx_t_2[188] = 0x6d;
-  __pyx_t_2[189] = 0x6c;
-  __pyx_t_2[190] = 0x5b;
-  __pyx_t_2[191] = 0x51;
-  __pyx_t_2[192] = 0x8d;
-  __pyx_t_2[193] = 0x1b;
-  __pyx_t_2[194] = 0xaf;
-  __pyx_t_2[195] = 0x92;
-  __pyx_t_2[196] = 0xbb;
-  __pyx_t_2[197] = 0xdd;
-  __pyx_t_2[198] = 0xbc;
-  __pyx_t_2[199] = 0x7f;
-  __pyx_t_2[200] = 0x11;
-  __pyx_t_2[201] = 0xd9;
-  __pyx_t_2[202] = 0x5c;
-  __pyx_t_2[203] = 0x41;
-  __pyx_t_2[204] = 0x1f;
-  __pyx_t_2[205] = 0x10;
-  __pyx_t_2[206] = 0x5a;
-  __pyx_t_2[207] = 0xd8;
-  __pyx_t_2[208] = 0x0a;
-  __pyx_t_2[209] = 0xc1;
-  __pyx_t_2[210] = 0x31;
-  __pyx_t_2[211] = 0x88;
-  __pyx_t_2[212] = 0xa5;
-  __pyx_t_2[213] = 0xcd;
-  __pyx_t_2[214] = 0x7b;
-  __pyx_t_2[215] = 0xbd;
-  __pyx_t_2[216] = 0x2d;
-  __pyx_t_2[217] = 0x74;
-  __pyx_t_2[218] = 0xd0;
-  __pyx_t_2[219] = 0x12;
-  __pyx_t_2[220] = 0xb8;
-  __pyx_t_2[221] = 0xe5;
-  __pyx_t_2[222] = 0xb4;
-  __pyx_t_2[223] = 0xb0;
-  __pyx_t_2[224] = 0x89;
-  __pyx_t_2[225] = 0x69;
-  __pyx_t_2[226] = 0x97;
-  __pyx_t_2[227] = 0x4a;
-  __pyx_t_2[228] = 0x0c;
-  __pyx_t_2[229] = 0x96;
-  __pyx_t_2[230] = 0x77;
-  __pyx_t_2[231] = 0x7e;
-  __pyx_t_2[232] = 0x65;
-  __pyx_t_2[233] = 0xb9;
-  __pyx_t_2[234] = 0xf1;
-  __pyx_t_2[235] = 0x09;
-  __pyx_t_2[236] = 0xc5;
-  __pyx_t_2[237] = 0x6e;
-  __pyx_t_2[238] = 0xc6;
-  __pyx_t_2[239] = 0x84;
-  __pyx_t_2[240] = 0x18;
-  __pyx_t_2[241] = 0xf0;
-  __pyx_t_2[242] = 0x7d;
-  __pyx_t_2[243] = 0xec;
-  __pyx_t_2[244] = 0x3a;
-  __pyx_t_2[245] = 0xdc;
-  __pyx_t_2[246] = 0x4d;
-  __pyx_t_2[247] = 0x20;
-  __pyx_t_2[248] = 0x79;
-  __pyx_t_2[249] = 0xee;
-  __pyx_t_2[250] = 0x5f;
-  __pyx_t_2[251] = 0x3e;
-  __pyx_t_2[252] = 0xd7;
-  __pyx_t_2[253] = 0xcb;
-  __pyx_t_2[254] = 0x39;
-  __pyx_t_2[255] = 0x48;
-  __pyx_v_6fastgm_3sm4_SM4_S = __pyx_t_2;
+  __pyx_t_4[0] = 0xd6;
+  __pyx_t_4[1] = 0x90;
+  __pyx_t_4[2] = 0xe9;
+  __pyx_t_4[3] = 0xfe;
+  __pyx_t_4[4] = 0xcc;
+  __pyx_t_4[5] = 0xe1;
+  __pyx_t_4[6] = 0x3d;
+  __pyx_t_4[7] = 0xb7;
+  __pyx_t_4[8] = 0x16;
+  __pyx_t_4[9] = 0xb6;
+  __pyx_t_4[10] = 0x14;
+  __pyx_t_4[11] = 0xc2;
+  __pyx_t_4[12] = 0x28;
+  __pyx_t_4[13] = 0xfb;
+  __pyx_t_4[14] = 0x2c;
+  __pyx_t_4[15] = 0x05;
+  __pyx_t_4[16] = 0x2b;
+  __pyx_t_4[17] = 0x67;
+  __pyx_t_4[18] = 0x9a;
+  __pyx_t_4[19] = 0x76;
+  __pyx_t_4[20] = 0x2a;
+  __pyx_t_4[21] = 0xbe;
+  __pyx_t_4[22] = 0x04;
+  __pyx_t_4[23] = 0xc3;
+  __pyx_t_4[24] = 0xaa;
+  __pyx_t_4[25] = 0x44;
+  __pyx_t_4[26] = 0x13;
+  __pyx_t_4[27] = 0x26;
+  __pyx_t_4[28] = 0x49;
+  __pyx_t_4[29] = 0x86;
+  __pyx_t_4[30] = 0x06;
+  __pyx_t_4[31] = 0x99;
+  __pyx_t_4[32] = 0x9c;
+  __pyx_t_4[33] = 0x42;
+  __pyx_t_4[34] = 0x50;
+  __pyx_t_4[35] = 0xf4;
+  __pyx_t_4[36] = 0x91;
+  __pyx_t_4[37] = 0xef;
+  __pyx_t_4[38] = 0x98;
+  __pyx_t_4[39] = 0x7a;
+  __pyx_t_4[40] = 0x33;
+  __pyx_t_4[41] = 0x54;
+  __pyx_t_4[42] = 0x0b;
+  __pyx_t_4[43] = 0x43;
+  __pyx_t_4[44] = 0xed;
+  __pyx_t_4[45] = 0xcf;
+  __pyx_t_4[46] = 0xac;
+  __pyx_t_4[47] = 0x62;
+  __pyx_t_4[48] = 0xe4;
+  __pyx_t_4[49] = 0xb3;
+  __pyx_t_4[50] = 0x1c;
+  __pyx_t_4[51] = 0xa9;
+  __pyx_t_4[52] = 0xc9;
+  __pyx_t_4[53] = 0x08;
+  __pyx_t_4[54] = 0xe8;
+  __pyx_t_4[55] = 0x95;
+  __pyx_t_4[56] = 0x80;
+  __pyx_t_4[57] = 0xdf;
+  __pyx_t_4[58] = 0x94;
+  __pyx_t_4[59] = 0xfa;
+  __pyx_t_4[60] = 0x75;
+  __pyx_t_4[61] = 0x8f;
+  __pyx_t_4[62] = 0x3f;
+  __pyx_t_4[63] = 0xa6;
+  __pyx_t_4[64] = 0x47;
+  __pyx_t_4[65] = 0x07;
+  __pyx_t_4[66] = 0xa7;
+  __pyx_t_4[67] = 0xfc;
+  __pyx_t_4[68] = 0xf3;
+  __pyx_t_4[69] = 0x73;
+  __pyx_t_4[70] = 0x17;
+  __pyx_t_4[71] = 0xba;
+  __pyx_t_4[72] = 0x83;
+  __pyx_t_4[73] = 0x59;
+  __pyx_t_4[74] = 0x3c;
+  __pyx_t_4[75] = 0x19;
+  __pyx_t_4[76] = 0xe6;
+  __pyx_t_4[77] = 0x85;
+  __pyx_t_4[78] = 0x4f;
+  __pyx_t_4[79] = 0xa8;
+  __pyx_t_4[80] = 0x68;
+  __pyx_t_4[81] = 0x6b;
+  __pyx_t_4[82] = 0x81;
+  __pyx_t_4[83] = 0xb2;
+  __pyx_t_4[84] = 0x71;
+  __pyx_t_4[85] = 0x64;
+  __pyx_t_4[86] = 0xda;
+  __pyx_t_4[87] = 0x8b;
+  __pyx_t_4[88] = 0xf8;
+  __pyx_t_4[89] = 0xeb;
+  __pyx_t_4[90] = 0x0f;
+  __pyx_t_4[91] = 0x4b;
+  __pyx_t_4[92] = 0x70;
+  __pyx_t_4[93] = 0x56;
+  __pyx_t_4[94] = 0x9d;
+  __pyx_t_4[95] = 0x35;
+  __pyx_t_4[96] = 0x1e;
+  __pyx_t_4[97] = 0x24;
+  __pyx_t_4[98] = 0x0e;
+  __pyx_t_4[99] = 0x5e;
+  __pyx_t_4[100] = 0x63;
+  __pyx_t_4[101] = 0x58;
+  __pyx_t_4[102] = 0xd1;
+  __pyx_t_4[103] = 0xa2;
+  __pyx_t_4[104] = 0x25;
+  __pyx_t_4[105] = 0x22;
+  __pyx_t_4[106] = 0x7c;
+  __pyx_t_4[107] = 0x3b;
+  __pyx_t_4[108] = 0x01;
+  __pyx_t_4[109] = 0x21;
+  __pyx_t_4[110] = 0x78;
+  __pyx_t_4[111] = 0x87;
+  __pyx_t_4[112] = 0xd4;
+  __pyx_t_4[113] = 0x00;
+  __pyx_t_4[114] = 0x46;
+  __pyx_t_4[115] = 0x57;
+  __pyx_t_4[116] = 0x9f;
+  __pyx_t_4[117] = 0xd3;
+  __pyx_t_4[118] = 0x27;
+  __pyx_t_4[119] = 0x52;
+  __pyx_t_4[120] = 0x4c;
+  __pyx_t_4[121] = 0x36;
+  __pyx_t_4[122] = 0x02;
+  __pyx_t_4[123] = 0xe7;
+  __pyx_t_4[124] = 0xa0;
+  __pyx_t_4[125] = 0xc4;
+  __pyx_t_4[126] = 0xc8;
+  __pyx_t_4[127] = 0x9e;
+  __pyx_t_4[128] = 0xea;
+  __pyx_t_4[129] = 0xbf;
+  __pyx_t_4[130] = 0x8a;
+  __pyx_t_4[131] = 0xd2;
+  __pyx_t_4[132] = 0x40;
+  __pyx_t_4[133] = 0xc7;
+  __pyx_t_4[134] = 0x38;
+  __pyx_t_4[135] = 0xb5;
+  __pyx_t_4[136] = 0xa3;
+  __pyx_t_4[137] = 0xf7;
+  __pyx_t_4[138] = 0xf2;
+  __pyx_t_4[139] = 0xce;
+  __pyx_t_4[140] = 0xf9;
+  __pyx_t_4[141] = 0x61;
+  __pyx_t_4[142] = 0x15;
+  __pyx_t_4[143] = 0xa1;
+  __pyx_t_4[144] = 0xe0;
+  __pyx_t_4[145] = 0xae;
+  __pyx_t_4[146] = 0x5d;
+  __pyx_t_4[147] = 0xa4;
+  __pyx_t_4[148] = 0x9b;
+  __pyx_t_4[149] = 0x34;
+  __pyx_t_4[150] = 0x1a;
+  __pyx_t_4[151] = 0x55;
+  __pyx_t_4[152] = 0xad;
+  __pyx_t_4[153] = 0x93;
+  __pyx_t_4[154] = 0x32;
+  __pyx_t_4[155] = 0x30;
+  __pyx_t_4[156] = 0xf5;
+  __pyx_t_4[157] = 0x8c;
+  __pyx_t_4[158] = 0xb1;
+  __pyx_t_4[159] = 0xe3;
+  __pyx_t_4[160] = 0x1d;
+  __pyx_t_4[161] = 0xf6;
+  __pyx_t_4[162] = 0xe2;
+  __pyx_t_4[163] = 0x2e;
+  __pyx_t_4[164] = 0x82;
+  __pyx_t_4[165] = 0x66;
+  __pyx_t_4[166] = 0xca;
+  __pyx_t_4[167] = 0x60;
+  __pyx_t_4[168] = 0xc0;
+  __pyx_t_4[169] = 0x29;
+  __pyx_t_4[170] = 0x23;
+  __pyx_t_4[171] = 0xab;
+  __pyx_t_4[172] = 0x0d;
+  __pyx_t_4[173] = 0x53;
+  __pyx_t_4[174] = 0x4e;
+  __pyx_t_4[175] = 0x6f;
+  __pyx_t_4[176] = 0xd5;
+  __pyx_t_4[177] = 0xdb;
+  __pyx_t_4[178] = 0x37;
+  __pyx_t_4[179] = 0x45;
+  __pyx_t_4[180] = 0xde;
+  __pyx_t_4[181] = 0xfd;
+  __pyx_t_4[182] = 0x8e;
+  __pyx_t_4[183] = 0x2f;
+  __pyx_t_4[184] = 0x03;
+  __pyx_t_4[185] = 0xff;
+  __pyx_t_4[186] = 0x6a;
+  __pyx_t_4[187] = 0x72;
+  __pyx_t_4[188] = 0x6d;
+  __pyx_t_4[189] = 0x6c;
+  __pyx_t_4[190] = 0x5b;
+  __pyx_t_4[191] = 0x51;
+  __pyx_t_4[192] = 0x8d;
+  __pyx_t_4[193] = 0x1b;
+  __pyx_t_4[194] = 0xaf;
+  __pyx_t_4[195] = 0x92;
+  __pyx_t_4[196] = 0xbb;
+  __pyx_t_4[197] = 0xdd;
+  __pyx_t_4[198] = 0xbc;
+  __pyx_t_4[199] = 0x7f;
+  __pyx_t_4[200] = 0x11;
+  __pyx_t_4[201] = 0xd9;
+  __pyx_t_4[202] = 0x5c;
+  __pyx_t_4[203] = 0x41;
+  __pyx_t_4[204] = 0x1f;
+  __pyx_t_4[205] = 0x10;
+  __pyx_t_4[206] = 0x5a;
+  __pyx_t_4[207] = 0xd8;
+  __pyx_t_4[208] = 0x0a;
+  __pyx_t_4[209] = 0xc1;
+  __pyx_t_4[210] = 0x31;
+  __pyx_t_4[211] = 0x88;
+  __pyx_t_4[212] = 0xa5;
+  __pyx_t_4[213] = 0xcd;
+  __pyx_t_4[214] = 0x7b;
+  __pyx_t_4[215] = 0xbd;
+  __pyx_t_4[216] = 0x2d;
+  __pyx_t_4[217] = 0x74;
+  __pyx_t_4[218] = 0xd0;
+  __pyx_t_4[219] = 0x12;
+  __pyx_t_4[220] = 0xb8;
+  __pyx_t_4[221] = 0xe5;
+  __pyx_t_4[222] = 0xb4;
+  __pyx_t_4[223] = 0xb0;
+  __pyx_t_4[224] = 0x89;
+  __pyx_t_4[225] = 0x69;
+  __pyx_t_4[226] = 0x97;
+  __pyx_t_4[227] = 0x4a;
+  __pyx_t_4[228] = 0x0c;
+  __pyx_t_4[229] = 0x96;
+  __pyx_t_4[230] = 0x77;
+  __pyx_t_4[231] = 0x7e;
+  __pyx_t_4[232] = 0x65;
+  __pyx_t_4[233] = 0xb9;
+  __pyx_t_4[234] = 0xf1;
+  __pyx_t_4[235] = 0x09;
+  __pyx_t_4[236] = 0xc5;
+  __pyx_t_4[237] = 0x6e;
+  __pyx_t_4[238] = 0xc6;
+  __pyx_t_4[239] = 0x84;
+  __pyx_t_4[240] = 0x18;
+  __pyx_t_4[241] = 0xf0;
+  __pyx_t_4[242] = 0x7d;
+  __pyx_t_4[243] = 0xec;
+  __pyx_t_4[244] = 0x3a;
+  __pyx_t_4[245] = 0xdc;
+  __pyx_t_4[246] = 0x4d;
+  __pyx_t_4[247] = 0x20;
+  __pyx_t_4[248] = 0x79;
+  __pyx_t_4[249] = 0xee;
+  __pyx_t_4[250] = 0x5f;
+  __pyx_t_4[251] = 0x3e;
+  __pyx_t_4[252] = 0xd7;
+  __pyx_t_4[253] = 0xcb;
+  __pyx_t_4[254] = 0x39;
+  __pyx_t_4[255] = 0x48;
+  __pyx_v_6fastgm_3sm4_SM4_S = __pyx_t_4;
 
-  /* "fastgm/sm4.pyx":67
+  /* "fastgm/sm4.pyx":75
  * ]
  * 
  * cdef unsigned int* SM4_FK = [             # <<<<<<<<<<<<<<
  *     0xa3b1bac6, 0x56aa3350, 0x677d9197, 0xb27022dc,
  * ]
  */
-  __pyx_t_3[0] = 0xa3b1bac6;
-  __pyx_t_3[1] = 0x56aa3350;
-  __pyx_t_3[2] = 0x677d9197;
-  __pyx_t_3[3] = 0xb27022dc;
-  __pyx_v_6fastgm_3sm4_SM4_FK = __pyx_t_3;
+  __pyx_t_5[0] = 0xa3b1bac6;
+  __pyx_t_5[1] = 0x56aa3350;
+  __pyx_t_5[2] = 0x677d9197;
+  __pyx_t_5[3] = 0xb27022dc;
+  __pyx_v_6fastgm_3sm4_SM4_FK = __pyx_t_5;
 
-  /* "fastgm/sm4.pyx":71
+  /* "fastgm/sm4.pyx":79
  * ]
  * 
  * cdef unsigned int* SM4_CK = [             # <<<<<<<<<<<<<<
  *     0x00070e15, 0x1c232a31, 0x383f464d, 0x545b6269,
  *     0x70777e85, 0x8c939aa1, 0xa8afb6bd, 0xc4cbd2d9,
  */
-  __pyx_t_4[0] = 0x00070e15;
-  __pyx_t_4[1] = 0x1c232a31;
-  __pyx_t_4[2] = 0x383f464d;
-  __pyx_t_4[3] = 0x545b6269;
-  __pyx_t_4[4] = 0x70777e85;
-  __pyx_t_4[5] = 0x8c939aa1;
-  __pyx_t_4[6] = 0xa8afb6bd;
-  __pyx_t_4[7] = 0xc4cbd2d9;
-  __pyx_t_4[8] = 0xe0e7eef5;
-  __pyx_t_4[9] = 0xfc030a11;
-  __pyx_t_4[10] = 0x181f262d;
-  __pyx_t_4[11] = 0x343b4249;
-  __pyx_t_4[12] = 0x50575e65;
-  __pyx_t_4[13] = 0x6c737a81;
-  __pyx_t_4[14] = 0x888f969d;
-  __pyx_t_4[15] = 0xa4abb2b9;
-  __pyx_t_4[16] = 0xc0c7ced5;
-  __pyx_t_4[17] = 0xdce3eaf1;
-  __pyx_t_4[18] = 0xf8ff060d;
-  __pyx_t_4[19] = 0x141b2229;
-  __pyx_t_4[20] = 0x30373e45;
-  __pyx_t_4[21] = 0x4c535a61;
-  __pyx_t_4[22] = 0x686f767d;
-  __pyx_t_4[23] = 0x848b9299;
-  __pyx_t_4[24] = 0xa0a7aeb5;
-  __pyx_t_4[25] = 0xbcc3cad1;
-  __pyx_t_4[26] = 0xd8dfe6ed;
-  __pyx_t_4[27] = 0xf4fb0209;
-  __pyx_t_4[28] = 0x10171e25;
-  __pyx_t_4[29] = 0x2c333a41;
-  __pyx_t_4[30] = 0x484f565d;
-  __pyx_t_4[31] = 0x646b7279;
-  __pyx_v_6fastgm_3sm4_SM4_CK = __pyx_t_4;
+  __pyx_t_6[0] = 0x00070e15;
+  __pyx_t_6[1] = 0x1c232a31;
+  __pyx_t_6[2] = 0x383f464d;
+  __pyx_t_6[3] = 0x545b6269;
+  __pyx_t_6[4] = 0x70777e85;
+  __pyx_t_6[5] = 0x8c939aa1;
+  __pyx_t_6[6] = 0xa8afb6bd;
+  __pyx_t_6[7] = 0xc4cbd2d9;
+  __pyx_t_6[8] = 0xe0e7eef5;
+  __pyx_t_6[9] = 0xfc030a11;
+  __pyx_t_6[10] = 0x181f262d;
+  __pyx_t_6[11] = 0x343b4249;
+  __pyx_t_6[12] = 0x50575e65;
+  __pyx_t_6[13] = 0x6c737a81;
+  __pyx_t_6[14] = 0x888f969d;
+  __pyx_t_6[15] = 0xa4abb2b9;
+  __pyx_t_6[16] = 0xc0c7ced5;
+  __pyx_t_6[17] = 0xdce3eaf1;
+  __pyx_t_6[18] = 0xf8ff060d;
+  __pyx_t_6[19] = 0x141b2229;
+  __pyx_t_6[20] = 0x30373e45;
+  __pyx_t_6[21] = 0x4c535a61;
+  __pyx_t_6[22] = 0x686f767d;
+  __pyx_t_6[23] = 0x848b9299;
+  __pyx_t_6[24] = 0xa0a7aeb5;
+  __pyx_t_6[25] = 0xbcc3cad1;
+  __pyx_t_6[26] = 0xd8dfe6ed;
+  __pyx_t_6[27] = 0xf4fb0209;
+  __pyx_t_6[28] = 0x10171e25;
+  __pyx_t_6[29] = 0x2c333a41;
+  __pyx_t_6[30] = 0x484f565d;
+  __pyx_t_6[31] = 0x646b7279;
+  __pyx_v_6fastgm_3sm4_SM4_CK = __pyx_t_6;
 
-  /* "fastgm/sm4.pyx":294
+  /* "fastgm/sm4.pyx":302
  *         tmp_iv = inbuf[i:i + 16].copy()
  * 
  * def sm4_key_new():             # <<<<<<<<<<<<<<
  *     return array.array('I', [0] * SM4_NUM_ROUNDS)
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_1sm4_key_new, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 294, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sm4_key_new, __pyx_t_1) < 0) __PYX_ERR(0, 294, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_1sm4_key_new, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_sm4_key_new, __pyx_t_2) < 0) __PYX_ERR(0, 302, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":298
+  /* "fastgm/sm4.pyx":306
  * 
  * 
  * def zero_pad(data):             # <<<<<<<<<<<<<<
  *     buf_len = len(data)
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_3zero_pad, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 298, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_zero_pad, __pyx_t_1) < 0) __PYX_ERR(0, 298, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_3zero_pad, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_zero_pad, __pyx_t_2) < 0) __PYX_ERR(0, 306, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":307
+  /* "fastgm/sm4.pyx":315
  *         return data + b'\0' * (new_len - buf_len)
  * 
  * def pkcs7_pad(data):             # <<<<<<<<<<<<<<
  *     buf_len = len(data)
  * 
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_5pkcs7_pad, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 307, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pkcs7_pad, __pyx_t_1) < 0) __PYX_ERR(0, 307, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6fastgm_3sm4_5pkcs7_pad, NULL, __pyx_n_s_fastgm_sm4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pkcs7_pad, __pyx_t_2) < 0) __PYX_ERR(0, 315, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "fastgm/sm4.pyx":313
- *     return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)
+  /* "fastgm/sm4.pyx":321
+ *     return data + struct.pack("B", new_len - buf_len) * (new_len - buf_len)
  * 
  * class SM4:             # <<<<<<<<<<<<<<
  *     def __init__(self, key, padding='zero'):
  *         """
  */
-  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_SM4, __pyx_n_s_SM4, (PyObject *) NULL, __pyx_n_s_fastgm_sm4, (PyObject *) NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 313, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_SM4, __pyx_n_s_SM4, (PyObject *) NULL, __pyx_n_s_fastgm_sm4, (PyObject *) NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
 
-  /* "fastgm/sm4.pyx":314
+  /* "fastgm/sm4.pyx":322
  * 
  * class SM4:
  *     def __init__(self, key, padding='zero'):             # <<<<<<<<<<<<<<
  *         """
  *         key: key16bytesSM4.generate_key()
  */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_1__init__, 0, __pyx_n_s_SM4___init, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__28)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_5, __pyx_tuple__29);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_init, __pyx_t_5) < 0) __PYX_ERR(0, 314, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_1__init__, 0, __pyx_n_s_SM4___init, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__27)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_1, __pyx_tuple__28);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_init, __pyx_t_1) < 0) __PYX_ERR(0, 322, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fastgm/sm4.pyx":328
+  /* "fastgm/sm4.pyx":336
  * 
  *     @classmethod
  *     def generate_key(cls):             # <<<<<<<<<<<<<<
  *         return os.urandom(16)
  * 
  */
-  __pyx_t_5 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_3generate_key, __Pyx_CYFUNCTION_CLASSMETHOD, __pyx_n_s_SM4_generate_key, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 328, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_3generate_key, __Pyx_CYFUNCTION_CLASSMETHOD, __pyx_n_s_SM4_generate_key, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
 
-  /* "fastgm/sm4.pyx":327
+  /* "fastgm/sm4.pyx":335
  *         self.padding = padding
  * 
  *     @classmethod             # <<<<<<<<<<<<<<
  *     def generate_key(cls):
  *         return os.urandom(16)
  */
-  __pyx_t_6 = __Pyx_Method_ClassMethod(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 327, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_generate_key, __pyx_t_6) < 0) __PYX_ERR(0, 328, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_7 = __Pyx_Method_ClassMethod(__pyx_t_1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 335, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_generate_key, __pyx_t_7) < 0) __PYX_ERR(0, 336, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "fastgm/sm4.pyx":331
+  /* "fastgm/sm4.pyx":339
  *         return os.urandom(16)
+ * 
+ *     def _set_enc_key(self):             # <<<<<<<<<<<<<<
+ *         if self._enc_key is None:
+ *             self._enc_key = sm4_key_new()
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_5_set_enc_key, 0, __pyx_n_s_SM4__set_enc_key, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 339, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_set_enc_key, __pyx_t_7) < 0) __PYX_ERR(0, 339, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+  /* "fastgm/sm4.pyx":344
+ *             sm4_set_encrypt_key(self._enc_key, self._raw_key)
+ * 
+ *     def _set_dec_key(self):             # <<<<<<<<<<<<<<
+ *         if self._dec_key is None:
+ *             self._dec_key = sm4_key_new()
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_7_set_dec_key, 0, __pyx_n_s_SM4__set_dec_key, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__34)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 344, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_set_dec_key, __pyx_t_7) < 0) __PYX_ERR(0, 344, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+  /* "fastgm/sm4.pyx":349
+ *             sm4_set_decrypt_key(self._dec_key, self._raw_key)
+ * 
+ *     def _padding(self, message):             # <<<<<<<<<<<<<<
+ *         if self.padding == 'zero':
+ *             message = zero_pad(message)
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_9_padding, 0, __pyx_n_s_SM4__padding, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__36)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 349, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_padding_2, __pyx_t_7) < 0) __PYX_ERR(0, 349, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+  /* "fastgm/sm4.pyx":358
+ *         return message
+ * 
+ *     def _bytes_array_to_string(self, buf, mode):             # <<<<<<<<<<<<<<
+ *         if mode == 'decrypt':
+ *             if self.padding == 'pkcs7':
+ */
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_11_bytes_array_to_string, 0, __pyx_n_s_SM4__bytes_array_to_string, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__38)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_bytes_array_to_string, __pyx_t_7) < 0) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+  /* "fastgm/sm4.pyx":370
+ *         return buf.tobytes().rstrip(b'\0')
  * 
  *     def encrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_5encrypt_ecb, 0, __pyx_n_s_SM4_encrypt_ecb, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 331, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_encrypt_ecb, __pyx_t_6) < 0) __PYX_ERR(0, 331, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_13encrypt_ecb, 0, __pyx_n_s_SM4_encrypt_ecb, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__40)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 370, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_encrypt_ecb, __pyx_t_7) < 0) __PYX_ERR(0, 370, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "fastgm/sm4.pyx":352
- *         return buf.tobytes().rstrip(b'\0')
+  /* "fastgm/sm4.pyx":381
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_ecb(self, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_7decrypt_ecb, 0, __pyx_n_s_SM4_decrypt_ecb, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 352, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_decrypt_ecb, __pyx_t_6) < 0) __PYX_ERR(0, 352, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_15decrypt_ecb, 0, __pyx_n_s_SM4_decrypt_ecb, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__42)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 381, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_decrypt_ecb, __pyx_t_7) < 0) __PYX_ERR(0, 381, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "fastgm/sm4.pyx":375
- *             return buf[:-pad_len]
+  /* "fastgm/sm4.pyx":392
+ *         return self._bytes_array_to_string(buf, 'decrypt')
  * 
  *     def encrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_9encrypt_cbc, 0, __pyx_n_s_SM4_encrypt_cbc, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 375, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_encrypt_cbc, __pyx_t_6) < 0) __PYX_ERR(0, 375, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_17encrypt_cbc, 0, __pyx_n_s_SM4_encrypt_cbc, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__44)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 392, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_encrypt_cbc, __pyx_t_7) < 0) __PYX_ERR(0, 392, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "fastgm/sm4.pyx":396
- * 
+  /* "fastgm/sm4.pyx":403
+ *         return self._bytes_array_to_string(buf, 'encrypt')
  * 
  *     def decrypt_cbc(self, iv, message):             # <<<<<<<<<<<<<<
  *         """
  *         message: bytes
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_11decrypt_cbc, 0, __pyx_n_s_SM4_decrypt_cbc, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 396, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_decrypt_cbc, __pyx_t_6) < 0) __PYX_ERR(0, 396, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_6fastgm_3sm4_3SM4_19decrypt_cbc, 0, __pyx_n_s_SM4_decrypt_cbc, NULL, __pyx_n_s_fastgm_sm4, __pyx_d, ((PyObject *)__pyx_codeobj__46)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 403, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (__Pyx_SetNameInClass(__pyx_t_2, __pyx_n_s_decrypt_cbc, __pyx_t_7) < 0) __PYX_ERR(0, 403, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "fastgm/sm4.pyx":313
- *     return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)
+  /* "fastgm/sm4.pyx":321
+ *     return data + struct.pack("B", new_len - buf_len) * (new_len - buf_len)
  * 
  * class SM4:             # <<<<<<<<<<<<<<
  *     def __init__(self, key, padding='zero'):
  *         """
  */
-  __pyx_t_6 = __Pyx_Py3ClassCreate(((PyObject*)&__Pyx_DefaultClassType), __pyx_n_s_SM4, __pyx_empty_tuple, __pyx_t_1, NULL, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 313, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SM4, __pyx_t_6) < 0) __PYX_ERR(0, 313, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_7 = __Pyx_Py3ClassCreate(((PyObject*)&__Pyx_DefaultClassType), __pyx_n_s_SM4, __pyx_empty_tuple, __pyx_t_2, NULL, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 321, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_SM4, __pyx_t_7) < 0) __PYX_ERR(0, 321, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "fastgm/sm4.pyx":1
  * import os             # <<<<<<<<<<<<<<
- * 
- * from cpython cimport array
+ * from sys import version_info
+ * import struct
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "View.MemoryView":209
  *         info.obj = self
@@ -23263,10 +23971,10 @@ if (!__Pyx_RefNanny) {
  * 
  *     def __dealloc__(array self):
  */
-  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 209, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(2, 209, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 209, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(2, 209, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_array_type);
 
   /* "View.MemoryView":286
@@ -23276,12 +23984,12 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__40, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__47, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(generic);
-  __Pyx_DECREF_SET(generic, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(generic, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "View.MemoryView":287
  * 
@@ -23290,12 +23998,12 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__41, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__48, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(strided);
-  __Pyx_DECREF_SET(strided, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(strided, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -23304,12 +24012,12 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__42, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__49, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect);
-  __Pyx_DECREF_SET(indirect, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(indirect, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "View.MemoryView":291
  * 
@@ -23318,12 +24026,12 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__43, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__50, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(contiguous);
-  __Pyx_DECREF_SET(contiguous, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(contiguous, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "View.MemoryView":292
  * 
@@ -23332,12 +24040,12 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__44, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__51, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect_contiguous);
-  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_1);
-  __pyx_t_1 = 0;
+  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_2);
+  __pyx_t_2 = 0;
 
   /* "View.MemoryView":316
  * 
@@ -23355,15 +24063,15 @@ if (!__Pyx_RefNanny) {
  *     PyThread_allocate_lock(),
  *     PyThread_allocate_lock(),
  */
-  __pyx_t_7[0] = PyThread_allocate_lock();
-  __pyx_t_7[1] = PyThread_allocate_lock();
-  __pyx_t_7[2] = PyThread_allocate_lock();
-  __pyx_t_7[3] = PyThread_allocate_lock();
-  __pyx_t_7[4] = PyThread_allocate_lock();
-  __pyx_t_7[5] = PyThread_allocate_lock();
-  __pyx_t_7[6] = PyThread_allocate_lock();
-  __pyx_t_7[7] = PyThread_allocate_lock();
-  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_7, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
+  __pyx_t_8[0] = PyThread_allocate_lock();
+  __pyx_t_8[1] = PyThread_allocate_lock();
+  __pyx_t_8[2] = PyThread_allocate_lock();
+  __pyx_t_8[3] = PyThread_allocate_lock();
+  __pyx_t_8[4] = PyThread_allocate_lock();
+  __pyx_t_8[5] = PyThread_allocate_lock();
+  __pyx_t_8[6] = PyThread_allocate_lock();
+  __pyx_t_8[7] = PyThread_allocate_lock();
+  memcpy(&(__pyx_memoryview_thread_locks[0]), __pyx_t_8, sizeof(__pyx_memoryview_thread_locks[0]) * (8));
 
   /* "View.MemoryView":549
  *         info.obj = self
@@ -23372,10 +24080,10 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 549, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(2, 549, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 549, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(2, 549, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_memoryview_type);
 
   /* "View.MemoryView":995
@@ -23385,10 +24093,10 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 995, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem((PyObject *)__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_1) < 0) __PYX_ERR(2, 995, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), ((char *)"getbuffer(obj, view, flags)")); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem((PyObject *)__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) __PYX_ERR(2, 995, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   PyType_Modified(__pyx_memoryviewslice_type);
 
   /* "(tree fragment)":1
@@ -23396,10 +24104,10 @@ if (!__Pyx_RefNanny) {
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_15View_dot_MemoryView_1__pyx_unpickle_Enum, NULL, __pyx_n_s_View_MemoryView); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_1) < 0) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_15View_dot_MemoryView_1__pyx_unpickle_Enum, NULL, __pyx_n_s_View_MemoryView); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_pyx_unpickle_Enum, __pyx_t_2) < 0) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":11
  *         __pyx_unpickle_Enum__set_state(<Enum> __pyx_result, __pyx_state)
@@ -23414,8 +24122,8 @@ if (!__Pyx_RefNanny) {
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_7);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init fastgm.sm4", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -24170,6 +24878,209 @@ static PyObject* __Pyx_PyInt_FloorDivideObjC(PyObject *op1, PyObject *op2, CYTHO
 }
 #endif
 
+/* PyDictVersioning */
+#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
+}
+static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
+    PyObject **dictptr = NULL;
+    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
+    if (offset) {
+#if CYTHON_COMPILING_IN_CPYTHON
+        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
+#else
+        dictptr = _PyObject_GetDictPtr(obj);
+#endif
+    }
+    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
+}
+static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
+    PyObject *dict = Py_TYPE(obj)->tp_dict;
+    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
+        return 0;
+    return obj_dict_version == __Pyx_get_object_dict_version(obj);
+}
+#endif
+
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
+}
+#endif
+
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
     const char* func_name,
@@ -24475,209 +25386,6 @@ return_ne:
 #endif
 }
 
-/* PyDictVersioning */
-#if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_tp_dict_version(PyObject *obj) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    return likely(dict) ? __PYX_GET_DICT_VERSION(dict) : 0;
-}
-static CYTHON_INLINE PY_UINT64_T __Pyx_get_object_dict_version(PyObject *obj) {
-    PyObject **dictptr = NULL;
-    Py_ssize_t offset = Py_TYPE(obj)->tp_dictoffset;
-    if (offset) {
-#if CYTHON_COMPILING_IN_CPYTHON
-        dictptr = (likely(offset > 0)) ? (PyObject **) ((char *)obj + offset) : _PyObject_GetDictPtr(obj);
-#else
-        dictptr = _PyObject_GetDictPtr(obj);
-#endif
-    }
-    return (dictptr && *dictptr) ? __PYX_GET_DICT_VERSION(*dictptr) : 0;
-}
-static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UINT64_T tp_dict_version, PY_UINT64_T obj_dict_version) {
-    PyObject *dict = Py_TYPE(obj)->tp_dict;
-    if (unlikely(!dict) || unlikely(tp_dict_version != __PYX_GET_DICT_VERSION(dict)))
-        return 0;
-    return obj_dict_version == __Pyx_get_object_dict_version(obj);
-}
-#endif
-
-/* GetModuleGlobalName */
-#if CYTHON_USE_DICT_VERSIONS
-static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
-#else
-static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
-#endif
-{
-    PyObject *result;
-#if !CYTHON_AVOID_BORROWED_REFS
-#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
-    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    } else if (unlikely(PyErr_Occurred())) {
-        return NULL;
-    }
-#else
-    result = PyDict_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-#endif
-#else
-    result = PyObject_GetItem(__pyx_d, name);
-    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
-    if (likely(result)) {
-        return __Pyx_NewRef(result);
-    }
-    PyErr_Clear();
-#endif
-    return __Pyx_GetBuiltinName(name);
-}
-
-/* PyCFunctionFastCall */
-#if CYTHON_FAST_PYCCALL
-static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
-    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
-    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
-    PyObject *self = PyCFunction_GET_SELF(func);
-    int flags = PyCFunction_GET_FLAGS(func);
-    assert(PyCFunction_Check(func));
-    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
-    assert(nargs >= 0);
-    assert(nargs == 0 || args != NULL);
-    /* _PyCFunction_FastCallDict() must not be called with an exception set,
-       because it may clear it (directly or indirectly) and so the
-       caller loses its exception */
-    assert(!PyErr_Occurred());
-    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
-        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
-    } else {
-        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
-    }
-}
-#endif
-
-/* PyFunctionFastCall */
-#if CYTHON_FAST_PYCALL
-static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
-                                               PyObject *globals) {
-    PyFrameObject *f;
-    PyThreadState *tstate = __Pyx_PyThreadState_Current;
-    PyObject **fastlocals;
-    Py_ssize_t i;
-    PyObject *result;
-    assert(globals != NULL);
-    /* XXX Perhaps we should create a specialized
-       PyFrame_New() that doesn't take locals, but does
-       take builtins without sanity checking them.
-       */
-    assert(tstate != NULL);
-    f = PyFrame_New(tstate, co, globals, NULL);
-    if (f == NULL) {
-        return NULL;
-    }
-    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
-    for (i = 0; i < na; i++) {
-        Py_INCREF(*args);
-        fastlocals[i] = *args++;
-    }
-    result = PyEval_EvalFrameEx(f,0);
-    ++tstate->recursion_depth;
-    Py_DECREF(f);
-    --tstate->recursion_depth;
-    return result;
-}
-#if 1 || PY_VERSION_HEX < 0x030600B1
-static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
-    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
-    PyObject *globals = PyFunction_GET_GLOBALS(func);
-    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
-    PyObject *closure;
-#if PY_MAJOR_VERSION >= 3
-    PyObject *kwdefs;
-#endif
-    PyObject *kwtuple, **k;
-    PyObject **d;
-    Py_ssize_t nd;
-    Py_ssize_t nk;
-    PyObject *result;
-    assert(kwargs == NULL || PyDict_Check(kwargs));
-    nk = kwargs ? PyDict_Size(kwargs) : 0;
-    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
-        return NULL;
-    }
-    if (
-#if PY_MAJOR_VERSION >= 3
-            co->co_kwonlyargcount == 0 &&
-#endif
-            likely(kwargs == NULL || nk == 0) &&
-            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
-        if (argdefs == NULL && co->co_argcount == nargs) {
-            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
-            goto done;
-        }
-        else if (nargs == 0 && argdefs != NULL
-                 && co->co_argcount == Py_SIZE(argdefs)) {
-            /* function called with no arguments, but all parameters have
-               a default value: use default values as arguments .*/
-            args = &PyTuple_GET_ITEM(argdefs, 0);
-            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
-            goto done;
-        }
-    }
-    if (kwargs != NULL) {
-        Py_ssize_t pos, i;
-        kwtuple = PyTuple_New(2 * nk);
-        if (kwtuple == NULL) {
-            result = NULL;
-            goto done;
-        }
-        k = &PyTuple_GET_ITEM(kwtuple, 0);
-        pos = i = 0;
-        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
-            Py_INCREF(k[i]);
-            Py_INCREF(k[i+1]);
-            i += 2;
-        }
-        nk = i / 2;
-    }
-    else {
-        kwtuple = NULL;
-        k = NULL;
-    }
-    closure = PyFunction_GET_CLOSURE(func);
-#if PY_MAJOR_VERSION >= 3
-    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
-#endif
-    if (argdefs != NULL) {
-        d = &PyTuple_GET_ITEM(argdefs, 0);
-        nd = Py_SIZE(argdefs);
-    }
-    else {
-        d = NULL;
-        nd = 0;
-    }
-#if PY_MAJOR_VERSION >= 3
-    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
-                               args, (int)nargs,
-                               k, (int)nk,
-                               d, (int)nd, kwdefs, closure);
-#else
-    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
-                               args, (int)nargs,
-                               k, (int)nk,
-                               d, (int)nd, closure);
-#endif
-    Py_XDECREF(kwtuple);
-done:
-    Py_LeaveRecursiveCall();
-    return result;
-}
-#endif
-#endif
-
 /* PyObjectCall2Args */
 static CYTHON_UNUSED PyObject* __Pyx_PyObject_Call2Args(PyObject* function, PyObject* arg1, PyObject* arg2) {
     PyObject *args, *result = NULL;
@@ -24948,13 +25656,6 @@ bad:
 }
 #endif
 
-/* None */
-static CYTHON_INLINE Py_ssize_t __Pyx_mod_Py_ssize_t(Py_ssize_t a, Py_ssize_t b) {
-    Py_ssize_t r = a % b;
-    r += ((r != 0) & ((r ^ b) < 0)) * b;
-    return r;
-}
-
 /* GetItemInt */
 static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
     PyObject *r;
@@ -25137,6 +25838,13 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(PyObject* obj,
         "'%.200s' object is unsliceable", Py_TYPE(obj)->tp_name);
 bad:
     return NULL;
+}
+
+/* None */
+static CYTHON_INLINE Py_ssize_t __Pyx_mod_Py_ssize_t(Py_ssize_t a, Py_ssize_t b) {
+    Py_ssize_t r = a % b;
+    r += ((r != 0) & ((r ^ b) < 0)) * b;
+    return r;
 }
 
 /* ArgTypeTest */
@@ -27941,6 +28649,44 @@ no_fail:
 }
 
 /* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const long neg_one = (long) -1, const_zero = (long) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(long) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
   static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_char(unsigned char value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
@@ -28442,44 +29188,6 @@ raise_neg_overflow:
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(unsigned int),
-                                     little, !is_unsigned);
-    }
-}
-
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
                                      little, !is_unsigned);
     }
 }

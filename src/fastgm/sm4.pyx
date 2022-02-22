@@ -1,9 +1,17 @@
 import os
+from sys import version_info
+import struct
 
 from cpython cimport array
 import array
 import cython
 
+if version_info[0] == 2:
+    # python2
+    PY2 = True
+else:
+    # python3
+    PY2 = False
 
 @cython.boundscheck(False) # turn off bounds-checking for entire function
 @cython.wraparound(False)  # turn off negative index wrapping for entire function        
@@ -308,7 +316,7 @@ def pkcs7_pad(data):
     buf_len = len(data)
 
     new_len = (buf_len // 16 + 1) * 16
-    return data + (new_len - buf_len).to_bytes(1, 'big') * (new_len - buf_len)
+    return data + struct.pack("B", new_len - buf_len) * (new_len - buf_len)
 
 class SM4:
     def __init__(self, key, padding='zero'):
@@ -327,90 +335,78 @@ class SM4:
     @classmethod
     def generate_key(cls):
         return os.urandom(16)
-        
-    def encrypt_ecb(self, message):
-        """
-        message: 待加密bytes串
-        """
+
+    def _set_enc_key(self):
         if self._enc_key is None:
             self._enc_key = sm4_key_new()
             sm4_set_encrypt_key(self._enc_key, self._raw_key)
-        
+
+    def _set_dec_key(self):
+        if self._dec_key is None:
+            self._dec_key = sm4_key_new()
+            sm4_set_decrypt_key(self._dec_key, self._raw_key)
+
+    def _padding(self, message):
         if self.padding == 'zero':
             message = zero_pad(message)
         elif self.padding == 'pkcs7':
             message = pkcs7_pad(message)
         else:
             raise Exception('不支持的padding方式，目前支持zero与pkcs7')
+        return message
+
+    def _bytes_array_to_string(self, buf, mode):
+        if mode == 'decrypt':
+            if self.padding == 'pkcs7':
+                pad_len = buf[-1]
+                if PY2:
+                    return buf[:-pad_len].tostring()
+                else:
+                    return buf[:-pad_len].tobytes()
+        if PY2:
+            return buf.tostring().rstrip(b'\0')
+        return buf.tobytes().rstrip(b'\0')
+
+    def encrypt_ecb(self, message):
+        """
+        message: 待加密bytes串
+        """
+        self._set_enc_key()
+        message = self._padding(message)
 
         buf = array.array('B', b'\0' * len(message))
-        
         sm4_encrypt_ecb(message, buf, self._enc_key)
-        
-        return buf.tobytes().rstrip(b'\0')
-    
+        return self._bytes_array_to_string(buf, 'encrypt')
+
     def decrypt_ecb(self, message):
         """
         message: 待解密bytes串
         """
-
-        if self._dec_key is None:
-            self._dec_key = sm4_key_new()
-            sm4_set_decrypt_key(self._dec_key, self._raw_key)
-        
+        self._set_dec_key()
         assert len(message) % 16 == 0, '密文长度需要是16的整数'
 
         buf = array.array('B', b'\0' * len(message))
-        
         sm4_decrypt_ecb(message, buf, self._dec_key)
-        
-        buf = buf.tobytes()
-        
-        if self.padding == 'zero':
-            return buf.rstrip(b'\0')
-        else:
-            pad_len = buf[-1]
-            return buf[:-pad_len]
+        return self._bytes_array_to_string(buf, 'decrypt')
 
     def encrypt_cbc(self, iv, message):
         """
         message: 待加密bytes串
         """
-        if self._enc_key is None:
-            self._enc_key = sm4_key_new()
-            sm4_set_encrypt_key(self._enc_key, self._raw_key)
-
-
-        if self.padding == 'zero':
-            message = zero_pad(message)
-        elif self.padding == 'pkcs7':
-            message = pkcs7_pad(message)
-        else:
-            raise Exception('不支持的padding方式，目前支持zero与pkcs7')
+        self._set_enc_key()
+        message = self._padding(message)
 
         buf = array.array('B', b'\0' * len(message))
         sm4_encrypt_cbc(message, iv, buf, self._enc_key)
-        return buf.tobytes().rstrip(b'\0')
-
+        return self._bytes_array_to_string(buf, 'encrypt')
 
     def decrypt_cbc(self, iv, message):
         """
         message: 待解密bytes串
         """
-        if self._dec_key is None:
-            self._dec_key = sm4_key_new()
-            sm4_set_decrypt_key(self._dec_key, self._raw_key)
-
+        self._set_dec_key()
         assert len(message) % 16 == 0, '密文长度需要是16的整数'
 
         buf = array.array('B', b'\0' * len(message))
-
         sm4_decrypt_cbc(message, iv, buf, self._dec_key)
-
-        buf = buf.tobytes()
-
-        if self.padding == 'zero':
-            return buf.rstrip(b'\0')
-        else:
-            pad_len = buf[-1]
-            return buf[:-pad_len]
+        return self._bytes_array_to_string(buf, 'decrypt')
