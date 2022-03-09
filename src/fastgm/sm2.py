@@ -1,5 +1,6 @@
 import os
 
+from .der import sm2_pk_from_pem, sm2_sk_from_pem
 from .sm3 import hash, kdf
 
 # 选择素域，设置椭圆曲线参数
@@ -227,15 +228,16 @@ class SM2:
         """
         mode: C1C3C2 或 C1C2C3
         """
-        
         self._mode = mode
+        self._sk = None
+        self._pk = None
 
     @classmethod
     def generate_key(cls):
         """
         return: 私钥、公钥组成的tuple
         """
-        return generate_key()
+        sk, pk = generate_key()
 
     def encrypt(self, pk, data):
         """
@@ -252,3 +254,12 @@ class SM2:
         data: bytes
         """
         return decrypt(sk, data, self._mode)
+
+    def pk_from_pem(self, pem):
+        pk = sm2_pk_from_pem(pem)
+        self._pk = pk
+
+    def sk_from_pem(self, pem):
+        sk, pk = sm2_sk_from_pem(pem)
+        self._sk = sk
+        self._pk = pk
