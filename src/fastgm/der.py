@@ -9,6 +9,20 @@ _sentry = object()
 class FastgmExpectedDer(Exception):
     pass
 
+# sm2 256 curve information
+sm256v1 = {
+    'ver': 1,
+    'cor': 1,
+    'p': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF',
+    'a': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC',
+    'b': '28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93',
+    'n': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123',
+    'gx':'32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7',
+    'gy':'BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0',
+    'sm2ecc_oid':[1, 2, 156, 10197, 1, 301],
+    'ecpk_oid':[1, 2, 840, 10045, 2, 1],
+}
+
 def str_idx_as_int(string, index):
     """Take index'th byte from string, return as integer"""
     val = string[index]
@@ -227,36 +241,89 @@ def unpem(pem):
             if l and not l.startswith(b("-----"))
         ]
     )
-    second = d.find(b'MI', 2)
+    second = d.find(b'MH', 0)
     if second != -1:
         return base64.b64decode(d[second:])
 
     return base64.b64decode(d)
 
+def to_pem(der, name):
+    b64 = base64.b64encode(der)
+    lines = [("-----BEGIN %s-----\n" % name).encode()]
+    lines.extend(
+        [b64[start : start + 64] + b("\n") for start in range(0, len(b64), 64)]
+    )
+    lines.append(("-----END %s-----\n" % name).encode())
+    return b("").join(lines)
+
 def sm2_pk_from_pem(pem):
-    '''
-    The asn.1 struct 
-    '''
     unb64 = unpem(pem)
     string = normalise_bytes(unb64)
     total_seq, empty1 = remove_sequence(string)
-    cur_info_seq, empty2 = remove_sequence(total_seq)
-    pk, rest = remove_bitstring(empty2, 0)
-
+    oid_sequence, rest1 = remove_sequence(total_seq)
+    pk, rest2 = remove_bitstring(rest1, 0)
     return pk[1:]
 
 def sm2_sk_from_pem(pem):
-    '''
-    The asn.1 struct
-    '''
     unb64 = unpem(pem)
     string = normalise_bytes(unb64)
     total_seq, empty = remove_sequence(string)
     version, ver_rest = remove_integer(total_seq)
     sk, sk_rest = remove_octet_string(ver_rest)
-    cur_info_ctx, cic_rest = remove_ctx_t61string(sk_rest)
-    pk_ctx, pk_ctx_rest = remove_ctx_t61string(cic_rest)
+    sm2_ecc_ctx, sm2ecc_rest = remove_ctx_t61string(sk_rest)
+    pk_ctx, pk_ctx_rest = remove_ctx_t61string(sm2ecc_rest)
     pk, rest = remove_bitstring(pk_ctx, 0)
 
-    return sk, pk
+    return sk, pk[1:]
+
+def sm2_cur_info_to_der():
+    cor_integer = encode_integer(sm256v1['cor'])
+    n_integer = encode_integer(int(sm256v1['n'], base=16))
+    g_octet_string = encode_octet_string(bytearray.fromhex('04'+sm256v1['gx']+sm256v1['gy']))
+    b_octet_string = encode_octet_string(bytearray.fromhex(sm256v1['b']))
+    a_octet_string = encode_octet_string(bytearray.fromhex(sm256v1['a']))
+    sequence_1 = encode_sequence(a_octet_string, b_octet_string)
+    p_integer = encode_integer(int(sm256v1['p'], base=16))
+    prime_object_id = encode_oid(sm256v1['prime-oid'][0], sm256v1['prime-oid'][1],\
+                               sm256v1['prime-oid'][2], sm256v1['prime-oid'][3],\
+                               sm256v1['prime-oid'][4], sm256v1['prime-oid'][5])
+    sequence_2 = encode_sequence(prime_object_id, p_integer)
+    version_integer = encode_integer(sm256v1['ver'])
+
+    return encode_sequence(version_integer, sequence_2, sequence_1, g_octet_string, n_integer, cor_integer)
+
+
+def sm2_pk_to_der(pk):
+    pk_bitstring = encode_bitstring(b'\04' + pk, 0)
+    sm2ecc = encode_oid(sm256v1['sm2ecc_oid'][0], sm256v1['sm2ecc_oid'][1],\
+                        sm256v1['sm2ecc_oid'][2], sm256v1['sm2ecc_oid'][3],\
+                        sm256v1['sm2ecc_oid'][4], sm256v1['sm2ecc_oid'][5])
+    ecpk = encode_oid(sm256v1['ecpk_oid'][0], sm256v1['ecpk_oid'][1],\
+                      sm256v1['ecpk_oid'][2], sm256v1['ecpk_oid'][3],\
+                      sm256v1['ecpk_oid'][4], sm256v1['ecpk_oid'][5])
+    sequence = encode_sequence(ecpk, sm2ecc)
+    pk_der = encode_sequence(sequence, pk_bitstring)
+
+    return to_pem(pk_der, 'PUBLIC KEY')
+
+def sm2_sk_to_der(sk, pk):
+    # first parameter
+    sm2ecc = encode_oid(sm256v1['sm2ecc_oid'][0], sm256v1['sm2ecc_oid'][1],\
+                        sm256v1['sm2ecc_oid'][2], sm256v1['sm2ecc_oid'][3],\
+                        sm256v1['sm2ecc_oid'][4], sm256v1['sm2ecc_oid'][5])
+    # second parameter
+    pk_bitstring = encode_bitstring(b'\04' + pk, 0)
+    ctx_spec_1 = encode_ctx_t61string(pk_bitstring, 1)
+    ctx_spec_2 = encode_ctx_t61string(sm2ecc, 0)
+    sk_octet_string = encode_octet_string(sk)
+    version_integer = encode_integer(sm256v1['ver'])
+    sk_der = encode_sequence(version_integer, sk_octet_string, ctx_spec_2, ctx_spec_1)
+
+    cur_pem = to_pem(sm2ecc, 'EC PARAMETERS')
+    sk_pem  = to_pem(sk_der, 'EC PRIVATE KEY')
+    return cur_pem + sk_pem
+
+
+
+
 

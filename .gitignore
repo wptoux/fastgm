@@ -115,3 +115,6 @@ dmypy.json
 .pyre/
 
 test_der.py
+bd.sh
+st.sh
+*.pem

@@ -1,6 +1,6 @@
 import os
 
-from .der import sm2_pk_from_pem, sm2_sk_from_pem
+from .der import sm2_pk_from_pem, sm2_sk_from_pem, sm2_pk_to_der, sm2_sk_to_der
 from .sm3 import hash, kdf
 
 # 选择素域，设置椭圆曲线参数
@@ -263,3 +263,9 @@ class SM2:
         sk, pk = sm2_sk_from_pem(pem)
         self._sk = sk
         self._pk = pk
+
+    def pk_to_pem(self):
+        return sm2_pk_to_der(self._pk)
+
+    def sk_to_pem(self):
+        return sm2_sk_to_der(self._sk, self._pk)
