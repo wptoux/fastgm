@@ -241,21 +241,21 @@ class SM2:
         sm2._sk, sm2._pk = generate_key()
         return sm2
 
-    def encrypt(self, pk, data):
+    def encrypt(self, data):
         """
         pk: 公钥, hex编码
         data: bytes
         """
         k = os.urandom(32)
 
-        return encrypt(pk, k, data, mode=self._mode)
+        return encrypt(self._pk, k, data, mode=self._mode)
 
-    def decrypt(self, sk, data):
+    def decrypt(self, data):
         """
         sk: 私钥, hex编码
         data: bytes
         """
-        return decrypt(sk, data, self._mode)
+        return decrypt(self._sk, data, self._mode)
 
     def pk_from_pem(self, pem):
         '''
