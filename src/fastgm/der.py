@@ -259,7 +259,7 @@ def sm2_pk_from_pem(pem):
     total_seq, empty1 = remove_sequence(string)
     oid_sequence, rest1 = remove_sequence(total_seq)
     pk, rest2 = remove_bitstring(rest1, 0)
-    return pk[1:]
+    return pk[1:].hex()
 
 def sm2_sk_from_pem(pem):
     pos = pem.find(sm256v1['header'])
@@ -272,24 +272,7 @@ def sm2_sk_from_pem(pem):
     pk_ctx, pk_ctx_rest = remove_ctx_t61string(sm2ecc_rest)
     pk, rest = remove_bitstring(pk_ctx, 0)
 
-    return sk, pk[1:]
-
-def sm2_cur_info_to_der():
-    cor_integer = encode_integer(sm256v1['cor'])
-    n_integer = encode_integer(int(sm256v1['n'], base=16))
-    g_octet_string = encode_octet_string(bytearray.fromhex('04'+sm256v1['gx']+sm256v1['gy']))
-    b_octet_string = encode_octet_string(bytearray.fromhex(sm256v1['b']))
-    a_octet_string = encode_octet_string(bytearray.fromhex(sm256v1['a']))
-    sequence_1 = encode_sequence(a_octet_string, b_octet_string)
-    p_integer = encode_integer(int(sm256v1['p'], base=16))
-    prime_object_id = encode_oid(sm256v1['prime-oid'][0], sm256v1['prime-oid'][1],\
-                               sm256v1['prime-oid'][2], sm256v1['prime-oid'][3],\
-                               sm256v1['prime-oid'][4], sm256v1['prime-oid'][5])
-    sequence_2 = encode_sequence(prime_object_id, p_integer)
-    version_integer = encode_integer(sm256v1['ver'])
-
-    return encode_sequence(version_integer, sequence_2, sequence_1, g_octet_string, n_integer, cor_integer)
-
+    return sk.hex(), pk[1:].hex()
 
 def sm2_pk_to_der(pbk):
     pk = pbk.encode(encoding="utf-8")
