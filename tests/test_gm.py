@@ -127,7 +127,6 @@ def test_sm2_sk_to_pem():
     with open('test_sk.pem', "wb") as f:
         f.write(SM2.dump_pem(sk, pk, True))
 
-
 def test_sm2_pk_to_pem():
     sk, pk = SM2.generate_key()
 
