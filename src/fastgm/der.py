@@ -12,13 +12,6 @@ class FastgmExpectedDer(Exception):
 # sm2 256 curve information
 sm256v1 = {
     'ver': 1,
-    'cor': 1,
-    'p': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF',
-    'a': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC',
-    'b': '28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93',
-    'n': 'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123',
-    'gx':'32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7',
-    'gy':'BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0',
     'sm2ecc_oid':[1, 2, 156, 10197, 1, 301],
     'ecpk_oid':[1, 2, 840, 10045, 2, 1],
     'header':'-----BEGIN EC PRIVATE KEY-----',
@@ -149,7 +142,7 @@ def remove_ctx_t61string(string):
         raise FastgmExpectedDer("wanted type 'context-specify' (0xA0), got 0x%02x" % tag)
     length, llen = read_length(string[1:])
     if length > len(string) - 1 - llen:
-        raise UnexpectedDER("Length longer than the provided buffer")
+        raise FastgmExpectedDer("Length longer than the provided buffer")
     endctx = 1 + llen + length
     return string[1 + llen : endctx], string[endctx:]
 
