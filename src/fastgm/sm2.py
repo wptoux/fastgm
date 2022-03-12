@@ -1,6 +1,7 @@
 import os
 
 from .sm3 import hash, kdf
+from .der import sm2_pk_from_pem, sm2_sk_from_pem, sm2_pk_to_der, sm2_sk_to_der
 
 # 选择素域，设置椭圆曲线参数
 
@@ -221,13 +222,11 @@ def generate_key():
     
     return ('%064x'% k).upper(), point2hex(pk).upper()
 
-
 class SM2:
     def __init__(self, mode='C1C3C2'):
         """
         mode: C1C3C2 或 C1C2C3
         """
-        
         self._mode = mode
 
     @classmethod
@@ -252,3 +251,32 @@ class SM2:
         data: bytes
         """
         return decrypt(sk, data, self._mode)
+    
+    @classmethod
+    def load_pem(cls, pem,  is_sk = False):
+        '''
+        is_sk: True or False
+        is_sk = True
+        读取私钥pem, return (sk, pk)
+        is_sk = False
+        读取公钥pk, return pk
+        '''
+        if is_sk:
+            return sm2_sk_from_pem(pem)
+        else:
+            return sm2_pk_from_pem(pem)
+
+    @classmethod
+    def dump_pem(cls, sk, pk, is_sk = False):
+        '''
+        return sk-pem or pk-pem. 
+        '''
+        if is_sk:
+            if sk and pk: 
+                return sm2_sk_to_der(sk, pk)
+            else:
+                raise ValueError("Private key PEM need private key and public key simultaneously.")
+        else:
+            if pk == None:
+                raise ValueError("Must have public key.")
+            return sm2_pk_to_der(pk)

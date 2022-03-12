@@ -99,3 +99,36 @@ def test_sm2_generate_key():
     dec = sm2.decrypt(sk, enc)
 
     assert dec == data
+
+def test_sm2_form_pem():
+    '''
+    使用openssl 生成SM2密钥
+    openssl ecparam -genkey -name SM2 -out sk.pem
+    openssl ec -in sk.pem -pubout -out pk.pem
+    '''
+    with open('sk.pem') as f:
+        sk_buffer = f.read()
+
+    with open('pk.pem') as f:
+        pk_buffer = f.read()
+
+    sk, pk1 = SM2.load_pem(sk_buffer, True)
+    pk = SM2.load_pem(pk_buffer, False)
+    print(sk)
+    print(pk)
+
+def test_sm2_sk_to_pem():
+    '''
+    将生成的密钥保存到pem
+    pem格式符合OpenSSL
+    '''
+    sk, pk = SM2.generate_key()
+
+    with open('test_sk.pem', "wb") as f:
+        f.write(SM2.dump_pem(sk, pk, True))
+
+def test_sm2_pk_to_pem():
+    sk, pk = SM2.generate_key()
+
+    with open('test_pk.pem', "wb") as f:
+        f.write(SM2.dump_pem(None, pk, False))
