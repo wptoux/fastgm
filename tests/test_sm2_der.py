@@ -46,3 +46,20 @@ def test_sm2_form_pem():
     dec = sm2.decrypt(enc)
 
     assert dec == data
+
+def test_sm2_to_pem():
+    '''
+    将生成的密钥保存到pem
+    pem格式完全兼容OpenSSL
+    '''
+    sm2 = SM2.generate_key()
+    pk_b64 = sm2.pk_to_pem()
+    sk_b64 = sm2.sk_to_pem()
+
+    with open('test_pk.pem', "wb") as f:
+        f.write(pk_b64)
+
+    with open('test_sk.pem', "wb") as f:
+        f.write(sk_b64)
+
+test_sm2_to_pem()
