@@ -1,7 +1,7 @@
 import os
 
-from .der import sm2_pk_from_pem, sm2_sk_from_pem, sm2_pk_to_der, sm2_sk_to_der
 from .sm3 import hash, kdf
+from .der import sm2_pk_from_pem, sm2_sk_from_pem, sm2_pk_to_der, sm2_sk_to_der
 
 # 选择素域，设置椭圆曲线参数
 
@@ -222,66 +222,61 @@ def generate_key():
     
     return ('%064x'% k).upper(), point2hex(pk).upper()
 
-
 class SM2:
     def __init__(self, mode='C1C3C2'):
         """
         mode: C1C3C2 或 C1C2C3
         """
         self._mode = mode
-        self._sk = None
-        self._pk = None
 
     @classmethod
     def generate_key(cls):
         """
-        return: 包含公私钥的对象
+        return: 私钥、公钥组成的tuple
         """
-        sm2 = cls()
-        sm2._sk, sm2._pk = generate_key()
-        return sm2
+        return generate_key()
 
-    def encrypt(self, data):
+    def encrypt(self, pk, data):
         """
         pk: 公钥, hex编码
         data: bytes
         """
         k = os.urandom(32)
 
-        return encrypt(self._pk, k, data, mode=self._mode)
+        return encrypt(pk, k, data, mode=self._mode)
 
-    def decrypt(self, data):
+    def decrypt(self, sk, data):
         """
         sk: 私钥, hex编码
         data: bytes
         """
-        return decrypt(self._sk, data, self._mode)
+        return decrypt(sk, data, self._mode)
+    
+    @classmethod
+    def load_pem(cls, pem,  is_sk = False):
+        '''
+        is_sk: True or False
+        is_sk = True
+        读取私钥pem, return (sk, pk)
+        is_sk = False
+        读取公钥pk, return pk
+        '''
+        if is_sk:
+            return sm2_sk_from_pem(pem)
+        else:
+            return sm2_pk_from_pem(pem)
 
-    def pk_from_pem(self, pem):
+    @classmethod
+    def dump_pem(cls, sk, pk, is_sk = False):
         '''
-        读取公钥
-        pem:bytes
+        return sk-pem or pk-pem. 
         '''
-        pk = sm2_pk_from_pem(pem)
-        self._pk = pk
-
-    def sk_from_pem(self, pem):
-        '''
-        同时读取私钥和公钥
-        pem:bytes
-        '''
-        sk, pk = sm2_sk_from_pem(pem)
-        self._sk = sk
-        self._pk = pk
-
-    def pk_to_pem(self):
-        '''
-        输出公钥到pem
-        '''
-        return sm2_pk_to_der(self._pk)
-
-    def sk_to_pem(self):
-        '''
-        输出私钥到pem
-        '''
-        return sm2_sk_to_der(self._sk, self._pk)
+        if is_sk:
+            if sk and pk: 
+                return sm2_sk_to_der(sk, pk)
+            else:
+                raise ValueError("Private key PEM need private key and public key simultaneously.")
+        else:
+            if pk == None:
+                raise ValueError("Must have public key.")
+            return sm2_pk_to_der(pk)
