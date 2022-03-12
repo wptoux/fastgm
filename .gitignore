@@ -113,8 +113,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-test_der.py
-bd.sh
-st.sh
-*.pem
