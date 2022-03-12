@@ -21,6 +21,7 @@ sm256v1 = {
     'gy':'BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0',
     'sm2ecc_oid':[1, 2, 156, 10197, 1, 301],
     'ecpk_oid':[1, 2, 840, 10045, 2, 1],
+    'header':'-----BEGIN EC PRIVATE KEY-----',
 }
 
 def str_idx_as_int(string, index):
@@ -241,10 +242,6 @@ def unpem(pem):
             if l and not l.startswith(b("-----"))
         ]
     )
-    second = d.find(b'MH', 0)
-    if second != -1:
-        return base64.b64decode(d[second:])
-
     return base64.b64decode(d)
 
 def to_pem(der, name):
@@ -265,7 +262,8 @@ def sm2_pk_from_pem(pem):
     return pk[1:]
 
 def sm2_sk_from_pem(pem):
-    unb64 = unpem(pem)
+    pos = pem.find(sm256v1['header'])
+    unb64 = unpem(pem[pos:])
     string = normalise_bytes(unb64)
     total_seq, empty = remove_sequence(string)
     version, ver_rest = remove_integer(total_seq)
@@ -293,7 +291,8 @@ def sm2_cur_info_to_der():
     return encode_sequence(version_integer, sequence_2, sequence_1, g_octet_string, n_integer, cor_integer)
 
 
-def sm2_pk_to_der(pk):
+def sm2_pk_to_der(pbk):
+    pk = pbk.encode(encoding="utf-8")
     pk_bitstring = encode_bitstring(b'\04' + pk, 0)
     sm2ecc = encode_oid(sm256v1['sm2ecc_oid'][0], sm256v1['sm2ecc_oid'][1],\
                         sm256v1['sm2ecc_oid'][2], sm256v1['sm2ecc_oid'][3],\
@@ -306,7 +305,9 @@ def sm2_pk_to_der(pk):
 
     return to_pem(pk_der, 'PUBLIC KEY')
 
-def sm2_sk_to_der(sk, pk):
+def sm2_sk_to_der(prk, pbk):
+    sk = prk.encode(encoding="utf-8")
+    pk = pbk.encode(encoding="utf-8")
     # first parameter
     sm2ecc = encode_oid(sm256v1['sm2ecc_oid'][0], sm256v1['sm2ecc_oid'][1],\
                         sm256v1['sm2ecc_oid'][2], sm256v1['sm2ecc_oid'][3],\
@@ -322,8 +323,3 @@ def sm2_sk_to_der(sk, pk):
     cur_pem = to_pem(sm2ecc, 'EC PARAMETERS')
     sk_pem  = to_pem(sk_der, 'EC PRIVATE KEY')
     return cur_pem + sk_pem
-
-
-
-
-

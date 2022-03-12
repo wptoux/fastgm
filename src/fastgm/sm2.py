@@ -235,9 +235,11 @@ class SM2:
     @classmethod
     def generate_key(cls):
         """
-        return: 私钥、公钥组成的tuple
+        return: 包含公私钥的对象
         """
-        sk, pk = generate_key()
+        sm2 = cls()
+        sm2._sk, sm2._pk = generate_key()
+        return sm2
 
     def encrypt(self, pk, data):
         """
@@ -256,16 +258,30 @@ class SM2:
         return decrypt(sk, data, self._mode)
 
     def pk_from_pem(self, pem):
+        '''
+        读取公钥
+        pem:bytes
+        '''
         pk = sm2_pk_from_pem(pem)
         self._pk = pk
 
     def sk_from_pem(self, pem):
+        '''
+        同时读取私钥和公钥
+        pem:bytes
+        '''
         sk, pk = sm2_sk_from_pem(pem)
         self._sk = sk
         self._pk = pk
 
     def pk_to_pem(self):
+        '''
+        输出公钥到pem
+        '''
         return sm2_pk_to_der(self._pk)
 
     def sk_to_pem(self):
+        '''
+        输出私钥到pem
+        '''
         return sm2_sk_to_der(self._sk, self._pk)
