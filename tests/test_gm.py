@@ -1,3 +1,4 @@
+# coding=utf-8
 from fastgm import SM2, SM3, SM4
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from gmssl.sm4 import CryptSM4, SM4_ENCRYPT, SM4_DECRYPT
@@ -71,8 +72,18 @@ def test_sm4_generate_key():
     assert sm4.decrypt_ecb(sm4.encrypt_ecb(b'helloworld')) == b'helloworld'
 
 def test_sm3():
+    # python2下不能再用gmssl进行测试，因为版本不支持
+    # gmssl项目官方源地址下未找到历史版本
     from gmssl.sm3 import sm3_hash
-
+    
+    # python2.7下测试用
+    # a = SM3().hash(b'helloworld' * 1024)
+    # print(a)
+    # python2此处会中断，但fastgm.sm3.hash的结果已经打印在stdout上，可以和python3环境下的输出结果对比
+    # b = sm3_hash(list(b'helloworld' * 1024)) 
+    # print(b)
+    # assert  a == b
+    
     assert SM3().hash(b'helloworld' * 1024) == sm3_hash(list(b'helloworld' * 1024))
 
 def test_sm2():

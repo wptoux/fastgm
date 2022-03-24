@@ -1,4 +1,6 @@
+# coding=utf-8
 import os
+import binascii
 
 from .sm3 import hash, kdf
 
@@ -141,8 +143,12 @@ def convert_jacb_to_nor(Point):  # Jacobian加重射影坐标转换成仿射坐�
 
 def encrypt(pk, k, data, mode='C1C3C2'):
     # 加密函数，data消息(bytes)
-    msg = data.hex()  # 消息转化为16进制字符串
-    k = int(k.hex(), 16)
+    msg = binascii.hexlify(data)  # 消息转化为16进制字符串
+    msg = str(msg)
+    if len(msg) % 2 == 1:
+        msg = msg[2:-1]
+        
+    k = int(binascii.hexlify(k), 16)
     pk = hex2point(pk)
     
     C1 = kP(k, G)
@@ -161,18 +167,22 @@ def encrypt(pk, k, data, mode='C1C3C2'):
         
         C1 = point2hex(C1)
         C2 = form % (int(msg, 16) ^ int(t, 16))
-        C3 = hash(bytes.fromhex('%s%s%s' % (x2, msg, y2)))
+        C3 = hash(binascii.unhexlify('%s%s%s' % (x2, msg, y2)))
         
         if mode == 'C1C3C2':
-            return bytes.fromhex('%s%s%s' % (C1, C3, C2))
+            return binascii.unhexlify('%s%s%s' % (C1, C3, C2))
         elif mode == 'C1C2C3':
-            return bytes.fromhex('%s%s%s' % (C1, C2, C3))
+            return binascii.unhexlify('%s%s%s' % (C1, C2, C3))
         else:
             return None
 
 def decrypt(sk, data, mode='C1C3C2'):
     # 解密函数，data密文（bytes）
-    data = data.hex()
+    data = binascii.hexlify(data)
+    data = str(data)
+    if len(data) % 2 == 1:
+        data = data[2:-1]
+        
     len_2 = 128
     len_3 = len_2 + 64
     C1 = data[0:len_2]
@@ -201,10 +211,10 @@ def decrypt(sk, data, mode='C1C3C2'):
     else:
         form = '%%0%dx' % cl
         M = form % (int(C2, 16) ^ int(t, 16))
-        u = hash(bytes.fromhex('%s%s%s' % (x2, M, y2)))
+        u = hash(binascii.unhexlify('%s%s%s' % (x2, M, y2)))
         
         if u == C3:
-            return bytes.fromhex(M)
+            return binascii.unhexlify(M)
         else:
             return None
 
@@ -215,7 +225,7 @@ def generate_key():
     """
     
     k = os.urandom(32)
-    k = int(k.hex(), 16)
+    k = int(binascii.hexlify(k), 16)
 
     pk = kP(k, G)
     

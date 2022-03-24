@@ -1,3 +1,5 @@
+# coding=utf-8
+import binascii
 from math import ceil
 from cpython cimport array
 import array
@@ -138,6 +140,11 @@ def hash(msg):
     return: sm3 hash bytes
     """
     msg = list(msg)
+    if msg != []:
+        if type(msg[0]) == str:
+            for i in range(len(msg)):
+                msg[i] = ord(msg[i])
+                
     len1 = len(msg)
     reserve1 = len1 % 64
     msg.append(0x80)
@@ -158,7 +165,7 @@ def hash(msg):
     for i in range(8):
         msg.append(bit_length_str[7-i])
 
-    group_count = round(len(msg) / 64)
+    group_count = int(round(len(msg) / 64))
 
     B = []
     for i in range(0, group_count):
@@ -182,12 +189,12 @@ def hash(msg):
 def kdf(z, klen): # z为16进制表示的比特串（str），klen为密钥长度（单位byte）
     klen = int(klen)
     ct = 0x00000001
-    rcnt = ceil(klen/32)
-    zin = bytes.fromhex(z.decode('utf8'))
+    rcnt = int(ceil(klen/32.0))
+    zin = binascii.unhexlify(z.decode('utf8'))
     
     ha = ""
     for i in range(rcnt):
-        msg = zin  + bytes.fromhex('%08x' % ct)
+        msg = zin  + binascii.unhexlify('%08x' % ct)
         ha = ha + hash(msg)
         ct += 1
     return ha[0: klen * 2]
